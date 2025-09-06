@@ -139,6 +139,7 @@
 
 
 /* Expanded Widgets */
+/* Expanded Widgets */
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -146,32 +147,31 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample orders with descriptions
     final List<Map<String, String>> orders = [
       {
         "item": "Espresso",
         "price": "₱100 – ₱180",
-        "description": "Strong and bold shot of pure coffee."
+        "description": "A strong, concentrated shot of coffee with bold flavor and rich aroma."
       },
       {
         "item": "Americano",
         "price": "₱120 – ₱200",
-        "description": "Espresso with added hot water, smooth taste."
+        "description": "Espresso diluted with hot water, smooth and slightly lighter in taste."
       },
       {
         "item": "Cappuccino",
         "price": "₱140 – ₱220",
-        "description": "Rich espresso topped with foamy milk."
+        "description": "A balanced mix of espresso, steamed milk, and frothy foam."
       },
       {
         "item": "Latte",
         "price": "₱150 – ₱230",
-        "description": "Espresso with steamed milk, creamy and light."
+        "description": "Creamy espresso drink with more steamed milk and a light layer of foam."
       },
       {
         "item": "Mocha",
         "price": "₱160 – ₱250",
-        "description": "Espresso mixed with chocolate and milk."
+        "description": "A sweet blend of espresso, chocolate syrup, and steamed milk."
       },
       {
         "item": "Macchiato",
@@ -184,7 +184,7 @@ class Home extends StatelessWidget {
       backgroundColor: const Color(0xffedebdd),
       appBar: AppBar(
         title: const Text(
-          'Sample Café',
+          'Café Haven',
           style: TextStyle(
             fontSize: 35,
             fontWeight: FontWeight.bold,
@@ -195,9 +195,10 @@ class Home extends StatelessWidget {
         backgroundColor: const Color(0xff630100),
         centerTitle: true,
       ),
+
       body: Column(
         children: [
-          // 📌 Image Container on top
+          // 📌 Top banner image
           Container(
             height: 106,
             width: double.infinity,
@@ -212,18 +213,19 @@ class Home extends StatelessWidget {
               ),
             ),
           ),
+          
 
-          // 📌 Expanded Grid below the image
+          // 📌 Expanded Grid (menu items)
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
               child: GridView.builder(
                 itemCount: orders.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // 2 columns
+                  crossAxisCount: 2,
                   crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.9,
+                  mainAxisSpacing: 15,
+                  childAspectRatio: 0.75,
                 ),
                 itemBuilder: (context, index) {
                   final order = orders[index];
@@ -231,18 +233,34 @@ class Home extends StatelessWidget {
                     color: const Color(0xffedebdd),
                     elevation: 3,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(20),
                       side: const BorderSide(
                         color: Color(0xff630100),
                         width: 2,
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(9.0),
+                      padding: const EdgeInsets.fromLTRB(11, 12, 11, 4),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // 👈 Align left
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          // 🖼 Coffee image
+                          Container(
+                            height: 100,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.brown[100],
+                              image: const DecorationImage(
+                                image: AssetImage("assets/img/sample_drink.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          // ☕ Item name
                           Text(
                             order["item"]!,
                             style: const TextStyle(
@@ -251,15 +269,19 @@ class Home extends StatelessWidget {
                               color: Color(0xff630100),
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 0.1),
+
+                          // 💰 Price
                           Text(
                             "${order["price"]}",
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 11,
                               color: Colors.black87,
                             ),
                           ),
                           const SizedBox(height: 6),
+
+                          // 📝 Description
                           Text(
                             order["description"]!,
                             style: const TextStyle(
@@ -280,6 +302,9 @@ class Home extends StatelessWidget {
     );
   }
 }
+
+
+
 
 
 
