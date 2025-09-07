@@ -279,7 +279,7 @@ class Home extends StatelessWidget {
                                 'Café Haven',
                                 style: TextStyle(
                                   color: Color(0xffedebdd),
-                                  fontSize: 25,
+                                  fontSize: 28,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Caveat',
                                 ),
@@ -289,7 +289,7 @@ class Home extends StatelessWidget {
                         ),
                         // Location
                         Container(
-                          padding: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 1),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: const [
@@ -298,25 +298,16 @@ class Home extends StatelessWidget {
                                 'San Jose City, Nueva Ecija, Philippines, 3121',
                                 style: TextStyle(
                                   color: Color(0xffedebdd),
-                                  fontSize: 13,
+                                  fontSize: 12,
                                 ),
                                 textAlign: TextAlign.justify,
                               ),
-                            ],
-                          ),
-                        ),
-                        // Contact
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
                               SizedBox(height: 10),
                               Text(
-                                'Contact: (02) 1234-5678 | cafehaven.official.gmail.com',
+                                'Contact: (02) 1234-5678 | cafehaven.official@gmail.com',
                                 style: TextStyle(
                                   color: Color(0xffedebdd),
-                                  fontSize: 13,
+                                  fontSize: 12,
                                 ),
                                 textAlign: TextAlign.justify,
                               ),
