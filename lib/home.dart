@@ -239,58 +239,100 @@ class Home extends StatelessWidget {
                         width: 2,
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(11, 12, 11, 4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // 🖼 Coffee image
-                          Container(
-                            height: 100,
-                            width: double.infinity,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(11, 12, 11, 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              // 🖼 Coffee image
+                              Container(
+                                height: 100,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.brown[100],
+                                  image: const DecorationImage(
+                                    image: AssetImage("assets/img/sample_drink.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+
+                              // ☕ Item name
+                              Text(
+                                order["item"]!,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff630100),
+                                ),
+                              ),
+                              const SizedBox(height: 0.1),
+
+                              // 💰 Price
+                              Text(
+                                "${order["price"]}",
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+
+                              // 📝 Description
+                              Text(
+                                order["description"]!,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 18), // Space for button
+                            ],
+                          ),
+                        ),
+                        // ➕ Circular plus button
+                        Positioned(
+                          bottom: 85,
+                          right: 15,
+                          child: Container(
+                            width: 38,
+                            height: 38,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.brown[100],
-                              image: const DecorationImage(
-                                image: AssetImage("assets/img/sample_drink.png"),
-                                fit: BoxFit.cover,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Container(
+                              width: 38,
+                              height: 38,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xff630100),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.add, color: Colors.white),
+                                onPressed: () {
+                                  // TODO: Add your action here
+                                },
+                                iconSize: 24,       // Size of the "+" icon
+                                splashRadius: 28,   // Optional: size of ripple effect
+                                padding: EdgeInsets.zero, // Important: prevent extra padding
+                                alignment: Alignment.center,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
-
-                          // ☕ Item name
-                          Text(
-                            order["item"]!,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff630100),
-                            ),
-                          ),
-                          const SizedBox(height: 0.1),
-
-                          // 💰 Price
-                          Text(
-                            "${order["price"]}",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-
-                          // 📝 Description
-                          Text(
-                            order["description"]!,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 },
