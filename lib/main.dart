@@ -6,7 +6,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List of menu items with details
+    // List of menu items with details and desc
     final List<Map<String, String>> orders = [
       {
         "item": "Espresso",
@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffedebdd),
 
-      // Top AppBar (Header Bar)
+      // Header Bar
       appBar: AppBar(
         title: const Text(
           'Café Haven',
@@ -62,17 +62,17 @@ class Home extends StatelessWidget {
             fontSize: 35,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontFamily: 'Caveat', // Custom font for branding
+            fontFamily: 'Caveat', // Custom font 
           ),
         ),
-        backgroundColor: const Color(0xff630100), // Dark red coffee color
+        backgroundColor: const Color(0xff630100),
         centerTitle: true,
       ),
 
       // Main Content
       body: Column(
         children: [
-          // Top Banner Image
+          // Banner Image
           Container(
             height: 106,
             width: double.infinity,
@@ -88,7 +88,7 @@ class Home extends StatelessWidget {
             ),
           ),
 
-          // Expanded scrollable content
+          //scrollable cont
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -134,22 +134,22 @@ class Home extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final order = orders[index];
 
-                        // Individual Menu Card
+                        // Menu Cards
                         return Card(
                           color: const Color(
                             0xffedebdd,
-                          ), // Background color matches scaffold
-                          elevation: 3, // Subtle shadow
+                          ),
+                          elevation: 3, // card with shadow
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: const BorderSide(
-                              color: Color(0xff630100), // Border matches theme
+                              color: Color(0xff630100), 
                               width: 2,
                             ),
                           ),
                           child: Stack(
                             children: [
-                              // 📋 Main Content of the Card
+                              // Card content
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   11,
@@ -160,7 +160,7 @@ class Home extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // ☕ Coffee Image
+                                    // img assets
                                     Container(
                                       height: 100,
                                       width: double.infinity,
@@ -178,7 +178,7 @@ class Home extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 10),
 
-                                    // Item Name
+                                    // menu names
                                     Text(
                                       order["item"]!,
                                       style: const TextStyle(
@@ -199,7 +199,7 @@ class Home extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 6),
 
-                                    // Description
+                                    // menu description/details
                                     Text(
                                       order["description"]!,
                                       style: const TextStyle(
@@ -209,12 +209,12 @@ class Home extends StatelessWidget {
                                     ),
                                     const SizedBox(
                                       height: 18,
-                                    ), // Leaves space for the add button
+                                    ),
                                   ],
                                 ),
                               ),
 
-                              // Add Button
+                              // display button
                               Positioned(
                                 bottom: 85,
                                 right: 15,
@@ -236,7 +236,7 @@ class Home extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       color: Color(
                                         0xff630100,
-                                      ), // Match theme color
+                                      ),
                                     ),
                                     child: IconButton(
                                       icon: const Icon(
@@ -314,7 +314,7 @@ class Home extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // Copyright (separated)
+                        // other details
                         Container(
                           alignment: Alignment.center,
                           child: Column(
