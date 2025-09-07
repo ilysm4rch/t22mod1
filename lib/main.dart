@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffedebdd),
 
-      // 🧱 Top AppBar (Header Bar)
+      // Top AppBar (Header Bar)
       appBar: AppBar(
         title: const Text(
           'Café Haven',
@@ -69,10 +69,10 @@ class Home extends StatelessWidget {
         centerTitle: true,
       ),
 
-      // 📦 Main Content
+      // Main Content
       body: Column(
         children: [
-          // 📸 Top Banner Image
+          // Top Banner Image
           Container(
             height: 106,
             width: double.infinity,
