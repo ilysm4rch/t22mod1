@@ -151,32 +151,38 @@ class Home extends StatelessWidget {
       {
         "item": "Espresso",
         "price": "₱100 – ₱180",
-        "description": "A strong, concentrated shot of coffee with bold flavor and rich aroma."
+        "description": "A strong, concentrated shot of coffee with bold flavor and rich aroma.",
+        "image": "assets/img/espresso.jpg"
       },
       {
         "item": "Americano",
         "price": "₱120 – ₱200",
-        "description": "Espresso diluted with hot water, smooth and slightly lighter in taste."
+        "description": "Espresso diluted with hot water, smooth and slightly lighter in taste.",
+        "image": "assets/img/americano.jpg"
       },
       {
         "item": "Cappuccino",
         "price": "₱140 – ₱220",
-        "description": "A balanced mix of espresso, steamed milk, and frothy foam."
+        "description": "A balanced mix of espresso, steamed milk, and frothy foam.",
+        "image": "assets/img/cappuccino.jpg"
       },
       {
         "item": "Latte",
         "price": "₱150 – ₱230",
-        "description": "Creamy espresso drink with more steamed milk and a light layer of foam."
+        "description": "Creamy espresso drink with more steamed milk and a light layer of foam.",
+        "image": "assets/img/latte.jpg"
       },
       {
         "item": "Mocha",
         "price": "₱160 – ₱250",
-        "description": "A sweet blend of espresso, chocolate syrup, and steamed milk."
+        "description": "A sweet blend of espresso, chocolate syrup, and steamed milk.",
+        "image": "assets/img/mocha.jpg"
       },
       {
         "item": "Macchiato",
         "price": "₱160 – ₱250",
-        "description": "Espresso with a touch of frothy milk."
+        "description": "Espresso with a touch of frothy milk.",
+        "image": "assets/img/macchiato.jpg"
       },
     ];
 
@@ -247,15 +253,15 @@ class Home extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              // 🖼 Coffee image
+                              // 🖼 Coffee image (now dynamic)
                               Container(
                                 height: 100,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
                                   color: Colors.brown[100],
-                                  image: const DecorationImage(
-                                    image: AssetImage("assets/img/sample_drink.png"),
+                                  image: DecorationImage(
+                                    image: AssetImage(order["image"] ?? "assets/img/default.jpg"),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -307,8 +313,8 @@ class Home extends StatelessWidget {
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black26,
-                                  blurRadius: 5,
-                                  offset: Offset(0, 4),
+                                  blurRadius: 1,
+                                  offset: Offset(1, 2),
                                 ),
                               ],
                             ),
@@ -322,10 +328,10 @@ class Home extends StatelessWidget {
                               child: IconButton(
                                 icon: const Icon(Icons.add, color: Colors.white),
                                 onPressed: () {
-                                  // TODO: Add your action here
+                                  //empty
                                 },
                                 iconSize: 24,       
-                                splashRadius: 28,   
+                                splashRadius: 10,   
                                 padding: EdgeInsets.zero, 
                                 alignment: Alignment.center,
                               ),
