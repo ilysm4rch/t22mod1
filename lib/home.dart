@@ -228,17 +228,17 @@ class Home extends StatelessWidget {
                               Text(
                                 'Café Haven',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xffedebdd),
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Caveat',
                                 ),
                               ),
-                              SizedBox(height: 1),
+                              SizedBox(height: 0),
                               Text(
                                 'Your cozy corner for specialty coffee and pastries.',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xffedebdd),
                                   fontSize: 13,
                                   fontStyle: FontStyle.italic,
                                 ),
@@ -257,7 +257,7 @@ class Home extends StatelessWidget {
                               Text(
                                 'San Jose City, Nueva Ecija, Philippines, 3121',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xffedebdd),
                                   fontSize: 13,
                                 ),
                                 textAlign: TextAlign.start,
@@ -266,7 +266,7 @@ class Home extends StatelessWidget {
                               Text(
                                 'Contact: (02) 1234-5678 | cafehaven.official.gmail.com',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xffedebdd),
                                   fontSize: 13,
                                 ),
                                 textAlign: TextAlign.center,
@@ -283,7 +283,7 @@ class Home extends StatelessWidget {
                               Text(
                                 '© 2025 Café Haven. All rights reserved.',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xffedebdd),
                                   fontSize: 10,
                                 ),
                                 textAlign: TextAlign.center,
