@@ -324,9 +324,9 @@ class Home extends StatelessWidget {
                                 onPressed: () {
                                   // TODO: Add your action here
                                 },
-                                iconSize: 24,       // Size of the "+" icon
-                                splashRadius: 28,   // Optional: size of ripple effect
-                                padding: EdgeInsets.zero, // Important: prevent extra padding
+                                iconSize: 24,       
+                                splashRadius: 28,   
+                                padding: EdgeInsets.zero, 
                                 alignment: Alignment.center,
                               ),
                             ),
