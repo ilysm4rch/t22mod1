@@ -241,7 +241,7 @@ class Home extends StatelessWidget {
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.add,
-                                        color:  Color(0xffedebdd),
+                                        color: Color(0xffedebdd),
                                       ),
                                       onPressed: () {},
                                       iconSize: 24,
@@ -279,7 +279,7 @@ class Home extends StatelessWidget {
                                 'Café Haven',
                                 style: TextStyle(
                                   color: Color(0xffedebdd),
-                                  fontSize: 28,
+                                  fontSize: 27,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Caveat',
                                 ),
