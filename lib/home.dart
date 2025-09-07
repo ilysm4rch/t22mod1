@@ -11,37 +11,37 @@ class Home extends StatelessWidget {
         "item": "Espresso",
         "price": "₱100 – ₱180",
         "description": "A strong, concentrated shot of coffee with bold flavor and rich aroma.",
-        "image": "assets/img/espresso.jpg"
+        "image": "assets/img/Espresso.png"
       },
       {
         "item": "Americano",
         "price": "₱120 – ₱200",
         "description": "Espresso diluted with hot water, smooth and slightly lighter in taste.",
-        "image": "assets/img/americano.jpg"
+        "image": "assets/img/Americano.png"
       },
       {
         "item": "Cappuccino",
         "price": "₱140 – ₱220",
         "description": "A balanced mix of espresso, steamed milk, and frothy foam.",
-        "image": "assets/img/cappuccino.jpg"
+        "image": "assets/img/Cappuccino.png"
       },
       {
         "item": "Latte",
         "price": "₱150 – ₱230",
         "description": "Creamy espresso drink with more steamed milk and a light layer of foam.",
-        "image": "assets/img/latte.jpg"
+        "image": "assets/img/Latte.png"
       },
       {
         "item": "Mocha",
         "price": "₱160 – ₱250",
         "description": "A sweet blend of espresso, chocolate syrup, and steamed milk.",
-        "image": "assets/img/mocha.jpg"
+        "image": "assets/img/Mocha.png"
       },
       {
         "item": "Macchiato",
         "price": "₱160 – ₱250",
         "description": "Espresso with a touch of frothy milk.",
-        "image": "assets/img/macchiato.jpg"
+        "image": "assets/img/Macchiato.png"
       },
     ];
 
@@ -127,7 +127,7 @@ class Home extends StatelessWidget {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
-                                        color: Colors.brown[100],
+                                        color: const Color(0xffedebdd),
                                         image: DecorationImage(
                                           image: AssetImage(order["image"] ?? "assets/img/default.jpg"),
                                           fit: BoxFit.cover,
@@ -200,7 +200,7 @@ class Home extends StatelessWidget {
                                       iconSize: 24,
                                       splashRadius: 10,
                                       padding: EdgeInsets.zero,
-                                      alignment: Alignment.center,
+                                      alignment: Alignment.center, 
                                     ),
                                   ),
                                 ),
