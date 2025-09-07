@@ -88,11 +88,36 @@ class Home extends StatelessWidget {
             ),
           ),
 
-          // 🧱 Expanded scrollable content (Grid + Footer)
+          // Expanded scrollable content
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            "The Café Collection",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff630100),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 14),
+                        Center(
+                          child: Container(
+                            width: 350,
+                            height: 2,
+                            color: Color(0xff630100),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
                     child: GridView.builder(
@@ -109,7 +134,7 @@ class Home extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final order = orders[index];
 
-                        // 🧩 Individual Menu Card
+                        // Individual Menu Card
                         return Card(
                           color: const Color(
                             0xffedebdd,
@@ -153,7 +178,7 @@ class Home extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 10),
 
-                                    // 🏷️ Item Name
+                                    // Item Name
                                     Text(
                                       order["item"]!,
                                       style: const TextStyle(
@@ -164,7 +189,7 @@ class Home extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 0.1),
 
-                                    // 💰 Price
+                                    // Price
                                     Text(
                                       order["price"]!,
                                       style: const TextStyle(
@@ -174,7 +199,7 @@ class Home extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 6),
 
-                                    // 📝 Description
+                                    // Description
                                     Text(
                                       order["description"]!,
                                       style: const TextStyle(
@@ -189,7 +214,7 @@ class Home extends StatelessWidget {
                                 ),
                               ),
 
-                              // ➕ Add Button (Floating Circle Button)
+                              // Add Button
                               Positioned(
                                 bottom: 85,
                                 right: 15,
@@ -233,20 +258,20 @@ class Home extends StatelessWidget {
                       },
                     ),
                   ),
-                  // 🦶 Footer inside scrollable area
+                  // Footer
                   Container(
                     width: double.infinity,
                     color: const Color.fromARGB(255, 80, 2, 1),
                     padding: const EdgeInsets.symmetric(
-                      vertical: 25,
+                      vertical: 45,
                       horizontal: 24,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Branding and description
                         Container(
-                          padding: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
@@ -259,24 +284,14 @@ class Home extends StatelessWidget {
                                   fontFamily: 'Caveat',
                                 ),
                               ),
-                              SizedBox(height: 0),
-                              Text(
-                                'Your cozy corner for specialty coffee and pastries.',
-                                style: TextStyle(
-                                  color: Color(0xffedebdd),
-                                  fontSize: 13,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
                             ],
                           ),
                         ),
-                        // Location and contact
+                        // Location
                         Container(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: const [
                               SizedBox(height: 10),
                               Text(
@@ -285,16 +300,25 @@ class Home extends StatelessWidget {
                                   color: Color(0xffedebdd),
                                   fontSize: 13,
                                 ),
-                                textAlign: TextAlign.start,
+                                textAlign: TextAlign.justify,
                               ),
-                              SizedBox(height: 4),
+                            ],
+                          ),
+                        ),
+                        // Contact
+                        Container(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const [
+                              SizedBox(height: 10),
                               Text(
                                 'Contact: (02) 1234-5678 | cafehaven.official.gmail.com',
                                 style: TextStyle(
                                   color: Color(0xffedebdd),
                                   fontSize: 13,
                                 ),
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.justify,
                               ),
                             ],
                           ),
@@ -315,7 +339,7 @@ class Home extends StatelessWidget {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                'Designed & developed by Café Haven Team.',
+                                'Designed & developed by Bernabe, Libatique and Ocareza.',
                                 style: TextStyle(
                                   color: Colors.white54,
                                   fontSize: 10,
