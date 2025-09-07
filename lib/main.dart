@@ -241,7 +241,7 @@ class Home extends StatelessWidget {
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.add,
-                                        color: Colors.white,
+                                        color:  Color(0xffedebdd),
                                       ),
                                       onPressed: () {},
                                       iconSize: 24,
