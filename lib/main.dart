@@ -1,8 +1,15 @@
 /* Expanded Widgets */
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  HomeState createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
+  int cartCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +74,43 @@ class Home extends StatelessWidget {
         ),
         backgroundColor: const Color(0xff630100), // Dark red coffee color
         centerTitle: true,
+        actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.coffee),
+                color: Colors.white,
+                onPressed: () {
+                  // empty for now
+                },
+              ),
+              Positioned(
+                right: 3,
+                top: 1,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
+                  child: Text(
+                    '$cartCount',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
 
       // Main Content
@@ -149,7 +193,7 @@ class Home extends StatelessWidget {
                           ),
                           child: Stack(
                             children: [
-                              // 📋 Main Content of the Card
+                              // Main Content
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   11,
@@ -234,16 +278,32 @@ class Home extends StatelessWidget {
                                   child: Container(
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Color(
-                                        0xff630100,
-                                      ), // Match theme color
+                                      color: Color(0xff630100),
                                     ),
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.add,
                                         color: Color(0xffedebdd),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        setState(() {
+                                          cartCount++;
+                                        });
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'You ordered ${order["item"]}!',
+                                            ),
+                                            duration: const Duration(
+                                              seconds: 2,
+                                            ),
+                                            backgroundColor: Color(0xff630100),
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                      },
                                       iconSize: 24,
                                       splashRadius: 10,
                                       padding: EdgeInsets.zero,
