@@ -1,5 +1,5 @@
-/* Expanded Widgets */
 import 'package:flutter/material.dart';
+import 'order_summary.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -81,7 +81,10 @@ class HomeState extends State<Home> {
                 icon: const Icon(Icons.coffee),
                 color: Colors.white,
                 onPressed: () {
-                  // empty for now
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OrderSummary()),
+                  );
                 },
               ),
               Positioned(
