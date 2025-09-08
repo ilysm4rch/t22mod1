@@ -13,7 +13,7 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // List of menu items with details
+    // List of menu items with details and desc
     final List<Map<String, String>> orders = [
       {
         "item": "Espresso",
@@ -61,7 +61,7 @@ class HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: const Color(0xffedebdd),
 
-      // Top AppBar (Header Bar)
+      // Header Bar
       appBar: AppBar(
         title: const Text(
           'Café Haven',
@@ -69,10 +69,10 @@ class HomeState extends State<Home> {
             fontSize: 35,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontFamily: 'Caveat', // Custom font for branding
+            fontFamily: 'Caveat', // Custom font
           ),
         ),
-        backgroundColor: const Color(0xff630100), // Dark red coffee color
+        backgroundColor: const Color(0xff630100),
         centerTitle: true,
         actions: [
           Stack(
@@ -116,7 +116,7 @@ class HomeState extends State<Home> {
       // Main Content
       body: Column(
         children: [
-          // Top Banner Image
+          // Banner Image
           Container(
             height: 106,
             width: double.infinity,
@@ -132,7 +132,7 @@ class HomeState extends State<Home> {
             ),
           ),
 
-          // Expanded scrollable content
+          //scrollable cont
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -178,22 +178,20 @@ class HomeState extends State<Home> {
                       itemBuilder: (context, index) {
                         final order = orders[index];
 
-                        // Individual Menu Card
+                        // Menu Cards
                         return Card(
-                          color: const Color(
-                            0xffedebdd,
-                          ), // Background color matches scaffold
-                          elevation: 3, // Subtle shadow
+                          color: const Color(0xffedebdd),
+                          elevation: 3, // card with shadow
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: const BorderSide(
-                              color: Color(0xff630100), // Border matches theme
+                              color: Color(0xff630100),
                               width: 2,
                             ),
                           ),
                           child: Stack(
                             children: [
-                              // Main Content
+                              // Card content
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   11,
@@ -204,7 +202,7 @@ class HomeState extends State<Home> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // ☕ Coffee Image
+                                    // img assets
                                     Container(
                                       height: 100,
                                       width: double.infinity,
@@ -222,7 +220,7 @@ class HomeState extends State<Home> {
                                     ),
                                     const SizedBox(height: 10),
 
-                                    // Item Name
+                                    // menu names
                                     Text(
                                       order["item"]!,
                                       style: const TextStyle(
@@ -243,7 +241,7 @@ class HomeState extends State<Home> {
                                     ),
                                     const SizedBox(height: 6),
 
-                                    // Description
+                                    // menu description/details
                                     Text(
                                       order["description"]!,
                                       style: const TextStyle(
@@ -251,14 +249,12 @@ class HomeState extends State<Home> {
                                         color: Colors.black54,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 18,
-                                    ), // Leaves space for the add button
+                                    const SizedBox(height: 18),
                                   ],
                                 ),
                               ),
 
-                              // Add Button
+                              // display button
                               Positioned(
                                 bottom: 85,
                                 right: 15,
@@ -278,7 +274,9 @@ class HomeState extends State<Home> {
                                   child: Container(
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Color(0xff630100),
+                                      color: Color(
+                                        0xff630100,
+                                      ), // Match theme color
                                     ),
                                     child: IconButton(
                                       icon: const Icon(
@@ -374,7 +372,7 @@ class HomeState extends State<Home> {
                             ],
                           ),
                         ),
-                        // Copyright (separated)
+                        // other details
                         Container(
                           alignment: Alignment.center,
                           child: Column(
