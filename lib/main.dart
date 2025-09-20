@@ -10,13 +10,9 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
   int cartCount = 0;
-
-  // ✅ Cart items will be stored here
   final List<Map<String, dynamic>> cartItems = [];
-
   final List<Map<String, dynamic>> favorites = [];
 
-  // ✅ Update cart count based on quantities
   void updateCartCount() {
     setState(() {
       cartCount = cartItems.fold<int>(
@@ -28,7 +24,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // Menu items with multiple sizes
     final List<Map<String, dynamic>> orders = [
       {
         "item": "Espresso",
@@ -76,23 +71,19 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
 
-      // AppBar
       appBar: AppBar(
         title: const Text(
           'cafe haven',
           style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
+            fontFamily: "Caveat",
+            fontSize: 35,
             color: Color(0xFFB53324),
           ),
         ),
         backgroundColor: const Color(0xFFFFFAF4),
         centerTitle: true,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFFB53324)),
-          onPressed: () {},
-        ),
         actions: [
           Stack(
             children: [
@@ -105,11 +96,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     MaterialPageRoute(
                       builder: (context) => OrderSummary(
                         cartItems: cartItems,
-                        onCartUpdated: updateCartCount, // ✅ callback
+                        onCartUpdated: updateCartCount,
                       ),
                     ),
                   );
-                  updateCartCount(); // ✅ refresh when returning
+                  updateCartCount();
                 },
               ),
               Positioned(
@@ -141,10 +132,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         ],
       ),
 
-      // Body
       body: Column(
         children: [
-          // Banner
+          // ✅ Banner
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             padding: const EdgeInsets.all(30),
@@ -154,22 +144,37 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               color: const Color(0xFFB53324),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Align(
+            child: Align(
               alignment: Alignment.centerRight,
-              child: Text(
-                "welcome to\ncafe haven!",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  height: 1.3,
-                ),
-                textAlign: TextAlign.right,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    "Welcome to",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.2,
+                    ),
+                  ),
+                  Text(
+                    "cafe haven!",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: "Caveat", // ✅ Caveat font applied
+                      color: Colors.white,
+                      height: 1.2,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
 
-          // TabBar
+          // Tabs
           DefaultTabController(
             length: 2,
             child: Expanded(
@@ -209,7 +214,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  // Widget builder for Drinks & Favorites
   Widget buildMenuContent(
       BuildContext context, List<Map<String, dynamic>> items) {
     return SingleChildScrollView(
@@ -230,7 +234,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             final isFavorite =
                 favorites.any((item) => item["item"] == order["item"]);
 
-            // ✅ Default selected size
             String selectedSize = "S";
 
             return StatefulBuilder(

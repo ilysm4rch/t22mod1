@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class OrderSummary extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems; // ✅ Accept cart items
-  final VoidCallback onCartUpdated; // ✅ Callback to notify Home
+  final VoidCallback onCartUpdated; // 
 
   const OrderSummary({
     super.key,
@@ -15,7 +15,6 @@ class OrderSummary extends StatefulWidget {
 }
 
 class OrderSummaryState extends State<OrderSummary> {
-  // ✅ Calculate total price
   int getTotal() {
     int total = 0;
     for (var item in widget.cartItems) {
@@ -26,13 +25,13 @@ class OrderSummaryState extends State<OrderSummary> {
 
   void updateAndNotify() {
     setState(() {});
-    widget.onCartUpdated(); // ✅ tell Home to refresh cartCount
+    widget.onCartUpdated(); 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffedebdd),
+      backgroundColor: const Color(0xFFfffafa),
 
       // Header Bar
       appBar: AppBar(
@@ -41,10 +40,10 @@ class OrderSummaryState extends State<OrderSummary> {
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Color(0xFFb53324),
           ),
         ),
-        backgroundColor: const Color(0xFFB53324),
+        backgroundColor: const Color(0xFFfffafa),
         centerTitle: true,
       ),
 
@@ -55,7 +54,7 @@ class OrderSummaryState extends State<OrderSummary> {
             child: widget.cartItems.isEmpty
                 ? const Center(
                     child: Text(
-                      "Your cart is empty 🛒",
+                      "Your cart is empty.",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black54,
@@ -96,7 +95,7 @@ class OrderSummaryState extends State<OrderSummary> {
                               // ➖ Decrease Quantity
                               IconButton(
                                 icon: const Icon(Icons.remove_circle,
-                                    color: Colors.red),
+                                    color: Color(0xFFb53324)),
                                 onPressed: () {
                                   if (item["quantity"] > 1) {
                                     item["quantity"]--;
@@ -110,10 +109,9 @@ class OrderSummaryState extends State<OrderSummary> {
                                 "${item["quantity"]}",
                                 style: const TextStyle(fontSize: 16),
                               ),
-                              // ➕ Increase Quantity
                               IconButton(
                                 icon: const Icon(Icons.add_circle,
-                                    color: Colors.green),
+                                    color: Color(0xFFb53324)),
                                 onPressed: () {
                                   item["quantity"]++;
                                   updateAndNotify();
