@@ -176,7 +176,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     ],
                   ),
                   SizedBox(
-                    height: 700,
+                    height: 720,
                     child: TabBarView(
                       children: [
                         buildMenuContent(context),
