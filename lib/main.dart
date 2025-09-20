@@ -458,7 +458,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 children: [
                   // Image
                   Container(
-                    height: 120,
+                    height: 180,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
