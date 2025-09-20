@@ -85,7 +85,9 @@ flutter:
     - family: Caveat
       fonts:
         - asset: fonts/Caveat-VariableFont_wght.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-VariableFont_wdth,wght.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

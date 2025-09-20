@@ -59,27 +59,31 @@ class HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xffedebdd),
+      backgroundColor: const Color(0xFFFFFAF4),
 
       // Header Bar
       appBar: AppBar(
         title: const Text(
-          'Café Haven',
+          'cafe haven',
           style: TextStyle(
-            fontSize: 35,
+            fontSize: 26,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontFamily: 'Caveat', // Custom font
+            color: Color(0xFFB53324),
           ),
         ),
-        backgroundColor: const Color(0xff630100),
+        backgroundColor: const Color(0xFFFFFAF4),
         centerTitle: true,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Color(0xFFB53324)),
+          onPressed: () {},
+        ),
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.coffee),
-                color: Colors.white,
+                icon: const Icon(Icons.shopping_basket),
+                color: const Color(0xFFB53324),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -93,7 +97,7 @@ class HomeState extends State<Home> {
                 child: Container(
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: const Color(0xFFB53324),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   constraints: const BoxConstraints(
@@ -102,7 +106,7 @@ class HomeState extends State<Home> {
                   ),
                   child: Text(
                     '$cartCount',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -119,52 +123,62 @@ class HomeState extends State<Home> {
       // Main Content
       body: Column(
         children: [
-          // Banner Image
+          // Banner
           Container(
-            height: 106,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.all(20),
+            height: 130,
             width: double.infinity,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              image: DecorationImage(
-                image: AssetImage("assets/img/top.png"),
-                fit: BoxFit.cover,
+            decoration: BoxDecoration(
+              color: const Color(0xFFB53324),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "welcome to\ncafe haven!",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1.3,
+                ),
+                textAlign: TextAlign.right,
               ),
             ),
           ),
 
-          //scrollable cont
+          // Scrollable Content
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  // Section Header
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            "The Café Collection",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff630100),
-                            ),
+                      children: const [
+                        Text(
+                          "Menu",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF3A1A0F),
                           ),
                         ),
-                        SizedBox(height: 14),
-                        Center(
-                          child: Container(
-                            width: 350,
-                            height: 2,
-                            color: Color(0xff630100),
+                        SizedBox(height: 5),
+                        Text(
+                          "Drinks",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
                           ),
                         ),
                       ],
                     ),
                   ),
+
+                  // Menu Grid
                   Padding(
                     padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
                     child: GridView.builder(
@@ -173,152 +187,156 @@ class HomeState extends State<Home> {
                       itemCount: orders.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 15,
-                            childAspectRatio: 0.75,
-                          ),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 40,
+                        childAspectRatio: 0.65,
+                      ),
                       itemBuilder: (context, index) {
                         final order = orders[index];
 
                         // Menu Cards
                         return Card(
-                          color: const Color(0xffedebdd),
-                          elevation: 3, // card with shadow
+                          color: const Color(0xFFF0f0f0),
+                          elevation: 1,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: const BorderSide(
-                              color: Color(0xff630100),
-                              width: 2,
-                            ),
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Stack(
-                            children: [
-                              // Card content
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  11,
-                                  12,
-                                  11,
-                                  4,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // img assets
-                                    Container(
-                                      height: 100,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: const Color(0xffedebdd),
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                            order["image"] ??
-                                                "assets/img/default.jpg",
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Image container with red background
+                                Container(
+                                  height: 130,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: const Color(0xFFB53324),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.asset(
+                                      order["image"] ??
+                                          "assets/img/default.jpg",
+                                      fit: BoxFit.cover,
                                     ),
-                                    const SizedBox(height: 10),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
 
-                                    // menu names
+                                // Coffee name + sizes
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
                                     Text(
                                       order["item"]!,
                                       style: const TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xff630100),
+                                        color: Color(0xFF3A1A0F),
                                       ),
                                     ),
-                                    const SizedBox(height: 0.1),
-
-                                    // Price
-                                    Text(
-                                      order["price"]!,
-                                      style: const TextStyle(
+                                    const Text(
+                                      "S  M  L",
+                                      style: TextStyle(
                                         fontSize: 11,
                                         color: Colors.black87,
                                       ),
                                     ),
-                                    const SizedBox(height: 6),
-
-                                    // menu description/details
-                                    Text(
-                                      order["description"]!,
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 18),
                                   ],
                                 ),
-                              ),
+                                const SizedBox(height: 1),
 
-                              // display button
-                              Positioned(
-                                bottom: 85,
-                                right: 15,
-                                child: Container(
-                                  width: 38,
-                                  height: 38,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0x42000000),
-                                        blurRadius: 2,
-                                        offset: Offset(1, 1),
-                                      ),
-                                    ],
+                                // Description
+                                Text(
+                                  order["description"]!,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.black54,
                                   ),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Color(
-                                        0xff630100,
-                                      ), // Match theme color
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.add,
-                                        color: Color(0xffedebdd),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          cartCount++;
-                                        });
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'You ordered ${order["item"]}!',
-                                            ),
-                                            duration: const Duration(
-                                              seconds: 2,
-                                            ),
-                                            backgroundColor: Color(0xff630100),
-                                            behavior: SnackBarBehavior.floating,
-                                          ),
-                                        );
-                                      },
-                                      iconSize: 24,
-                                      splashRadius: 10,
-                                      padding: EdgeInsets.zero,
-                                      alignment: Alignment.center,
-                                    ),
-                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 8),
+
+                                // Price + action buttons
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      order["price"]!,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.favorite_border,
+                                            color: Color(0xFFD98236),
+                                            size: 20,
+                                          ),
+                                          onPressed: () {},
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                        ),
+                                        const SizedBox(width: 1),
+                                        Container(
+                                          width: 20, // set width
+                                          height: 20, // set height (same as width for perfect circle)
+
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFFB53324),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.add,
+                                              color: Colors.white,
+                                              size: 10,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                cartCount++;
+                                              });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                      'You ordered ${order["item"]}!'),
+                                                  duration: const Duration(
+                                                      seconds: 2),
+                                                  backgroundColor:
+                                                      const Color(0xFF630100),
+                                                  behavior: SnackBarBehavior
+                                                      .floating,
+                                                ),
+                                              );
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            constraints:
+                                                const BoxConstraints(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
+
                   // Footer
                   Container(
                     width: double.infinity,
@@ -330,76 +348,50 @@ class HomeState extends State<Home> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Branding and description
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Café Haven',
-                                style: TextStyle(
-                                  color: Color(0xffedebdd),
-                                  fontSize: 27,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Caveat',
-                                ),
-                              ),
-                            ],
+                        const Text(
+                          'Café Haven',
+                          style: TextStyle(
+                            color: Color(0xffedebdd),
+                            fontSize: 27,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Caveat',
                           ),
                         ),
-                        // Location
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 1),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              SizedBox(height: 10),
-                              Text(
-                                'San Jose City, Nueva Ecija, Philippines, 3121',
-                                style: TextStyle(
-                                  color: Color(0xffedebdd),
-                                  fontSize: 12,
-                                ),
-                                textAlign: TextAlign.justify,
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                'Contact: (02) 1234-5678 | cafehaven.official@gmail.com',
-                                style: TextStyle(
-                                  color: Color(0xffedebdd),
-                                  fontSize: 12,
-                                ),
-                                textAlign: TextAlign.justify,
-                              ),
-                            ],
+                        const SizedBox(height: 10),
+                        const Text(
+                          'San Jose City, Nueva Ecija, Philippines, 3121',
+                          style: TextStyle(
+                            color: Color(0xffedebdd),
+                            fontSize: 12,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        // other details
-                        Container(
-                          alignment: Alignment.center,
-                          child: Column(
-                            children: const [
-                              SizedBox(height: 25),
-                              Text(
-                                '© 2025 Café Haven. All rights reserved.',
-                                style: TextStyle(
-                                  color: Color(0xffedebdd),
-                                  fontSize: 10,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                'Designed & developed by Bernabe, Libatique and Ocareza.',
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 10,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Contact: (02) 1234-5678 | cafehaven.official@gmail.com',
+                          style: TextStyle(
+                            color: Color(0xffedebdd),
+                            fontSize: 12,
                           ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 25),
+                        const Text(
+                          '© 2025 Café Haven. All rights reserved.',
+                          style: TextStyle(
+                            color: Color(0xffedebdd),
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'Designed & developed by Bernabe, Libatique and Ocareza.',
+                          style: TextStyle(
+                            color: Colors.white54,
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
