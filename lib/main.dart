@@ -458,7 +458,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 children: [
                   // Image
                   Container(
-                    height: 180,
+                    height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -476,7 +476,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
                   // Coffee name
                   Text(
