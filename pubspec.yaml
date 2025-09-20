@@ -64,7 +64,10 @@ flutter:
     - assets/img/sysdev.jpg
     - assets/img/top.png
     - assets/img/Espresso.png
+    - assets/img/ColdBrew.png
+    - assets/img/Frappe.png
     - assets/img/IcedAmericano.png
+    - assets/img/IcedLatte.png
     - assets/img/Cappuccino.png
     - assets/img/Americano.png
     - assets/img/Latte.png

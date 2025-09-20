@@ -418,7 +418,19 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           ),
         ),
         filteredColdDrinks.isEmpty
-            ? const SizedBox.shrink()
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                  child: Text(
+                    'No coffee match.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
             : SizedBox(
                 height: 300,
                 child: ListView.builder(
@@ -429,8 +441,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   },
                 ),
               ),
-        if (filteredColdDrinks.isEmpty && filteredHotDrinks.isEmpty)
-          const SizedBox.shrink(),
       ],
     );
   }
@@ -458,7 +468,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 children: [
                   // Image
                   Container(
-                    height: 180,
+                    height: 130,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
