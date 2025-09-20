@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'order_summary.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,43 +40,54 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         backgroundColor: const Color(0xFFFFFAF4),
         centerTitle: true,
         elevation: 0,
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_basket),
-                color: const Color(0xFFB53324),
-                onPressed: () {
-                  // Navigate to Order Summary page later
-                },
+ actions: [
+  Stack(
+    children: [
+      IconButton(
+        icon: const Icon(Icons.shopping_basket),
+        color: const Color(0xFFB53324),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OrderSummary(
+                cartItems: cartItems,
+                onCartUpdated: updateCartCount,
               ),
-              Positioned(
-                right: 3,
-                top: 1,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFB53324),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 18,
-                    minHeight: 18,
-                  ),
-                  child: Text(
-                    '$cartCount',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+            ),
+          );
+          updateCartCount();
+        },
+      ),
+      if (cartCount > 0) // ✅ only show badge if > 0
+        Positioned(
+          right: 3,
+          top: 1,
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: const Color(0xFFB53324),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            constraints: const BoxConstraints(
+              minWidth: 18,
+              minHeight: 18,
+            ),
+            child: Text(
+              '$cartCount',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
               ),
-            ],
+              textAlign: TextAlign.center,
+            ),
           ),
-        ],
+        ),
+    ],
+  ),
+],
+
       ),
 
       body: Column(
@@ -175,7 +187,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  // ✅ Drinks Tab Content
+
   Widget buildMenuContent(BuildContext context) {
     final List<Map<String, dynamic>> hotDrinks = [
       {

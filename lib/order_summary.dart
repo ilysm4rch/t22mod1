@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OrderSummary extends StatefulWidget {
-  final List<Map<String, dynamic>> cartItems; // ✅ Accept cart items
-  final VoidCallback onCartUpdated; // 
+  final List<Map<String, dynamic>> cartItems;
+  final VoidCallback onCartUpdated;
 
   const OrderSummary({
     super.key,
@@ -25,40 +25,38 @@ class OrderSummaryState extends State<OrderSummary> {
 
   void updateAndNotify() {
     setState(() {});
-    widget.onCartUpdated(); 
+    widget.onCartUpdated();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFfffafa),
+      backgroundColor: const Color(0xFFFFFAF4),
 
-      // Header Bar
+      // ✅ Header Bar
       appBar: AppBar(
         title: const Text(
           'Order Summary',
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: Color(0xFFb53324),
+            color: Color(0xFFB53324),
           ),
         ),
-        backgroundColor: const Color(0xFFfffafa),
+        backgroundColor: const Color(0xFFFFFAF4),
         centerTitle: true,
+        elevation: 0,
       ),
 
       body: Column(
         children: [
-          // ✅ Cart Items List
+          // ✅ Cart Items
           Expanded(
             child: widget.cartItems.isEmpty
                 ? const Center(
                     child: Text(
                       "Your cart is empty.",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
                     ),
                   )
                 : ListView.builder(
@@ -79,7 +77,8 @@ class OrderSummaryState extends State<OrderSummary> {
                             fit: BoxFit.contain,
                           ),
                           title: Text(
-                            item["item"],
+                            // ✅ Show size beside item name
+                            "${item["item"]} (${item["size"] ?? 'No size'})",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -92,10 +91,10 @@ class OrderSummaryState extends State<OrderSummary> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // ➖ Decrease Quantity
+                              // ➖ Decrease
                               IconButton(
                                 icon: const Icon(Icons.remove_circle,
-                                    color: Color(0xFFb53324)),
+                                    color: Color(0xFFB53324)),
                                 onPressed: () {
                                   if (item["quantity"] > 1) {
                                     item["quantity"]--;
@@ -109,9 +108,10 @@ class OrderSummaryState extends State<OrderSummary> {
                                 "${item["quantity"]}",
                                 style: const TextStyle(fontSize: 16),
                               ),
+                              // ➕ Increase
                               IconButton(
                                 icon: const Icon(Icons.add_circle,
-                                    color: Color(0xFFb53324)),
+                                    color: Color(0xFFB53324)),
                                 onPressed: () {
                                   item["quantity"]++;
                                   updateAndNotify();
@@ -125,7 +125,7 @@ class OrderSummaryState extends State<OrderSummary> {
                   ),
           ),
 
-          // ✅ Total Section
+          // ✅ Bottom total
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
