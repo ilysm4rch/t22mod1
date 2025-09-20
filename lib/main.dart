@@ -16,6 +16,16 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   final List<Map<String, dynamic>> favorites = [];
 
+  // ✅ Update cart count based on quantities
+  void updateCartCount() {
+    setState(() {
+      cartCount = cartItems.fold<int>(
+        0,
+        (sum, item) => sum + (item["quantity"] as int),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Menu items with multiple sizes
@@ -89,14 +99,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               IconButton(
                 icon: const Icon(Icons.shopping_basket),
                 color: const Color(0xFFB53324),
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          OrderSummary(cartItems: cartItems), // ✅ Pass cart
+                      builder: (context) => OrderSummary(
+                        cartItems: cartItems,
+                        onCartUpdated: updateCartCount, // ✅ callback
+                      ),
                     ),
                   );
+                  updateCartCount(); // ✅ refresh when returning
                 },
               ),
               Positioned(
@@ -178,7 +191,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                         favorites.isEmpty
                             ? const Center(
                                 child: Text(
-                                  "No favorites yet ❤️",
+                                  "No favorites yet.",
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.black54),
                                 ),
@@ -372,7 +385,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        cartCount++;
                                         cartItems.add({
                                           "item": order["item"],
                                           "price":
@@ -382,6 +394,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                           "size": selectedSize,
                                         });
                                       });
+                                      updateCartCount();
 
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

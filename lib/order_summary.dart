@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class OrderSummary extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems; // ✅ Accept cart items
+  final VoidCallback onCartUpdated; // ✅ Callback to notify Home
 
-  const OrderSummary({super.key, required this.cartItems});
+  const OrderSummary({
+    super.key,
+    required this.cartItems,
+    required this.onCartUpdated,
+  });
 
   @override
   State<OrderSummary> createState() => OrderSummaryState();
@@ -17,6 +22,11 @@ class OrderSummaryState extends State<OrderSummary> {
       total += (item["price"] as int) * (item["quantity"] as int);
     }
     return total;
+  }
+
+  void updateAndNotify() {
+    setState(() {});
+    widget.onCartUpdated(); // ✅ tell Home to refresh cartCount
   }
 
   @override
@@ -88,14 +98,12 @@ class OrderSummaryState extends State<OrderSummary> {
                                 icon: const Icon(Icons.remove_circle,
                                     color: Colors.red),
                                 onPressed: () {
-                                  setState(() {
-                                    if (item["quantity"] > 1) {
-                                      item["quantity"]--;
-                                    } else {
-                                      // remove from cart if qty < 1
-                                      widget.cartItems.removeAt(index);
-                                    }
-                                  });
+                                  if (item["quantity"] > 1) {
+                                    item["quantity"]--;
+                                  } else {
+                                    widget.cartItems.removeAt(index);
+                                  }
+                                  updateAndNotify();
                                 },
                               ),
                               Text(
@@ -107,9 +115,8 @@ class OrderSummaryState extends State<OrderSummary> {
                                 icon: const Icon(Icons.add_circle,
                                     color: Colors.green),
                                 onPressed: () {
-                                  setState(() {
-                                    item["quantity"]++;
-                                  });
+                                  item["quantity"]++;
+                                  updateAndNotify();
                                 },
                               ),
                             ],
