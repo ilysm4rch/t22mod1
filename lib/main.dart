@@ -13,6 +13,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   final List<Map<String, dynamic>> cartItems = [];
   final List<Map<String, dynamic>> favorites = [];
 
+  String searchQuery = "";
+
   void updateCartCount() {
     setState(() {
       cartCount = cartItems.fold<int>(
@@ -89,7 +91,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         ],
       ),
 
-      body: SingleChildScrollView( // 👈 makes everything scrollable
+      body: SingleChildScrollView(
         child: Column(
           children: [
             // ✅ Banner
@@ -132,6 +134,33 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             ),
 
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search for coffee...',
+                  prefixIcon: const Icon(Icons.search, color: Color(0xFFB53324)),
+                  filled: true,
+                  fillColor: Color(0xFFFFFAF4),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: Color(0xFFB53324), width: 1),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: Color(0xFFB53324), width: 2),
+                  ),
+                ),
+                onChanged: (query) {
+                  setState(() {
+                    searchQuery = query.toLowerCase();
+                  });
+                },
+              ),
+            ),
+
             // ✅ Tabs
             DefaultTabController(
               length: 2,
@@ -147,37 +176,71 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     ],
                   ),
                   SizedBox(
-                    height: 700, // 👈 needed so TabBarView shows properly
+                    height: 700,
                     child: TabBarView(
                       children: [
                         buildMenuContent(context),
-                        favorites.isEmpty
-                            ? const Center(
-                                child: Text(
-                                  "No favorites yet.",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              )
-                            : GridView.builder(
-                                padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
-                                itemCount: favorites.length,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 4,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 0.65,
-                                ),
-                                itemBuilder: (context, index) {
-                                  return buildDrinkCard(
-                                    context,
-                                    favorites[index],
-                                  );
-                                },
-                              ),
+                        // Favorites Tab with search filter
+                        searchQuery.isNotEmpty
+                            ? (favorites.where((item) =>
+                                  item["item"].toLowerCase().contains(searchQuery)).isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      "No coffee match.",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                : GridView.builder(
+                                    padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
+                                    itemCount: favorites
+                                        .where((item) => item["item"]
+                                            .toLowerCase()
+                                            .contains(searchQuery))
+                                        .length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 4,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 0.65,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final filteredFavorites = favorites
+                                          .where((item) => item["item"]
+                                              .toLowerCase()
+                                              .contains(searchQuery))
+                                          .toList();
+                                      return buildDrinkCard(context, filteredFavorites[index]);
+                                    },
+                                  ))
+                            : (favorites.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      "No favorites yet.",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  )
+                                : GridView.builder(
+                                    padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
+                                    itemCount: favorites.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 4,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 0.65,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return buildDrinkCard(context, favorites[index]);
+                                    },
+                                  )),
                       ],
                     ),
                   ),
@@ -185,7 +248,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             ),
 
-            // ✅ Footer (scrolls with content, not static)
+            // Footer
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -293,6 +356,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       },
     ];
 
+    // Filter drinks based on searchQuery
+    final filteredHotDrinks = hotDrinks.where((drink) =>
+      drink["item"].toLowerCase().contains(searchQuery)
+    ).toList();
+
+    final filteredColdDrinks = coldDrinks.where((drink) =>
+      drink["item"].toLowerCase().contains(searchQuery)
+    ).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -308,16 +380,30 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             ),
           ),
         ),
-        SizedBox(
-          height: 300,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: hotDrinks.length,
-            itemBuilder: (context, index) {
-              return buildDrinkCard(context, hotDrinks[index]);
-            },
-          ),
-        ),
+        filteredHotDrinks.isEmpty
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                  child: Text(
+                    'No coffee match.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox(
+                height: 300,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: filteredHotDrinks.length,
+                  itemBuilder: (context, index) {
+                    return buildDrinkCard(context, filteredHotDrinks[index]);
+                  },
+                ),
+              ),
 
         // ❄️ Cold Coffee
         const Padding(
@@ -331,16 +417,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             ),
           ),
         ),
-        SizedBox(
-          height: 300,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: coldDrinks.length,
-            itemBuilder: (context, index) {
-              return buildDrinkCard(context, coldDrinks[index]);
-            },
-          ),
-        ),
+        filteredColdDrinks.isEmpty
+            ? const SizedBox.shrink()
+            : SizedBox(
+                height: 300,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: filteredColdDrinks.length,
+                  itemBuilder: (context, index) {
+                    return buildDrinkCard(context, filteredColdDrinks[index]);
+                  },
+                ),
+              ),
+        if (filteredColdDrinks.isEmpty && filteredHotDrinks.isEmpty)
+          const SizedBox.shrink(),
       ],
     );
   }
