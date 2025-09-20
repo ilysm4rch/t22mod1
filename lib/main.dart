@@ -10,10 +10,10 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   int cartCount = 0;
+  List<Map<String, String>> favorites = []; // ❤️ favorites list
 
   @override
   Widget build(BuildContext context) {
-    // List of menu items with details and desc
     final List<Map<String, String>> orders = [
       {
         "item": "Espresso",
@@ -66,6 +66,7 @@ class HomeState extends State<Home> {
         title: const Text(
           'cafe haven',
           style: TextStyle(
+            fontFamily: 'Roboto',
             fontSize: 26,
             fontWeight: FontWeight.bold,
             color: Color(0xFFB53324),
@@ -79,6 +80,20 @@ class HomeState extends State<Home> {
           onPressed: () {},
         ),
         actions: [
+          // ❤️ Favorites button
+          IconButton(
+            icon: const Icon(Icons.favorite, color: Color(0xFFB53324)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FavoritesPage(favorites: favorites),
+                ),
+              );
+            },
+          ),
+
+          // 🛒 Cart button
           Stack(
             children: [
               IconButton(
@@ -155,26 +170,31 @@ class HomeState extends State<Home> {
                 children: [
                   // Section Header
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                      children: const [
-                        Text(
-                          "Menu",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF3A1A0F),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "Menu",
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2d0d0a),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Drinks",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
+                          SizedBox(height: 5),
+                          Text(
+                            "Drinks",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFF2d0d0a),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
@@ -194,11 +214,13 @@ class HomeState extends State<Home> {
                       ),
                       itemBuilder: (context, index) {
                         final order = orders[index];
+                        final isFavorite =
+                            favorites.any((item) => item["item"] == order["item"]);
 
                         // Menu Cards
                         return Card(
                           color: const Color(0xFFF0f0f0),
-                          elevation: 1,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -207,7 +229,7 @@ class HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Image container with red background
+                                // Image container
                                 Container(
                                   height: 130,
                                   width: double.infinity,
@@ -217,13 +239,30 @@ class HomeState extends State<Home> {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
-                                    child: Image.asset(
-                                      order["image"] ??
-                                          "assets/img/default.jpg",
-                                      fit: BoxFit.cover,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Image.asset(
+                                        order["image"] ??
+                                            "assets/img/default.jpg",
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
                                 ),
+
+                                // 🔽 Yellow line
+                                Center(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(top: 8),
+                                    height: 4,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFe5a657),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                  ),
+                                ),
+
                                 const SizedBox(height: 20),
 
                                 // Coffee name + sizes
@@ -277,21 +316,35 @@ class HomeState extends State<Home> {
                                     ),
                                     Row(
                                       children: [
+                                        // ❤️ Favorite button
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.favorite_border,
-                                            color: Color(0xFFD98236),
+                                          icon: Icon(
+                                            isFavorite
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: const Color(0xFFD98236),
                                             size: 20,
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            setState(() {
+                                              if (isFavorite) {
+                                                favorites.removeWhere((item) =>
+                                                    item["item"] ==
+                                                    order["item"]);
+                                              } else {
+                                                favorites.add(order);
+                                              }
+                                            });
+                                          },
                                           padding: EdgeInsets.zero,
                                           constraints: const BoxConstraints(),
                                         ),
-                                        const SizedBox(width: 1),
-                                        Container(
-                                          width: 20, // set width
-                                          height: 20, // set height (same as width for perfect circle)
 
+                                        const SizedBox(width: 1),
+                                        // ➕ Add button
+                                        Container(
+                                          width: 20,
+                                          height: 20,
                                           decoration: const BoxDecoration(
                                             color: Color(0xFFB53324),
                                             shape: BoxShape.circle,
@@ -336,66 +389,6 @@ class HomeState extends State<Home> {
                       },
                     ),
                   ),
-
-                  // Footer
-                  Container(
-                    width: double.infinity,
-                    color: const Color.fromARGB(255, 80, 2, 1),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 45,
-                      horizontal: 24,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Café Haven',
-                          style: TextStyle(
-                            color: Color(0xffedebdd),
-                            fontSize: 27,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Caveat',
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'San Jose City, Nueva Ecija, Philippines, 3121',
-                          style: TextStyle(
-                            color: Color(0xffedebdd),
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Contact: (02) 1234-5678 | cafehaven.official@gmail.com',
-                          style: TextStyle(
-                            color: Color(0xffedebdd),
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 25),
-                        const Text(
-                          '© 2025 Café Haven. All rights reserved.',
-                          style: TextStyle(
-                            color: Color(0xffedebdd),
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 2),
-                        const Text(
-                          'Designed & developed by Bernabe, Libatique and Ocareza.',
-                          style: TextStyle(
-                            color: Colors.white54,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -406,6 +399,35 @@ class HomeState extends State<Home> {
   }
 }
 
-void main() {
-  runApp(const MaterialApp(home: Home()));
+// ❤️ Favorites Page
+class FavoritesPage extends StatelessWidget {
+  final List<Map<String, String>> favorites;
+
+  const FavoritesPage({super.key, required this.favorites});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("My Favorites",
+            style: TextStyle(color: Color(0xFFB53324))),
+        backgroundColor: const Color(0xFFFFFAF4),
+        iconTheme: const IconThemeData(color: Color(0xFFB53324)),
+      ),
+      body: favorites.isEmpty
+          ? const Center(child: Text("No favorites yet! ❤️"))
+          : ListView.builder(
+              itemCount: favorites.length,
+              itemBuilder: (context, index) {
+                final fav = favorites[index];
+                return ListTile(
+                  leading: Image.asset(fav["image"]!,
+                      width: 40, height: 40, fit: BoxFit.contain),
+                  title: Text(fav["item"]!),
+                  subtitle: Text(fav["price"]!),
+                );
+              },
+            ),
+    );
+  }
 }
