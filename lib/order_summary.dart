@@ -46,6 +46,13 @@ class OrderSummaryState extends State<OrderSummary> {
         backgroundColor: const Color(0xFFFFFAF4),
         centerTitle: true,
         elevation: 0,
+        // Change back arrow color to match your theme
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFFB53324)),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
 
       body: Column(
@@ -70,14 +77,37 @@ class OrderSummaryState extends State<OrderSummary> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          leading: Image.asset(
-                            item["image"],
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.contain,
+                          // NEW: leading widget with both image and line
+                          leading: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFB53324),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Image.asset(
+                                    item["image"],
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 4,
+                                height: 30, 
+                                margin: const EdgeInsets.only(left: 8),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFD98236),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                            ],
                           ),
                           title: Text(
-                            // ✅ Show size beside item name
                             "${item["item"]} (${item["size"] ?? 'No size'})",
                             style: const TextStyle(
                               fontSize: 16,
@@ -91,7 +121,6 @@ class OrderSummaryState extends State<OrderSummary> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // ➖ Decrease
                               IconButton(
                                 icon: const Icon(Icons.remove_circle,
                                     color: Color(0xFFB53324)),
@@ -103,12 +132,12 @@ class OrderSummaryState extends State<OrderSummary> {
                                   }
                                   updateAndNotify();
                                 },
+                                iconSize: 23,
                               ),
                               Text(
                                 "${item["quantity"]}",
                                 style: const TextStyle(fontSize: 16),
                               ),
-                              // ➕ Increase
                               IconButton(
                                 icon: const Icon(Icons.add_circle,
                                     color: Color(0xFFB53324)),
@@ -116,6 +145,7 @@ class OrderSummaryState extends State<OrderSummary> {
                                   item["quantity"]++;
                                   updateAndNotify();
                                 },
+                                iconSize: 23,
                               ),
                             ],
                           ),
@@ -128,7 +158,7 @@ class OrderSummaryState extends State<OrderSummary> {
           // ✅ Bottom total
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFFF0f0f0),
               boxShadow: [
                 BoxShadow(

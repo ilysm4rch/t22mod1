@@ -28,7 +28,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
-
       appBar: AppBar(
         title: const Text(
           'cafe haven',
@@ -89,60 +88,67 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           ),
         ],
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ✅ Banner
+            // ✅ Banner with Image
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              padding: const EdgeInsets.all(30),
-              height: 130,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: const EdgeInsets.fromLTRB(16, 16, 40, 0),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: const Color(0xFFB53324),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Welcome to",
-                      style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        height: 1.2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    "assets/img/banner.png",
+                    width: 160,
+                    height: 130,
+                    fit: BoxFit.contain,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Welcome to",
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          height: 1.2,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "cafe haven!",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: "Caveat",
-                        color: Colors.white,
-                        height: 1.2,
+                      Text(
+                        "cafe haven!",
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Caveat",
+                          color: Colors.white,
+                          height: 1.2,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
-
             // Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search for coffee...',
-                  prefixIcon: const Icon(Icons.search, color: Color(0xFFB53324)),
+                  prefixIcon:
+                      const Icon(Icons.search, color: Color(0xFFB53324)),
                   filled: true,
-                  fillColor: Color(0xFFFFFAF4),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                  fillColor: const Color(0xFFFFFAF4),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: const BorderSide(color: Color(0xFFB53324), width: 1),
@@ -159,7 +165,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 },
               ),
             ),
-
             // ✅ Tabs
             DefaultTabController(
               length: 2,
@@ -181,8 +186,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                         buildMenuContent(context),
                         // Favorites Tab with search filter
                         searchQuery.isNotEmpty
-                            ? (favorites.where((item) =>
-                                  item["item"].toLowerCase().contains(searchQuery)).isEmpty
+                            ? (favorites
+                                    .where((item) => item["item"]
+                                        .toLowerCase()
+                                        .contains(searchQuery))
+                                    .isEmpty
                                 ? const Center(
                                     child: Text(
                                       "No coffee match.",
@@ -194,7 +202,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                   )
                                 : GridView.builder(
-                                    padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(11, 2, 11, 4),
                                     itemCount: favorites
                                         .where((item) => item["item"]
                                             .toLowerCase()
@@ -213,7 +222,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                               .toLowerCase()
                                               .contains(searchQuery))
                                           .toList();
-                                      return buildDrinkCard(context, filteredFavorites[index]);
+                                      return buildDrinkCard(
+                                          context, filteredFavorites[index]);
                                     },
                                   ))
                             : (favorites.isEmpty
@@ -227,7 +237,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                   )
                                 : GridView.builder(
-                                    padding: const EdgeInsets.fromLTRB(11, 2, 11, 4),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(11, 2, 11, 4),
                                     itemCount: favorites.length,
                                     gridDelegate:
                                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -237,7 +248,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                       childAspectRatio: 0.65,
                                     ),
                                     itemBuilder: (context, index) {
-                                      return buildDrinkCard(context, favorites[index]);
+                                      return buildDrinkCard(
+                                          context, favorites[index]);
                                     },
                                   )),
                       ],
@@ -246,32 +258,69 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 ],
               ),
             ),
-
             // Footer
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              color: const Color(0xFFB53324).withOpacity(0.1),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              color: const Color(0xFFB53324),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     "café haven",
                     style: TextStyle(
                       fontFamily: "Caveat",
-                      fontSize: 26,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFB53324),
+                      color: Color(0xFFFFFAF4),
                     ),
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                    "123 Coffee Street, Brewtown\n📞 (0912) 345-6789\n✉️ cafehaven@email.com",
+                  const SizedBox(height: 15),
+                  const Text(
+                    "San Jose City, Nueva Ecija",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.black87,
+                      color: Color(0xFFFFFAF4),
                     ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.phone,
+                        size: 14,
+                        color: Color(0xFFFFFAF4),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "(0912) 345-6789",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFFFFFAF4),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.email,
+                        size: 14,
+                        color: Color(0xFFFFFAF4),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "cafehaven@email.com",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFFFFFAF4),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -316,8 +365,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       {
         "item": "Mocha",
         "prices": {"S": 160, "M": 180, "L": 200},
-        "description":
-            "A sweet blend of espresso, chocolate syrup, and steamed milk.",
+        "description": "A sweet blend of espresso, chocolate syrup, and steamed milk.",
         "image": "assets/img/Mocha.png",
       },
       {
@@ -327,7 +375,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         "image": "assets/img/Macchiato.png",
       },
     ];
-
     final List<Map<String, dynamic>> coldDrinks = [
       {
         "item": "Iced Americano",
@@ -356,13 +403,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     ];
 
     // Filter drinks based on searchQuery
-    final filteredHotDrinks = hotDrinks.where((drink) =>
-      drink["item"].toLowerCase().contains(searchQuery)
-    ).toList();
+    final filteredHotDrinks = hotDrinks
+        .where((drink) => drink["item"].toLowerCase().contains(searchQuery))
+        .toList();
 
-    final filteredColdDrinks = coldDrinks.where((drink) =>
-      drink["item"].toLowerCase().contains(searchQuery)
-    ).toList();
+    final filteredColdDrinks = coldDrinks
+        .where((drink) => drink["item"].toLowerCase().contains(searchQuery))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,7 +450,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   },
                 ),
               ),
-
         // ❄️ Cold Coffee
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -446,10 +492,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   // ✅ Drink Card
   Widget buildDrinkCard(BuildContext context, Map<String, dynamic> order) {
-    final isFavorite =
-        favorites.any((item) => item["item"] == order["item"]);
+    final isFavorite = favorites.any((item) => item["item"] == order["item"]);
     String selectedSize = "S";
-
     return StatefulBuilder(
       builder: (context, setInnerState) {
         return Container(
@@ -484,51 +528,59 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Coffee name
-                  Text(
-                    order["item"],
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF3A1A0F),
+                  // NEW: Rounded yellow line below the image
+                  Container(
+                    height: 4,
+                    width: 270,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 60),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD98236),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-
-                  const SizedBox(height: 6),
-
-                  // Sizes
+                  const SizedBox(height: 10),
+                  // Coffee name and Sizes
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: ["S", "M", "L"].map((size) {
-                      return GestureDetector(
-                        onTap: () {
-                          setInnerState(() {
-                            selectedSize = size;
-                          });
-                        },
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Text(
-                            size,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: selectedSize == size
-                                  ? const Color(0xFFD98236)
-                                  : Colors.black54,
-                            ),
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Coffee name
+                      Text(
+                        order["item"],
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF3A1A0F),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                      // Sizes
+                      Row(
+                        children: ["S", "M", "L"].map((size) {
+                          return GestureDetector(
+                            onTap: () {
+                              setInnerState(() {
+                                selectedSize = size;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text(
+                                size,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: selectedSize == size
+                                      ? const Color(0xFFD98236)
+                                      : Colors.black54,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
-
                   const SizedBox(height: 6),
-
                   // Description
                   Text(
                     order["description"],
@@ -539,9 +591,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-
                   const Spacer(),
-
                   // Price + buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -567,8 +617,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                             onPressed: () {
                               setState(() {
                                 if (isFavorite) {
-                                  favorites.removeWhere((item) =>
-                                      item["item"] == order["item"]);
+                                  favorites.removeWhere(
+                                      (item) => item["item"] == order["item"]);
                                 } else {
                                   favorites.add(order);
                                 }
@@ -594,24 +644,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                 setState(() {
                                   cartItems.add({
                                     "item": order["item"],
-                                    "price":
-                                        order["prices"][selectedSize],
+                                    "price": order["prices"][selectedSize],
                                     "quantity": 1,
                                     "image": order["image"],
                                     "size": selectedSize,
                                   });
                                 });
                                 updateCartCount();
-
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
                                         'You added ${order["item"]} ($selectedSize)!'),
                                     duration: const Duration(seconds: 2),
-                                    backgroundColor:
-                                        const Color(0xFFB53324),
-                                    behavior:
-                                        SnackBarBehavior.floating,
+                                    backgroundColor: const Color(0xFFB53324),
+                                    behavior: SnackBarBehavior.floating,
                                   ),
                                 );
                               },
