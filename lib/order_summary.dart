@@ -33,7 +33,7 @@ class OrderSummaryState extends State<OrderSummary> {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
 
-      // ✅ Header Bar
+      // header
       appBar: AppBar(
         title: const Text(
           'Order Summary',
@@ -57,7 +57,7 @@ class OrderSummaryState extends State<OrderSummary> {
 
       body: Column(
         children: [
-          // ✅ Cart Items
+          // added items
           Expanded(
             child: widget.cartItems.isEmpty
                 ? const Center(
@@ -77,7 +77,6 @@ class OrderSummaryState extends State<OrderSummary> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
-                          // NEW: leading widget with both image and line
                           leading: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -155,7 +154,7 @@ class OrderSummaryState extends State<OrderSummary> {
                   ),
           ),
 
-          // ✅ Bottom total
+          // total
           Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(

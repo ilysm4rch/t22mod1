@@ -91,7 +91,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ✅ Banner with Image
+            // banner sec
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               padding: const EdgeInsets.fromLTRB(16, 16, 40, 0),
@@ -165,7 +165,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 },
               ),
             ),
-            // ✅ Tabs
+            // Tabs drinks & fav
             DefaultTabController(
               length: 2,
               child: Column(
@@ -331,7 +331,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  // ✅ Menu Content
+  // Menu 
   Widget buildMenuContent(BuildContext context) {
     final List<Map<String, dynamic>> hotDrinks = [
       {
@@ -414,7 +414,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 🔥 Hot Coffee
+        // Hot Coffee
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Text(
@@ -450,7 +450,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   },
                 ),
               ),
-        // ❄️ Cold Coffee
+        // Cold Coffee
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Text(
@@ -490,7 +490,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  // ✅ Drink Card
+  // Drink Card
   Widget buildDrinkCard(BuildContext context, Map<String, dynamic> order) {
     final isFavorite = favorites.any((item) => item["item"] == order["item"]);
     String selectedSize = "S";
