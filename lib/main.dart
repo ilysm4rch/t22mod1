@@ -143,19 +143,29 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search for coffee...',
-                  prefixIcon:
-                      const Icon(Icons.search, color: Color(0xFFB53324)),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Color(0xFFB53324),
+                  ),
                   filled: true,
                   fillColor: const Color(0xFFFFFAF4),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 0,
+                    horizontal: 16,
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Color(0xFFB53324), width: 1),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFB53324),
+                      width: 1,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(color: Color(0xFFB53324), width: 2),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFB53324),
+                      width: 2,
+                    ),
                   ),
                 ),
                 onChanged: (query) {
@@ -187,71 +197,93 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                         // Favorites Tab with search filter
                         searchQuery.isNotEmpty
                             ? (favorites
-                                    .where((item) => item["item"]
-                                        .toLowerCase()
-                                        .contains(searchQuery))
-                                    .isEmpty
-                                ? const Center(
-                                    child: Text(
-                                      "No coffee match.",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black54,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                : GridView.builder(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(11, 2, 11, 4),
-                                    itemCount: favorites
-                                        .where((item) => item["item"]
+                                      .where(
+                                        (item) => item["item"]
                                             .toLowerCase()
-                                            .contains(searchQuery))
-                                        .length,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 4,
-                                      mainAxisSpacing: 10,
-                                      childAspectRatio: 0.65,
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      final filteredFavorites = favorites
-                                          .where((item) => item["item"]
-                                              .toLowerCase()
-                                              .contains(searchQuery))
-                                          .toList();
-                                      return buildDrinkCard(
-                                          context, filteredFavorites[index]);
-                                    },
-                                  ))
-                            : (favorites.isEmpty
-                                ? const Center(
-                                    child: Text(
-                                      "No favorites yet.",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black54,
+                                            .contains(searchQuery),
+                                      )
+                                      .isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        "No coffee match.",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : GridView.builder(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(11, 2, 11, 4),
-                                    itemCount: favorites.length,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 4,
-                                      mainAxisSpacing: 10,
-                                      childAspectRatio: 0.65,
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      return buildDrinkCard(
-                                          context, favorites[index]);
-                                    },
-                                  )),
+                                    )
+                                  : GridView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        11,
+                                        2,
+                                        11,
+                                        4,
+                                      ),
+                                      itemCount: favorites
+                                          .where(
+                                            (item) => item["item"]
+                                                .toLowerCase()
+                                                .contains(searchQuery),
+                                          )
+                                          .length,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            crossAxisSpacing: 4,
+                                            mainAxisSpacing: 10,
+                                            childAspectRatio: 0.65,
+                                          ),
+                                      itemBuilder: (context, index) {
+                                        final filteredFavorites = favorites
+                                            .where(
+                                              (item) => item["item"]
+                                                  .toLowerCase()
+                                                  .contains(searchQuery),
+                                            )
+                                            .toList();
+                                        return buildDrinkCard(
+                                          context,
+                                          filteredFavorites[index],
+                                        );
+                                      },
+                                    ))
+                            : (favorites.isEmpty
+                                  ? const Center(
+                                      child: Text(
+                                        "No favorites yet.",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    )
+                                  : GridView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        11,
+                                        2,
+                                        11,
+                                        4,
+                                      ),
+                                      itemCount: favorites.length,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            crossAxisSpacing: 4,
+                                            mainAxisSpacing: 10,
+                                            childAspectRatio: 0.65,
+                                          ),
+                                      itemBuilder: (context, index) {
+                                        return buildDrinkCard(
+                                          context,
+                                          favorites[index],
+                                        );
+                                      },
+                                    )),
                       ],
                     ),
                   ),
@@ -279,20 +311,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   const Text(
                     "San Jose City, Nueva Ecija",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFFFFFAF4),
-                    ),
+                    style: TextStyle(fontSize: 13, color: Color(0xFFFFFAF4)),
                   ),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(
-                        Icons.phone,
-                        size: 14,
-                        color: Color(0xFFFFFAF4),
-                      ),
+                      Icon(Icons.phone, size: 14, color: Color(0xFFFFFAF4)),
                       SizedBox(width: 5),
                       Text(
                         "(0912) 345-6789",
@@ -307,11 +332,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(
-                        Icons.email,
-                        size: 14,
-                        color: Color(0xFFFFFAF4),
-                      ),
+                      Icon(Icons.email, size: 14, color: Color(0xFFFFFAF4)),
                       SizedBox(width: 5),
                       Text(
                         "cafehaven@email.com",
@@ -331,7 +352,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  // Menu 
+  // Menu
   Widget buildMenuContent(BuildContext context) {
     final List<Map<String, dynamic>> hotDrinks = [
       {
@@ -365,7 +386,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       {
         "item": "Mocha",
         "prices": {"S": 160, "M": 180, "L": 200},
-        "description": "A sweet blend of espresso, chocolate syrup, and steamed milk.",
+        "description":
+            "A sweet blend of espresso, chocolate syrup, and steamed milk.",
         "image": "assets/img/Mocha.png",
       },
       {
@@ -532,8 +554,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   Container(
                     height: 4,
                     width: 270,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 60),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 60,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFD98236),
                       borderRadius: BorderRadius.circular(5),
@@ -584,10 +608,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   // Description
                   Text(
                     order["description"],
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: Colors.black54,
-                    ),
+                    style: const TextStyle(fontSize: 10, color: Colors.black54),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -618,7 +639,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                               setState(() {
                                 if (isFavorite) {
                                   favorites.removeWhere(
-                                      (item) => item["item"] == order["item"]);
+                                    (item) => item["item"] == order["item"],
+                                  );
                                 } else {
                                   favorites.add(order);
                                 }
@@ -654,7 +676,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        'You added ${order["item"]} ($selectedSize)!'),
+                                      'You added ${order["item"]} ($selectedSize)!',
+                                    ),
                                     duration: const Duration(seconds: 2),
                                     backgroundColor: const Color(0xFFB53324),
                                     behavior: SnackBarBehavior.floating,
