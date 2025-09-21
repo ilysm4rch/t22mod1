@@ -41,7 +41,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         ),
         backgroundColor: const Color(0xFFFFFAF4),
         centerTitle: true,
-        elevation: 0,
         actions: [
           Stack(
             children: [

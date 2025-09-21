@@ -129,7 +129,7 @@ class OrderSummaryState extends State<OrderSummary> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color(0xFFF0f0f0),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
