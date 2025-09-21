@@ -343,6 +343,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      SizedBox(width: 4),
+                      Text(
+                        "Designed and Developed by Bernabe, Libatique and Ocareza.",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFFFFFAF4),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
