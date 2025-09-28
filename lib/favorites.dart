@@ -1,31 +1,19 @@
-/*
-// Favorites Tab
-  Widget buildFavorites() {
-    final filtered = favorites
-        .where((d) => d["place"].toLowerCase().contains(searchQuery))
-        .toList();
+import 'package:flutter/material.dart';
 
-    if (favorites.isEmpty) {
-      return const Center(
-        child: Text(
-          "No favorites yet.",
-          style: TextStyle(color: Colors.black54, fontSize: 16),
-        ),
-      );
-    }
+import 'main.dart';
+import 'booking_form.dart';
+import 'manage_booking.dart';
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.7,
-      ),
-      itemCount: filtered.length,
-      itemBuilder: (context, index) {
-        return buildDestinationCard(filtered[index]);
-      },
-    );
+class Favorites extends StatefulWidget {
+  const Favorites({super.key});
+
+  @override
+  State<Favorites> createState() => FavoritesState();
+}
+
+class FavoritesState extends State<Favorites> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
-*/
+}

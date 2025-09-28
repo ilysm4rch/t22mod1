@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'favorites.dart';
+import 'booking_form.dart';
+import 'manage_booking.dart';
+
 class TravelHome extends StatefulWidget {
   const TravelHome({super.key});
 
@@ -14,20 +18,10 @@ List<String> navLabels = ["Favorites", "Home", "Trips"];
 int selectedIndex = 0;
 
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
-  int bookingCount = 0;
   final List<Map<String, dynamic>> bookings = [];
   final List<Map<String, dynamic>> favorites = [];
 
   String searchQuery = "";
-
-  void updateBookingCount() {
-    setState(() {
-      bookingCount = bookings.fold<int>(
-        0,
-        (sum, item) => sum + (item["quantity"] as int),
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 300,
+            expandedHeight: 250,
             pinned: true,
             backgroundColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
@@ -51,34 +45,36 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 120,
+                      horizontal: 60,
+                      vertical: 115,
                     ),
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: 'Search a destination',
+                        hintStyle: const TextStyle(fontSize: 14),
                         prefixIcon: const Icon(
                           Icons.search,
                           color: Color(0xFF1E4D92),
+                          size: 20,
                         ),
                         filled: true,
                         fillColor: const Color(0xFFF6F9FC),
                         contentPadding: const EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 16,
+                          vertical: 6,
+                          horizontal: 5,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(18),
                           borderSide: const BorderSide(
                             color: Color(0xFF1E4D92),
-                            width: 1,
+                            width: 0,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: const BorderSide(
                             color: Color(0xFF1E4D92),
-                            width: 2,
+                            width: 1,
                           ),
                         ),
                       ),
@@ -99,7 +95,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 // Tabs and content here
                 Expanded(
                   child: DefaultTabController(
-                    length: 2,
+                    length: 1,
                     child: Column(
                       children: [
                         const TabBar(
@@ -334,7 +330,6 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                             "image": destination["image"],
                           });
                         });
-                        updateBookingCount();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
