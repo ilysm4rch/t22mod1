@@ -45,10 +45,16 @@ class _FavoritesState extends State<Favorites> {
               background: ClipPath(
                 clipper: AppBarWaveClipper(),
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(
+                          0.2,
+                        ), // Adjust opacity value (0.0 to 1.0) to control darkness
+                        BlendMode.darken,
+                      ),
                     ),
                   ),
                 ),
