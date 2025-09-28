@@ -11,7 +11,7 @@ class TravelHome extends StatefulWidget {
   TravelHomeState createState() => TravelHomeState();
 }
 
-List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.bookmark];
+List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.calendar_month];
 
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   int selectedIndex = 1;
@@ -22,6 +22,33 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   String selectedTag = "All";
 
   final List<String> tags = ["All", "City", "Beach", "Cultural", "Adventure"];
+
+  final List<Map<String, dynamic>> destinations = [
+    {
+      "place": "Siargao",
+      "price": 10000,
+      "location": "Siargao, Philippines",
+      "description": "Discover the beauty of ganito ganyan! Kaunting description here.",
+      "image": "assets/img/bali.png",
+      "tag": "Beach",
+    },
+    {
+      "place": "Tokyo",
+      "price": 12000,
+      "location": "Tokyo, Japan",
+      "description": "A blend of tradition and modern life.",
+      "image": "assets/img/tokyo.png",
+      "tag": "Cultural",
+    },
+    {
+      "place": "Paris",
+      "price": 15000,
+      "location": "Paris, France",
+      "description": "The city of lights, romance, and the Eiffel Tower.",
+      "image": "assets/img/paris.png",
+      "tag": "City",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +64,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
               background: ClipPath(
                 clipper: AppBarWaveClipper(),
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
@@ -45,37 +72,27 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 60,
-                      vertical: 115,
+                      horizontal: 30,
+                      vertical: 120,
                     ),
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: 'Search a destination',
+                        hintText: 'Search destination',
                         hintStyle: const TextStyle(fontSize: 14),
                         prefixIcon: const Icon(
                           Icons.search,
-                          color: Color(0xFF1E4D92),
+                          color: Colors.red,
                           size: 20,
                         ),
                         filled: true,
-                        fillColor: const Color(0xFFF6F9FC),
+                        fillColor: Colors.white.withOpacity(0.8),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 6,
                           horizontal: 5,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF1E4D92),
-                            width: 0,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF1E4D92),
-                            width: 1,
-                          ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                       onChanged: (query) {
@@ -90,41 +107,89 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             ),
           ),
           SliverFillRemaining(
-            child: Column(
-              children: [
-                // Filter tags row
-                SizedBox(
-                  height: 45,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    itemCount: tags.length,
-                    itemBuilder: (context, index) {
-                      final tag = tags[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: ChoiceChip(
-                          label: Text(tag),
-                          selected: selectedTag == tag,
-                          selectedColor: const Color(0xFF1E4D92),
-                          labelStyle: TextStyle(
-                            color: selectedTag == tag
-                                ? Colors.white
-                                : Colors.black87,
-                          ),
-                          onSelected: (_) {
-                            setState(() => selectedTag = tag);
-                          },
-                        ),
-                      );
-                    },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Discover
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      "Discover",
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-                // Destination grid
-                Expanded(
-                  child: buildDestinations(context),
-                ),
-              ],
+
+                  // Tags row
+                  SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: tags.length,
+                      itemBuilder: (context, index) {
+                        final tag = tags[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: ChoiceChip(
+                            label: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 6),
+                              child: Text(tag),
+                            ),
+                            selected: selectedTag == tag,
+                            selectedColor: const Color(0xFFDC143C),
+                            backgroundColor: const Color(0xFFF7CAC9),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: selectedTag == tag ? Colors.white : Colors.black87,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            onSelected: (_) {
+                              setState(() => selectedTag = tag);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Best Deals
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      "Best Deals",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  buildHorizontalCardList("Best"),
+
+                  const SizedBox(height: 20),
+
+                  // Local Destinations
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      "Local Destinations",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  buildHorizontalCardList("Local"),
+                ],
+              ),
             ),
           ),
         ],
@@ -133,82 +198,64 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
     );
   }
 
-  // Navigation Bar
+  // Bottom Nav
   Widget _navBar() {
     return Container(
-      height: 55,
+      height: 70,
       margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
       decoration: BoxDecoration(
         color: const Color(0xFFF7CAC9),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: navIcons.map((icon) {
           int index = navIcons.indexOf(icon);
           bool isSelected = selectedIndex == index;
-          return Material(
-            color: Colors.transparent,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
-
-                if (index == 0) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Favorites(
-                        favorites: favorites,
-                        onRemoveFavorite: (destination) {
-                          setState(() {
-                            favorites.removeWhere(
-                              (item) => item["place"] == destination["place"],
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                  ).then((_) => setState(() => selectedIndex = 1));
-                } else if (index == 2) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ManageBooking(
-                        bookings: bookings,
-                        onRemoveBooking: (index) {
-                          setState(() {
-                            bookings.removeAt(index);
-                          });
-                        },
-                      ),
-                    ),
-                  ).then((_) => setState(() => selectedIndex = 1));
-                }
-              },
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(
-                      top: 15,
-                      bottom: 0,
-                      left: 49,
-                      right: 35,
-                    ),
-                    child: Icon(
-                      icon,
-                      size: 30,
-                      color: isSelected
-                          ? Color(0xFFDC143C)
-                          : const Color(0xFFF75270),
+          return IconButton(
+            onPressed: () {
+              setState(() {
+                selectedIndex = index;
+              });
+              if (index == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Favorites(
+                      favorites: favorites,
+                      onRemoveFavorite: (destination) {
+                        setState(() {
+                          favorites.removeWhere(
+                            (item) => item["place"] == destination["place"],
+                          );
+                        });
+                      },
                     ),
                   ),
-                ],
-              ),
+                ).then((_) => setState(() => selectedIndex = 1));
+              } else if (index == 2) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ManageBooking(
+                      bookings: bookings,
+                      onRemoveBooking: (index) {
+                        setState(() {
+                          bookings.removeAt(index);
+                        });
+                      },
+                    ),
+                  ),
+                ).then((_) => setState(() => selectedIndex = 1));
+              }
+            },
+            icon: Icon(
+              icon,
+              size: 30,
+              color: isSelected ? const Color(0xFFDC143C) : const Color(0xFFF75270),
             ),
           );
         }).toList(),
@@ -216,153 +263,144 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
     );
   }
 
-  // Destinations
-  Widget buildDestinations(BuildContext context) {
-    final List<Map<String, dynamic>> destinations = [
-      {
-        "place": "Paris",
-        "price": 1200,
-        "description": "The city of lights, love, and iconic Eiffel Tower.",
-        "image": "assets/img/paris.png",
-        "tag": "City",
-      },
-      {
-        "place": "Tokyo",
-        "price": 1500,
-        "description": "A blend of tradition and technology in Japan’s capital.",
-        "image": "assets/img/tokyo.png",
-        "tag": "Cultural",
-      },
-      {
-        "place": "Bali",
-        "price": 1000,
-        "description": "A tropical paradise with beaches and temples.",
-        "image": "assets/img/bali.png",
-        "tag": "Beach",
-      },
-      {
-        "place": "New York",
-        "price": 1300,
-        "description": "The city that never sleeps, full of energy.",
-        "image": "assets/img/newyork.png",
-        "tag": "City",
-      },
-    ];
-
+  // Horizontal card list
+  Widget buildHorizontalCardList(String section) {
     final filtered = destinations.where((d) {
-      final matchesQuery = d["place"].toLowerCase().contains(searchQuery);
       final matchesTag = selectedTag == "All" || d["tag"] == selectedTag;
-      return matchesQuery && matchesTag;
+      return matchesTag;
     }).toList();
 
-    return filtered.isEmpty
-        ? const Center(
-            child: Text(
-              "No destinations found.",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-        : GridView.builder(
-            padding: const EdgeInsets.all(12),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.7,
-            ),
-            itemCount: filtered.length,
-            itemBuilder: (context, index) {
-              return buildDestinationCard(filtered[index]);
-            },
+    return SizedBox(
+      height: 280,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: filtered.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: buildDestinationCard(filtered[index]),
           );
+        },
+      ),
+    );
   }
 
-  // Destination Card
+  // Card design
   Widget buildDestinationCard(Map<String, dynamic> destination) {
     final isFavorite = favorites.any(
       (item) => item["place"] == destination["place"],
     );
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
+    return Container(
+      width: 220,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.brown.shade200),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.asset(
-              destination["image"],
-              height: 120,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+          // Image
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.asset(
+                  destination["image"],
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                right: 8,
+                top: 8,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white70,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: const Color(0xFFE63946),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (isFavorite) {
+                          favorites.removeWhere(
+                            (item) => item["place"] == destination["place"],
+                          );
+                        } else {
+                          favorites.add(destination);
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
+
+          // Info
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  destination["place"],
+                  "Name of Tourist Attraction",
                   style: const TextStyle(
-                    fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E4D92),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  destination["description"],
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, size: 14, color: Colors.red),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        destination["location"],
+                        style: const TextStyle(fontSize: 12, color: Colors.black54),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 Text(
-                  "\$${destination["price"]}",
+                  "Tour Starts at ₱${destination["price"]}",
                   style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
+
+                // Buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: const Color(0xFFE63946),
-                        size: 20,
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(80, 32),
+                        side: const BorderSide(color: Color(0xFFDC143C)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          if (isFavorite) {
-                            favorites.removeWhere(
-                              (item) => item["place"] == destination["place"],
-                            );
-                          } else {
-                            favorites.add(destination);
-                          }
-                        });
-                      },
+                      onPressed: () {},
+                      child: const Text(
+                        "View Details",
+                        style: TextStyle(color: Color(0xFFDC143C)),
+                      ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E4D92),
-                        minimumSize: const Size(60, 30),
+                        backgroundColor: const Color(0xFFDC143C),
+                        minimumSize: const Size(80, 32),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                      child: const Text(
-                        "Book",
-                        style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                       onPressed: () {
                         Navigator.push(
@@ -379,6 +417,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           ),
                         );
                       },
+                      child: const Text("Book Now"),
                     ),
                   ],
                 ),
