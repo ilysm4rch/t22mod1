@@ -27,83 +27,97 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
-      body: Column(
-        children: [
-          ClipPath(
-            clipper: AppBarWaveClipper(),
-            child: Container(
-              height: 300,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/img/bg-top.jpg"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 120,
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search a destination',
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Color(0xFF1E4D92),
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFFF6F9FC),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 0,
-                      horizontal: 16,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Color(0xFF1E4D92),
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: Color(0xFF1E4D92),
-                        width: 2,
-                      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: FlexibleSpaceBar(
+              background: ClipPath(
+                clipper: AppBarWaveClipper(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/img/bg-top.jpg"),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  onChanged: (query) {
-                    setState(() {
-                      searchQuery = query.toLowerCase();
-                    });
-                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 120,
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search a destination',
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Color(0xFF1E4D92),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF6F9FC),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 16,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1E4D92),
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1E4D92),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      onChanged: (query) {
+                        setState(() {
+                          searchQuery = query.toLowerCase();
+                        });
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-          // Tabs
-          Expanded(
-            child: DefaultTabController(
-              length: 2,
-              child: Column(
-                children: [
-                  const TabBar(
-                    labelColor: Color(0xFF1E4D92),
-                    unselectedLabelColor: Colors.black54,
-                    indicatorColor: Color(0xFF1E4D92),
-                    tabs: [
-                      Tab(text: "Destinations"),
-                      Tab(text: "Favorites"),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [buildDestinations(context), buildFavorites()],
+          SliverFillRemaining(
+            child: Column(
+              children: [
+                // Tabs and content here
+                Expanded(
+                  child: DefaultTabController(
+                    length: 2,
+                    child: Column(
+                      children: [
+                        const TabBar(
+                          labelColor: Color(0xFF1E4D92),
+                          unselectedLabelColor: Colors.black54,
+                          indicatorColor: Color(0xFF1E4D92),
+                          tabs: [
+                            Tab(text: "Destinations"),
+                            Tab(text: "Favorites"),
+                          ],
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              buildDestinations(context),
+                              buildFavorites(),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
