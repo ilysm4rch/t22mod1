@@ -66,6 +66,11 @@ class _ManageBookingState extends State<ManageBooking> {
   }
 
   Widget buildBookingsList() {
+    print(
+      'Building bookings list - Number of bookings: ${widget.bookings.length}',
+    ); // Debug print
+    print('Bookings data: ${widget.bookings}'); // Debug print
+
     if (widget.bookings.isEmpty) {
       return const Center(
         child: Text(
@@ -207,12 +212,9 @@ class _ManageBookingState extends State<ManageBooking> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          // First notify parent through callback
-                                          widget.onRemoveBooking.call(index);
-                                          // Then update local state
-                                          setState(() {
-                                            widget.bookings.removeAt(index);
-                                          });
+                                          widget.onRemoveBooking.call(
+                                            index,
+                                          ); // Let parent handle removal
                                           Navigator.pop(
                                             context,
                                           ); // Close dialog
