@@ -28,8 +28,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "place": "Boracay Island",
       "price": 6500,
       "location": "Aklan, Philippines",
-      "description":
-          "Famous for its white sand beaches and vibrant nightlife.",
+      "description": "Famous for its white sand beaches and vibrant nightlife.",
       "image": "assets/img/bora1.jpg",
       "tag": "Beach",
       "inclusions": [
@@ -44,12 +43,17 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "location": "Bohol, Philippines",
       "description": "A geological wonder with over 1,000 cone-shaped hills.",
       "image": "assets/img/ch1.jpg",
+<<<<<<< HEAD
       "tag": "Adventure",
       "inclusions": [
         "2 Nights Hotel",
         "Breakfast Buffet",
         "Countryside Tour",
       ],
+=======
+      "tag": "Cultural",
+      "inclusions": ["2 Nights Hotel", "Breakfast Buffet", "Countryside Tour"],
+>>>>>>> 6530647b8d12105439ab57aca4e080d5e12a356e
     },
     {
       "place": "Banaue Rice Terraces",
@@ -72,6 +76,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "location": "Palawan, Philippines",
       "description":
           "One of the New 7 Wonders of Nature featuring a stunning underground river.",
+<<<<<<< HEAD
       "image": "assets/img/pp3.jpg",
       "tag": "Adventure",
       "inclusions": [
@@ -79,35 +84,38 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
         "Buffet lunch",
         "Permits",
       ],
+=======
+      "image": "assets/img/pp1.jpg",
+      "tag": "City",
+      "inclusions": ["Boat Tour", "Buffet lunch", "Permits"],
+>>>>>>> 6530647b8d12105439ab57aca4e080d5e12a356e
     },
     {
       "place": "Mayon Volcano",
       "price": 3000,
       "location": "Albay, Philippines",
-      "description":
-          "Iconic volcano known for its perfect cone shape.",
+      "description": "Iconic volcano known for its perfect cone shape.",
       "image": "assets/img/mayon1.jpg",
+<<<<<<< HEAD
       "tag": "Adventure",
       "inclusions": [
         "Guided tour",
         "ATV ride",
         "safety gear",
       ],
+=======
+      "tag": "City",
+      "inclusions": ["Guided tour", "ATV ride", "safety gear"],
+>>>>>>> 6530647b8d12105439ab57aca4e080d5e12a356e
     },
     {
       "place": "Tagaytay Ridge",
       "price": 1800,
       "location": "Cavite, Philippines",
-      "description":
-          "A cool getaway with scenic views of Taal Volcano.",
+      "description": "A cool getaway with scenic views of Taal Volcano.",
       "image": "assets/img/tg1.jpg",
       "tag": "City",
-      "inclusions": [
-        "Day tour",
-        "lunch",
-        "Transport",
-        "Sightseeing stops",
-      ],
+      "inclusions": ["Day tour", "lunch", "Transport", "Sightseeing stops"],
     },
   ];
 
@@ -175,7 +183,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   // Discover
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Text(
                       "Discover",
                       style: const TextStyle(
@@ -199,7 +209,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           child: ChoiceChip(
                             label: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 2),
+                                horizontal: 16,
+                                vertical: 2,
+                              ),
                               child: Text(tag),
                             ),
                             selected: selectedTag == tag,
@@ -228,7 +240,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   // Best Deals
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Text(
                       "Best Deals",
                       style: const TextStyle(
@@ -244,7 +258,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   // Local Destinations
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Text(
                       "Local Destinations",
                       style: const TextStyle(
@@ -374,8 +390,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
           Stack(
             children: [
               ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: Image.asset(
                   destination["image"],
                   height: 130,
@@ -419,20 +436,19 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
               children: [
                 Text(
                   destination["place"],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.location_on,
-                        size: 14, color: Colors.red),
+                    const Icon(Icons.location_on, size: 14, color: Colors.red),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         destination["location"],
                         style: const TextStyle(
-                            fontSize: 12, color: Colors.black54),
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -441,9 +457,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 const SizedBox(height: 8),
                 Text(
                   "Tour Starts at ₱${destination["price"]}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
 
@@ -462,9 +476,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DestinationDetails(
-                                destination: destination,
-                              ),
+                              builder: (context) =>
+                                  DestinationDetails(destination: destination),
                             ),
                           );
                         },
@@ -474,35 +487,39 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDC143C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFDC143C),
+                        minimumSize: const Size(80, 32),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookForm(
-                                destination: destination,
-                                onBook: (booking) {
-                                  setState(() {
-                                    bookings.add({
-                                      ...booking,
-                                      'destination': destination,
-                                    });
-                                  });
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text("Book"),
                       ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookForm(
+                              destination: destination,
+                              onBook: (booking) {
+                                setState(() {
+                                  bookings.add({
+                                    ...booking,
+                                    'destination': {
+                                      'place': destination['place'],
+                                      'image': destination['image'],
+                                    },
+                                  });
+                                  print(
+                                    'Booking added: ${bookings.length}',
+                                  ); // Debug print
+                                });
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text("Book Now"),
                     ),
                   ],
                 ),
@@ -533,8 +550,12 @@ class DestinationDetails extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(destination["image"],
-                  height: 200, width: double.infinity, fit: BoxFit.cover),
+              child: Image.asset(
+                destination["image"],
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -545,15 +566,19 @@ class DestinationDetails extends StatelessWidget {
               children: [
                 const Icon(Icons.location_on, color: Colors.red, size: 16),
                 const SizedBox(width: 4),
-                Text(destination["location"],
-                    style: const TextStyle(color: Colors.black54)),
+                Text(
+                  destination["location"],
+                  style: const TextStyle(color: Colors.black54),
+                ),
               ],
             ),
             const SizedBox(height: 12),
             Text(destination["description"]),
             const SizedBox(height: 16),
-            const Text("Inclusions:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              "Inclusions:",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             ...List.generate(
               (destination["inclusions"] as List).length,
