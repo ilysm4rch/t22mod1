@@ -12,11 +12,8 @@ class TravelHome extends StatefulWidget {
 
 List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.bookmark];
 
-List<String> navLabels = ["Favorites", "Home", "Trips"];
-
-int selectedIndex = 1;
-
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
+  int selectedIndex = 1;
   final List<Map<String, dynamic>> bookings = [];
   final List<Map<String, dynamic>> favorites = [];
 
@@ -136,7 +133,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       ),
       child: Row(
         children: navIcons.map((icon) {
-          int index = navIcons.indexOf(icon); // Define index here
+          int index = navIcons.indexOf(icon);
           bool isSelected = selectedIndex == index;
           return Material(
             color: Colors.transparent,
@@ -149,13 +146,28 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 if (index == 0) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Favorites()),
-                  );
+                    MaterialPageRoute(
+                      builder: (context) => Favorites(
+                        favorites: favorites,
+                        onRemoveFavorite: (destination) {
+                          setState(() {
+                            favorites.removeWhere(
+                              (item) => item["place"] == destination["place"],
+                            );
+                          });
+                        },
+                      ),
+                    ),
+                  ).then(
+                    (_) => setState(() => selectedIndex = 1),
+                  ); // Reset to home when returning
                 } else if (index == 2) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ManageBooking()),
-                  );
+                  ).then(
+                    (_) => setState(() => selectedIndex = 1),
+                  ); // Reset to home when returning
                 }
                 // Don't navigate for index 1 (Home) since we're already there
               },

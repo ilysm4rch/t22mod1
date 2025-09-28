@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
+import 'manage_booking.dart';
 
 class Favorites extends StatefulWidget {
-  const Favorites({super.key});
+  final List<Map<String, dynamic>> favorites;
+  final Function(Map<String, dynamic>) onRemoveFavorite;
+
+  const Favorites({
+    super.key,
+    required this.favorites,
+    required this.onRemoveFavorite,
+  });
 
   @override
   State<Favorites> createState() => _FavoritesState();
 }
 
 class _FavoritesState extends State<Favorites> {
-  // Add favorites list here
-  final List<Map<String, dynamic>> favorites = []; // <-- Add this
+  int selectedIndex = 0;
+  final List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.book];
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +27,19 @@ class _FavoritesState extends State<Favorites> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 250,
+            expandedHeight: 150,
             pinned: true,
             backgroundColor: Colors.transparent,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Color(0xFF1E4D92)),
-              onPressed: () => Navigator.pop(context),
-            ),
+            automaticallyImplyLeading: false, // Remove the leading back button
             flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              titlePadding: const EdgeInsets.only(bottom: 80),
               title: const Text(
-                'My Favorites',
+                'FAVORITES',
                 style: TextStyle(
-                  color: Color(0xFF1E4D92),
+                  color: Color(0xFFFFFFFF),
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
               background: ClipPath(
@@ -50,11 +58,77 @@ class _FavoritesState extends State<Favorites> {
           SliverFillRemaining(child: buildFavoritesList()),
         ],
       ),
+      bottomNavigationBar: _navBar(),
+    );
+  }
+
+  // Navigation Bar
+  Widget _navBar() {
+    return Container(
+      height: 55,
+      margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7CAC9),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
+        ],
+      ),
+      child: Row(
+        children: navIcons.map((icon) {
+          int index = navIcons.indexOf(icon); // Define index here
+          bool isSelected = selectedIndex == index;
+          return Material(
+            color: Colors.transparent,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+
+                if (index == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TravelHome(),
+                    ), // Navigate to home
+                  );
+                } else if (index == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ManageBooking()),
+                  );
+                }
+              },
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(
+                      top: 15,
+                      bottom: 0,
+                      left: 49,
+                      right: 35,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 30,
+                      color: isSelected
+                          ? Color(0xFFDC143C)
+                          : const Color(0xFFF75270),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
   Widget buildFavoritesList() {
-    if (favorites.isEmpty) {
+    if (widget.favorites.isEmpty) {
       return const Center(
         child: Text(
           "No favorites yet.",
@@ -75,14 +149,13 @@ class _FavoritesState extends State<Favorites> {
         mainAxisSpacing: 12,
         childAspectRatio: 0.7,
       ),
-      itemCount: favorites.length, // <-- Fix capitalization
+      itemCount: widget.favorites.length,
       itemBuilder: (context, index) {
-        return buildDestinationCard(favorites[index]); // <-- Fix capitalization
+        return buildDestinationCard(widget.favorites[index]);
       },
     );
   }
 
-  // Reuse the same card design from main.dart
   Widget buildDestinationCard(Map<String, dynamic> destination) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -139,9 +212,7 @@ class _FavoritesState extends State<Favorites> {
                       ),
                       onPressed: () {
                         setState(() {
-                          favorites.removeWhere(
-                            (item) => item["place"] == destination["place"],
-                          );
+                          widget.onRemoveFavorite(destination);
                         });
                       },
                     ),
