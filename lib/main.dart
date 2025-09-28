@@ -44,7 +44,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "location": "Bohol, Philippines",
       "description": "A geological wonder with over 1,000 cone-shaped hills.",
       "image": "assets/img/ch1.jpg",
-      "tag": "Cultural",
+      "tag": "Adventure",
       "inclusions": [
         "2 Nights Hotel",
         "Breakfast Buffet",
@@ -58,7 +58,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "description":
           "A UNESCO World Heritage Site carved into the mountains 2,000 years ago.",
       "image": "assets/img/banaue1.jpg",
-      "tag": "City",
+      "tag": "Cultural",
       "inclusions": [
         "2D1N homestay",
         "Local Guide",
@@ -72,8 +72,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "location": "Palawan, Philippines",
       "description":
           "One of the New 7 Wonders of Nature featuring a stunning underground river.",
-      "image": "assets/img/pp1.jpg",
-      "tag": "City",
+      "image": "assets/img/pp3.jpg",
+      "tag": "Adventure",
       "inclusions": [
         "Boat Tour",
         "Buffet lunch",
@@ -87,7 +87,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "description":
           "Iconic volcano known for its perfect cone shape.",
       "image": "assets/img/mayon1.jpg",
-      "tag": "City",
+      "tag": "Adventure",
       "inclusions": [
         "Guided tour",
         "ATV ride",
