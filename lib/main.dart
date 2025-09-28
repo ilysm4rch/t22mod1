@@ -163,7 +163,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 } else if (index == 2) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ManageBooking()),
+                    MaterialPageRoute(
+                      builder: (context) => ManageBooking(bookings: bookings),
+                    ),
                   ).then(
                     (_) => setState(() => selectedIndex = 1),
                   ); // Reset to home when returning

@@ -1,50 +1,18 @@
 import 'package:flutter/material.dart';
+import 'manage_booking.dart';
 
-class SummaryForm extends StatefulWidget {
+class BookingSummary extends StatelessWidget {
   final Map<String, dynamic> bookingData;
   final Function(Map<String, dynamic>) onBook;
 
-  const SummaryForm({
+  const BookingSummary({
     super.key,
     required this.bookingData,
     required this.onBook,
   });
 
-  @override
-  State<SummaryForm> createState() => _SummaryFormState();
-}
-
-class _SummaryFormState extends State<SummaryForm> {
-  final _formKey = GlobalKey<FormState>();
-  bool _formSubmitted = false;
-
-  // Form controllers
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _addressController = TextEditingController();
-  final _mobileController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _senderNameController = TextEditingController();
-  String? selectedPaymentMode;
-
-  // Payment options
-  final List<String> paymentModes = [
-    'Credit Card',
-    'Debit Card',
-    'PayPal',
-    'Bank Transfer',
-    'GCash',
-  ];
-
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _addressController.dispose();
-    _mobileController.dispose();
-    _emailController.dispose();
-    _senderNameController.dispose();
-    super.dispose();
+  String _getFullName(String? firstName, String? lastName) {
+    return '${firstName ?? ''} ${lastName ?? ''}'.trim();
   }
 
   @override
@@ -61,18 +29,13 @@ class _SummaryFormState extends State<SummaryForm> {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: const EdgeInsets.only(bottom: 80),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'BOOKING',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              title: const Text(
+                'BOOKING',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               background: ClipPath(
                 clipper: AppBarWaveClipper(),
@@ -82,7 +45,7 @@ class _SummaryFormState extends State<SummaryForm> {
                       image: const AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.2),
+                        Colors.black.withOpacity(0.5),
                         BlendMode.darken,
                       ),
                     ),
@@ -95,414 +58,250 @@ class _SummaryFormState extends State<SummaryForm> {
             hasScrollBody: false,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Contact Information',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E4D92),
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Booking Form Summary',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E4D92),
                     ),
-                    const SizedBox(height: 25),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('First Name'),
-                              const SizedBox(height: 8),
-                              TextFormField(
-                                controller: _firstNameController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFF7CAC9),
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFF7CAC9),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFDC143C),
-                                    ),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _formKey.currentState?.validate();
-                                  });
-                                },
-                                validator: (value) {
-                                  if (_formSubmitted &&
-                                      (value == null || value.isEmpty)) {
-                                    return 'This field is required';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
-                          ),
+                  ),
+                  const SizedBox(height: 20),
+                  InfoSection(
+                    title: 'BOOKING INFORMATION',
+                    items: [
+                      MapEntry('Arrival:', bookingData['arrival'] ?? ''),
+                      MapEntry('Departure:', bookingData['departure'] ?? ''),
+                    ],
+                  ),
+
+                  InfoSection(
+                    title: 'NUMBER OF PARTICIPANTS',
+                    items: [
+                      MapEntry('Adults:', '${bookingData['adults'] ?? 0}'),
+                      MapEntry('Kids:', '${bookingData['kids'] ?? 0}'),
+                    ],
+                  ),
+
+                  InfoSection(
+                    title: 'BOOKER INFORMATION',
+                    items: [
+                      MapEntry(
+                        'Full Name:',
+                        _getFullName(
+                          bookingData['firstName'],
+                          bookingData['lastName'],
                         ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('Last Name'),
-                              const SizedBox(height: 8),
-                              TextFormField(
-                                controller: _lastNameController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFF7CAC9),
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFF7CAC9),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFFDC143C),
-                                    ),
+                      ),
+                      MapEntry('Age:', '${bookingData['age'] ?? ''}'),
+                      MapEntry('Gender:', bookingData['gender'] ?? ''),
+                      MapEntry('Origin:', bookingData['origin'] ?? ''),
+                    ],
+                  ),
+
+                  ...(bookingData['participants']
+                              as List<Map<String, dynamic>>?)
+                          ?.asMap()
+                          .entries
+                          .map((entry) {
+                            final participant = entry.value;
+                            return InfoSection(
+                              title: 'PARTICIPANT ${entry.key + 1}',
+                              titleSize: 16,
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              items: [
+                                MapEntry(
+                                  'Full Name:',
+                                  _getFullName(
+                                    participant['firstName'],
+                                    participant['lastName'],
                                   ),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _formKey.currentState?.validate();
-                                  });
-                                },
-                                validator: (value) {
-                                  if (_formSubmitted &&
-                                      (value == null || value.isEmpty)) {
-                                    return 'This field is required';
-                                  }
-                                  return null;
-                                },
+                                MapEntry('Age:', '${participant['age'] ?? ''}'),
+                                MapEntry(
+                                  'Gender:',
+                                  participant['gender'] ?? '',
+                                ),
+                              ],
+                            );
+                          })
+                          .toList() ??
+                      [],
+
+                  InfoSection(
+                    title: 'CONTACT INFORMATION',
+                    items: [
+                      MapEntry(
+                        'Full Name:',
+                        _getFullName(
+                          bookingData['contactInfo']['firstName'],
+                          bookingData['contactInfo']['lastName'],
+                        ),
+                      ),
+                      MapEntry(
+                        'Complete Address:',
+                        bookingData['contactInfo']['address'] ?? '',
+                      ),
+                      MapEntry(
+                        'Mobile Number:',
+                        bookingData['contactInfo']['mobile'] ?? '',
+                      ),
+                      MapEntry(
+                        'E-mail Address:',
+                        bookingData['contactInfo']['email'] ?? '',
+                      ),
+                    ],
+                  ),
+
+                  InfoSection(
+                    title: 'PAYMENT',
+                    items: [
+                      MapEntry(
+                        'Sender\'s Full Name:',
+                        bookingData['payment']['senderName'] ?? '',
+                      ),
+                      MapEntry(
+                        'Mode of Payment:',
+                        bookingData['payment']['paymentMode'] ?? '',
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF7CAC9),
+                          minimumSize: const Size(130, 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Back',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDC143C),
+                          minimumSize: const Size(130, 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                        onPressed: () {
+                          onBook(bookingData); // Save the booking data
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ManageBooking(
+                                bookings: bookingData['bookings'] ?? [],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    const Text('Complete Address'),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _addressController,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFDC143C),
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _formKey.currentState?.validate();
-                        });
-                      },
-                      validator: (value) {
-                        if (_formSubmitted &&
-                            (value == null || value.isEmpty)) {
-                          return 'This field is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    const Text('Mobile Number'),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _mobileController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFDC143C),
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _formKey.currentState?.validate();
-                        });
-                      },
-                      validator: (value) {
-                        if (_formSubmitted &&
-                            (value == null || value.isEmpty)) {
-                          return 'This field is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    const Text('Email Address'),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFDC143C),
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _formKey.currentState?.validate();
-                        });
-                      },
-                      validator: (value) {
-                        if (_formSubmitted &&
-                            (value == null || value.isEmpty)) {
-                          return 'This field is required';
-                        }
-                        // Only validate email format if there's a value
-                        if (value != null &&
-                            value.isNotEmpty &&
-                            !value.contains('@')) {
-                          return 'Please enter a valid email address';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    const Text(
-                      'Payment',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E4D92),
-                      ),
-                    ),
-                    const SizedBox(height: 25),
-                    const Text("Sender's Full Name"),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _senderNameController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFF7CAC9),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFFDC143C),
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _formKey.currentState?.validate();
-                        });
-                      },
-                      validator: (value) {
-                        if (_formSubmitted &&
-                            (value == null || value.isEmpty)) {
-                          return 'This field is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    const Text('Mode of Payment'),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFF7CAC9)),
-                      ),
-                      child: DropdownButtonFormField<String>(
-                        value: selectedPaymentMode,
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                          border: InputBorder.none,
-                        ),
-                        hint: const Text('Select Payment Mode'),
-                        items: paymentModes
-                            .map(
-                              (String value) => DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedPaymentMode = newValue;
-                            _formKey.currentState?.validate();
-                          });
-                        },
-                        validator: (value) {
-                          if (_formSubmitted &&
-                              (value == null || value.isEmpty)) {
-                            return 'This field is required';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 25),
-                    // Buttons and page indicator remain the same but update the Next button's onPressed:
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF7CAC9),
-                            minimumSize: const Size(130, 30),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
                             ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            'Back',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
-                          ),
+                            (route) =>
+                                false, // This removes all previous routes
+                          );
+                        },
+                        child: const Text(
+                          'Finish',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFDC143C),
-                            minimumSize: const Size(130, 30),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _formSubmitted = true;
-                            });
-                            if (_formKey.currentState!.validate()) {
-                              final updatedBookingData = {
-                                ...widget.bookingData,
-                                'contactInfo': {
-                                  'firstName': _firstNameController.text,
-                                  'lastName': _lastNameController.text,
-                                  'address': _addressController.text,
-                                  'mobile': _mobileController.text,
-                                  'email': _emailController.text,
-                                },
-                                'payment': {
-                                  'senderName': _senderNameController.text,
-                                  'paymentMode': selectedPaymentMode,
-                                },
-                              };
-                              widget.onBook(updatedBookingData);
-                            }
-                          },
-                          child: const Text(
-                            'Next',
-                            style: TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    // Page indicator dots
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        4,
-                        (index) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: 7,
-                          height: 7,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: index == 3
-                                ? const Color(0xFFDC143C)
-                                : const Color(0xFFF7CAC9),
-                          ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      4,
+                      (index) => Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: index == 3
+                              ? const Color(0xFFDC143C)
+                              : const Color(0xFFF7CAC9),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class InfoSection extends StatelessWidget {
+  final String title;
+  final List<MapEntry<String, String>> items;
+  final double titleSize;
+  final Color titleColor;
+  final EdgeInsets padding;
+
+  const InfoSection({
+    super.key,
+    required this.title,
+    required this.items,
+    this.titleSize = 18,
+    this.titleColor = const Color(0xFF1E4D92),
+    this.padding = const EdgeInsets.symmetric(vertical: 16),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: titleSize,
+              fontWeight: FontWeight.bold,
+              color: titleColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 140,
+                    child: Text(
+                      item.key,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      item.value,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

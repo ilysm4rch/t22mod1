@@ -99,6 +99,15 @@ class _ThirdFormState extends State<ThirdForm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
+                      'Booking Form',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E4D92),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
                       'Contact Information',
                       style: TextStyle(
                         fontSize: 24,
@@ -473,7 +482,7 @@ class _ThirdFormState extends State<ThirdForm> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SummaryForm(
+                                  builder: (context) => BookingSummary(
                                     bookingData: updatedBookingData,
                                     onBook: widget.onBook,
                                   ),

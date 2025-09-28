@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'booking_form.dart';
 import 'manage_booking.dart';
+import 'main.dart'; // Add this import for TravelHome
 
 class Favorites extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
@@ -76,50 +77,51 @@ class _FavoritesState extends State<Favorites> {
       decoration: BoxDecoration(
         color: const Color(0xFFF7CAC9),
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
         ],
       ),
       child: Row(
-        children: navIcons.map((icon) {
-          int index = navIcons.indexOf(icon); // Define index here
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: navIcons.asMap().entries.map((entry) {
+          int index = entry.key;
+          IconData icon = entry.value;
           bool isSelected = selectedIndex == index;
-          return Material(
-            color: Colors.transparent,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
 
-                if (index == 1) {
-                  Navigator.pop(context); // Go back to home screen
-                } else if (index == 2) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ManageBooking()),
-                  );
-                }
-              },
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(
-                      top: 15,
-                      bottom: 0,
-                      left: 49,
-                      right: 35,
-                    ),
-                    child: Icon(
-                      icon,
-                      size: 30,
-                      color: isSelected
-                          ? Color(0xFFDC143C)
-                          : const Color(0xFFF75270),
-                    ),
+          return Expanded(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+
+                  if (index == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TravelHome()),
+                    );
+                  } else if (index == 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ManageBooking(bookings: bookings),
+                      ),
+                    );
+                  }
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Icon(
+                    icon,
+                    size: 30,
+                    color: isSelected
+                        ? const Color(0xFFDC143C)
+                        : const Color(0xFFF75270),
                   ),
-                ],
+                ),
               ),
             ),
           );
