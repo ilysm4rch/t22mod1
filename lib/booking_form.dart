@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'second_booking_form.dart';
+
 class BookForm extends StatefulWidget {
   final Map<String, dynamic> destination;
   final Function(Map<String, dynamic>) onBook;
@@ -22,6 +24,8 @@ class _BookFormState extends State<BookForm> {
 
   int adultCount = 0;
   int kidsCount = 0;
+  int selectedAge = 18;
+  String? selectedGender;
 
   // Add these variables
   DateTime? selectedArrival;
@@ -519,39 +523,48 @@ class _BookFormState extends State<BookForm> {
                                 children: [
                                   const Text('Age'),
                                   const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: _ageController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFDC143C),
-                                        ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: const Color(0xFFF7CAC9),
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      _formKey.currentState?.validate();
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.remove),
+                                          onPressed: () {
+                                            setState(() {
+                                              if (selectedAge > 0)
+                                                selectedAge--;
+                                            });
+                                          },
+                                          color: const Color(0xFF1E4D92),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            '$selectedAge',
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.add),
+                                          onPressed: () {
+                                            setState(() {
+                                              if (selectedAge < 100)
+                                                selectedAge++;
+                                            });
+                                          },
+                                          color: const Color(0xFF1E4D92),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -563,39 +576,45 @@ class _BookFormState extends State<BookForm> {
                                 children: [
                                   const Text('Gender'),
                                   const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: _genderController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFDC143C),
-                                        ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: const Color(0xFFF7CAC9),
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      _formKey.currentState?.validate();
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
+                                    child: DropdownButtonFormField<String>(
+                                      value: selectedGender,
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                      hint: const Text('Select Gender'),
+                                      items: ['Male', 'Female', 'Other']
+                                          .map(
+                                            (String value) =>
+                                                DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                ),
+                                          )
+                                          .toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          selectedGender = newValue;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (_formSubmitted &&
+                                            (value == null || value.isEmpty)) {
+                                          return 'This field is required';
+                                        }
+                                        return null;
+                                      },
+                                    ),
                                   ),
                                 ],
                               ),
@@ -685,8 +704,7 @@ class _BookFormState extends State<BookForm> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _formSubmitted =
-                                      true; // Set to true on submit attempt
+                                  _formSubmitted = true;
                                 });
                                 if (_formKey.currentState!.validate() &&
                                     adultCount > 0) {
@@ -699,14 +717,34 @@ class _BookFormState extends State<BookForm> {
                                     'kids': kidsCount,
                                     'firstName': _firstNameController.text,
                                     'lastName': _lastNameController.text,
-                                    'age': _ageController.text,
-                                    'gender': _genderController.text,
+                                    'age': selectedAge, // Update this
+                                    'gender': selectedGender, // Update this
                                     'origin': _originController.text,
                                     'price': widget.destination['price'],
                                   };
 
-                                  // Pass the booking data to parent widget through onBook callback
-                                  widget.onBook(bookingData);
+                                  // Navigate to SecondBookingForm with the collected data
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SecondForm(
+                                        bookingData: bookingData,
+                                        onBook: widget.onBook,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  // Show error for adult count
+                                  if (adultCount == 0) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'At least one adult is required',
+                                        ),
+                                        backgroundColor: Color(0xFFDC143C),
+                                      ),
+                                    );
+                                  }
                                 }
                               },
                               child: const Text(
