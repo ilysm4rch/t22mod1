@@ -106,17 +106,11 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           labelColor: Color(0xFF1E4D92),
                           unselectedLabelColor: Colors.black54,
                           indicatorColor: Color(0xFF1E4D92),
-                          tabs: [
-                            Tab(text: "Destinations"),
-                            Tab(text: "Favorites"),
-                          ],
+                          tabs: [Tab(text: "Destinations")],
                         ),
                         Expanded(
                           child: TabBarView(
-                            children: [
-                              buildDestinations(context),
-                              buildFavorites(),
-                            ],
+                            children: [buildDestinations(context)],
                           ),
                         ),
                       ],
@@ -243,36 +237,6 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
               return buildDestinationCard(filtered[index]);
             },
           );
-  }
-
-  // Favorites Tab
-  Widget buildFavorites() {
-    final filtered = favorites
-        .where((d) => d["place"].toLowerCase().contains(searchQuery))
-        .toList();
-
-    if (favorites.isEmpty) {
-      return const Center(
-        child: Text(
-          "No favorites yet.",
-          style: TextStyle(color: Colors.black54, fontSize: 16),
-        ),
-      );
-    }
-
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.7,
-      ),
-      itemCount: filtered.length,
-      itemBuilder: (context, index) {
-        return buildDestinationCard(filtered[index]);
-      },
-    );
   }
 
   // Destination Card
