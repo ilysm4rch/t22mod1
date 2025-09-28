@@ -87,12 +87,7 @@ class _FavoritesState extends State<Favorites> {
                 });
 
                 if (index == 1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TravelHome(),
-                    ), // Navigate to home
-                  );
+                  Navigator.pop(context); // Go back to home screen
                 } else if (index == 2) {
                   Navigator.push(
                     context,
@@ -211,9 +206,9 @@ class _FavoritesState extends State<Favorites> {
                         size: 20,
                       ),
                       onPressed: () {
-                        setState(() {
-                          widget.onRemoveFavorite(destination);
-                        });
+                        widget.onRemoveFavorite(
+                          destination,
+                        ); // Use the callback to remove
                       },
                     ),
                     ElevatedButton(

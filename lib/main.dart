@@ -148,7 +148,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Favorites(
-                        favorites: favorites,
+                        favorites: favorites, // Pass the favorites list
                         onRemoveFavorite: (destination) {
                           setState(() {
                             favorites.removeWhere(
@@ -158,9 +158,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         },
                       ),
                     ),
-                  ).then(
-                    (_) => setState(() => selectedIndex = 1),
-                  ); // Reset to home when returning
+                  ).then((_) => setState(() => selectedIndex = 1));
                 } else if (index == 2) {
                   Navigator.push(
                     context,
