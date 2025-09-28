@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'favorites.dart';
+import 'booking_form.dart';
 import 'manage_booking.dart';
 
 class TravelHome extends StatefulWidget {
@@ -343,23 +344,19 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                       onPressed: () {
-                        setState(() {
-                          bookings.add({
-                            "place": destination["place"],
-                            "price": destination["price"],
-                            "quantity": 1,
-                            "image": destination["image"],
-                          });
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Booked a trip to ${destination["place"]}!",
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookForm(
+                              destination: destination,
+                              onBook: (booking) {
+                                setState(() {
+                                  bookings.add(booking);
+                                });
+                              },
                             ),
-                            duration: const Duration(seconds: 2),
-                            backgroundColor: const Color(0xFF1E4D92),
                           ),
-                        );
+                        ).then((_) => setState(() {}));
                       },
                     ),
                   ],

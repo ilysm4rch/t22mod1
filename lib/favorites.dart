@@ -50,9 +50,7 @@ class _FavoritesState extends State<Favorites> {
                       image: AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(
-                          0.2,
-                        ), // Adjust opacity value (0.0 to 1.0) to control darkness
+                        Colors.black.withOpacity(0.2),
                         BlendMode.darken,
                       ),
                     ),
