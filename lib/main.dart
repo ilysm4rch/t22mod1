@@ -25,28 +25,45 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
   final List<Map<String, dynamic>> destinations = [
     {
-      "place": "Siargao",
-      "price": 10000,
-      "location": "Siargao, Philippines",
-      "description": "Discover the beauty of ganito ganyan! Kaunting description here.",
-      "image": "assets/img/bali.png",
+      "place": "Boracay Island",
+      "price": 6500,
+      "location": "Aklan, Philippines",
+      "description":
+          "Famous for its white sand beaches and vibrant nightlife.",
+      "image": "assets/img/bora1.jpg",
       "tag": "Beach",
+      "inclusions": [
+        "3 Nights Hotel",
+        "Daily Breakfast",
+        "Island Hopping Tour",
+      ],
     },
     {
-      "place": "Tokyo",
-      "price": 12000,
-      "location": "Tokyo, Japan",
-      "description": "A blend of tradition and modern life.",
-      "image": "assets/img/tokyo.png",
+      "place": "Chocolate Hills",
+      "price": 2000,
+      "location": "Bohol, Philippines",
+      "description": "A geological wonder with over 1,000 cone-shaped hills.",
+      "image": "assets/img/ch1.jpg",
       "tag": "Cultural",
+      "inclusions": [
+        "2 Nights Hotel",
+        "Breakfast Buffet",
+        "Countryside Tour",
+      ],
     },
     {
-      "place": "Paris",
-      "price": 15000,
-      "location": "Paris, France",
-      "description": "The city of lights, romance, and the Eiffel Tower.",
-      "image": "assets/img/paris.png",
+      "place": "Banaue Rice Terraces",
+      "price": 3800,
+      "location": "Ifugao, Philippines",
+      "description":
+          "A UNESCO World Heritage Site carved into the mountains 2,000 years ago.",
+      "image": "assets/img/banaue1.jpg",
       "tag": "City",
+      "inclusions": [
+        "Homestay Accommodation",
+        "Local Guide",
+        "Cultural Show",
+      ],
     },
   ];
 
@@ -57,7 +74,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 250,
+            expandedHeight: 260,
             pinned: true,
             backgroundColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
@@ -72,7 +89,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
+                      horizontal: 20,
                       vertical: 120,
                     ),
                     child: TextField(
@@ -113,7 +130,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 children: [
                   // Discover
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
                     child: Text(
                       "Discover",
                       style: const TextStyle(
@@ -125,7 +143,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
                   // Tags row
                   SizedBox(
-                    height: 50,
+                    height: 40,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -137,7 +155,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           child: ChoiceChip(
                             label: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 6),
+                                  horizontal: 16, vertical: 2),
                               child: Text(tag),
                             ),
                             selected: selectedTag == tag,
@@ -145,7 +163,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                             backgroundColor: const Color(0xFFF7CAC9),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: selectedTag == tag ? Colors.white : Colors.black87,
+                              color: selectedTag == tag
+                                  ? Colors.white
+                                  : Colors.black87,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
@@ -163,7 +183,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
                   // Best Deals
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
                     child: Text(
                       "Best Deals",
                       style: const TextStyle(
@@ -178,7 +199,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
                   // Local Destinations
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
                     child: Text(
                       "Local Destinations",
                       style: const TextStyle(
@@ -255,7 +277,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             icon: Icon(
               icon,
               size: 30,
-              color: isSelected ? const Color(0xFFDC143C) : const Color(0xFFF75270),
+              color: isSelected
+                  ? const Color(0xFFDC143C)
+                  : const Color(0xFFF75270),
             ),
           );
         }).toList(),
@@ -271,7 +295,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
     }).toList();
 
     return SizedBox(
-      height: 280,
+      height: 300,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -306,10 +330,11 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
                 child: Image.asset(
                   destination["image"],
-                  height: 120,
+                  height: 130,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
@@ -349,19 +374,21 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Name of Tourist Attraction",
+                  destination["place"],
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Row(
                   children: [
-                    const Icon(Icons.location_on, size: 14, color: Colors.red),
+                    const Icon(Icons.location_on,
+                        size: 14, color: Colors.red),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         destination["location"],
-                        style: const TextStyle(fontSize: 12, color: Colors.black54),
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black54),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -378,51 +405,60 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
                 // Buttons
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(80, 32),
-                        side: const BorderSide(color: Color(0xFFDC143C)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDC143C)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        "View Details",
-                        style: TextStyle(color: Color(0xFFDC143C)),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DestinationDetails(
+                                destination: destination,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Details",
+                          style: TextStyle(color: Color(0xFFDC143C)),
+                        ),
                       ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDC143C),
-                        minimumSize: const Size(80, 32),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookForm(
-                              destination: destination,
-                              onBook: (booking) {
-                                setState(() {
-                                  bookings.add({
-                                    ...booking,
-                                    'destination': destination,
-                                  });
-                                  // Add debug print to verify booking is added
-                                  print('Booking added: ${bookings.length}');
-                                });
-                              },
-                            ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDC143C),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        );
-                      },
-                      child: const Text("Book Now"),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookForm(
+                                destination: destination,
+                                onBook: (booking) {
+                                  setState(() {
+                                    bookings.add({
+                                      ...booking,
+                                      'destination': destination,
+                                    });
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("Book"),
+                      ),
                     ),
                   ],
                 ),
@@ -430,6 +466,63 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DestinationDetails extends StatelessWidget {
+  final Map<String, dynamic> destination;
+  const DestinationDetails({super.key, required this.destination});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFDC143C),
+        title: Text(destination["place"]),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(destination["image"],
+                  height: 200, width: double.infinity, fit: BoxFit.cover),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              destination["place"],
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                const Icon(Icons.location_on, color: Colors.red, size: 16),
+                const SizedBox(width: 4),
+                Text(destination["location"],
+                    style: const TextStyle(color: Colors.black54)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(destination["description"]),
+            const SizedBox(height: 16),
+            const Text("Inclusions:",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            ...List.generate(
+              (destination["inclusions"] as List).length,
+              (i) => Row(
+                children: [
+                  const Icon(Icons.check, color: Colors.green, size: 18),
+                  const SizedBox(width: 6),
+                  Text(destination["inclusions"][i]),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
