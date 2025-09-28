@@ -354,72 +354,20 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         "Book",
                         style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
-                      onPressed: () async {
-                        final DateTime? arrivalDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime.now().add(
-                            const Duration(days: 365),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookForm(
+                              destination: destination,
+                              onBook: (booking) {
+                                setState(() {
+                                  bookings.add(booking);
+                                });
+                              },
+                            ),
                           ),
-                          builder: (context, child) {
-                            return Theme(
-                              data: Theme.of(context).copyWith(
-                                colorScheme: const ColorScheme.light(
-                                  primary: Color(0xFF1E4D92),
-                                  onPrimary: Colors.white,
-                                  onSurface: Color(0xFF1E4D92),
-                                ),
-                              ),
-                              child: child!,
-                            );
-                          },
                         );
-
-                        if (arrivalDate != null) {
-                          final DateTime? departureDate = await showDatePicker(
-                            context: context,
-                            initialDate: arrivalDate.add(
-                              const Duration(days: 1),
-                            ),
-                            firstDate: arrivalDate.add(const Duration(days: 1)),
-                            lastDate: DateTime.now().add(
-                              const Duration(days: 365),
-                            ),
-                            builder: (context, child) {
-                              return Theme(
-                                data: Theme.of(context).copyWith(
-                                  colorScheme: const ColorScheme.light(
-                                    primary: Color(0xFF1E4D92),
-                                    onPrimary: Colors.white,
-                                    onSurface: Color(0xFF1E4D92),
-                                  ),
-                                ),
-                                child: child!,
-                              );
-                            },
-                          );
-
-                          if (departureDate != null) {
-                            if (!context.mounted) return;
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BookForm(
-                                  destination: destination,
-                                  onBook: (booking) {
-                                    setState(() {
-                                      bookings.add(
-                                        booking,
-                                      ); // Add the booking to the list
-                                    });
-                                  },
-                                ),
-                              ),
-                            );
-                          }
-                        }
                       },
                     ),
                   ],

@@ -198,16 +198,31 @@ class BookingSummary extends StatelessWidget {
                         ),
                         onPressed: () {
                           onBook(bookingData); // Save the booking data
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ManageBooking(
-                                bookings: bookingData['bookings'] ?? [],
+
+                          // Show success message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'You successfully booked!',
+                                style: TextStyle(color: Colors.white),
                               ),
+                              backgroundColor: Color(0xFF1E4D92),
+                              duration: Duration(seconds: 2),
                             ),
-                            (route) =>
-                                false, // This removes all previous routes
                           );
+
+                          // Navigate after short delay to show the message
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ManageBooking(
+                                  bookings: bookingData['bookings'] ?? [],
+                                ),
+                              ),
+                              (route) => false,
+                            );
+                          });
                         },
                         child: const Text(
                           'Finish',
