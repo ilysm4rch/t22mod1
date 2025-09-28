@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'booking_form.dart';
 import 'manage_booking.dart';
 
 class Favorites extends StatefulWidget {
@@ -19,6 +20,7 @@ class Favorites extends StatefulWidget {
 class _FavoritesState extends State<Favorites> {
   int selectedIndex = 0;
   final List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.book];
+  final List<Map<String, dynamic>> bookings = [];
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +217,7 @@ class _FavoritesState extends State<Favorites> {
                         ); // Use the callback to remove
                       },
                     ),
+                    // Booking button
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1E4D92),
@@ -228,16 +231,19 @@ class _FavoritesState extends State<Favorites> {
                         style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                       onPressed: () {
-                        // Add booking logic here
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Booked a trip to ${destination["place"]}!",
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookForm(
+                              destination: destination,
+                              onBook: (booking) {
+                                setState(() {
+                                  bookings.add(booking);
+                                });
+                              },
                             ),
-                            duration: const Duration(seconds: 2),
-                            backgroundColor: const Color(0xFF1E4D92),
                           ),
-                        );
+                        ).then((_) => setState(() {}));
                       },
                     ),
                   ],
