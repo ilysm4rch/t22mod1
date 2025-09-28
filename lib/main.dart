@@ -60,9 +60,53 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "image": "assets/img/banaue1.jpg",
       "tag": "City",
       "inclusions": [
-        "Homestay Accommodation",
+        "2D1N homestay",
         "Local Guide",
         "Cultural Show",
+        "Trekking Tour",
+      ],
+    },
+    {
+      "place": "Puerto Princesa Underground River",
+      "price": 2500,
+      "location": "Palawan, Philippines",
+      "description":
+          "One of the New 7 Wonders of Nature featuring a stunning underground river.",
+      "image": "assets/img/pp1.jpg",
+      "tag": "City",
+      "inclusions": [
+        "Boat Tour",
+        "Buffet lunch",
+        "Permits",
+      ],
+    },
+    {
+      "place": "Mayon Volcano",
+      "price": 3000,
+      "location": "Albay, Philippines",
+      "description":
+          "Iconic volcano known for its perfect cone shape.",
+      "image": "assets/img/mayon1.jpg",
+      "tag": "City",
+      "inclusions": [
+        "Guided tour",
+        "ATV ride",
+        "safety gear",
+      ],
+    },
+    {
+      "place": "Tagaytay Ridge",
+      "price": 1800,
+      "location": "Cavite, Philippines",
+      "description":
+          "A cool getaway with scenic views of Taal Volcano.",
+      "image": "assets/img/tg1.jpg",
+      "tag": "City",
+      "inclusions": [
+        "Day tour",
+        "lunch",
+        "Transport",
+        "Sightseeing stops",
       ],
     },
   ];
