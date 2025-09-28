@@ -53,7 +53,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "description":
           "A UNESCO World Heritage Site carved into the mountains 2,000 years ago.",
       "image": "assets/img/banaue1.jpg",
-      "tag": "Cultural",
+      "tag": "City",
       "inclusions": [
         "2D1N homestay",
         "Local Guide",
@@ -458,79 +458,77 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 8),
 
-                // Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      // Details button
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFFDC143C)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DestinationDetails(destination: destination),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Details",
-                          style: TextStyle(color: Color(0xFFDC143C)),
+              // Buttons
+              Row(
+                children: [
+                  Expanded( // Details button
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xFFDC143C)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8), // Add a small space between buttons
-                    Expanded(
-                      // Book button
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFDC143C),
-                          minimumSize: const Size(double.infinity, 30), // Set width to fill Expanded
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DestinationDetails(destination: destination),
                           ),
+                        );
+                      },
+                      child: const Text(
+                        "Details",
+                        style: TextStyle(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8), // Add a small space between buttons
+                  Expanded( // Book button
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFDC143C),
+                        minimumSize: const Size(double.infinity, 32), // Set width to fill Expanded
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookForm(
-                                destination: destination,
-                                onBook: (booking) {
-                                  setState(() {
-                                    bookings.add({
-                                      ...booking,
-                                      'destination': {
-                                        'place': destination['place'],
-                                        'image': destination['image'],
-                                      },
-                                    });
-                                    print(
-                                        'Booking added: ${bookings.length}'); // Debug print
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookForm(
+                              destination: destination,
+                              onBook: (booking) {
+                                setState(() {
+                                  bookings.add({
+                                    ...booking,
+                                    'destination': {
+                                      'place': destination['place'],
+                                      'image': destination['image'],
+                                    },
                                   });
-                                },
-                              ),
+                                  print(
+                                      'Booking added: ${bookings.length}'); // Debug print
+                                });
+                              },
                             ),
-                          );
-                        },
-                        child: const Text("Book"),
-                      ),
+                          ),
+                        );
+                      },
+                      child: const Text("Book"),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }
 
 class DestinationDetails extends StatelessWidget {
