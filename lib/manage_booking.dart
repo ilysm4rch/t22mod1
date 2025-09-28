@@ -5,8 +5,13 @@ import 'favorites.dart';
 
 class ManageBooking extends StatefulWidget {
   final List<Map<String, dynamic>> bookings;
+  final Function(int)? onRemoveBooking; // Add this
 
-  const ManageBooking({super.key, required this.bookings});
+  const ManageBooking({
+    super.key,
+    required this.bookings,
+    this.onRemoveBooking, // Add this
+  });
 
   @override
   State<ManageBooking> createState() => _ManageBookingState();
@@ -164,6 +169,9 @@ class _ManageBookingState extends State<ManageBooking> {
                           onPressed: () {
                             setState(() {
                               widget.bookings.removeAt(index);
+                              widget.onRemoveBooking?.call(
+                                index,
+                              ); // Notify main.dart of removal
                             });
                           },
                           child: const Text(
