@@ -53,7 +53,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "description":
           "A UNESCO World Heritage Site carved into the mountains 2,000 years ago.",
       "image": "assets/img/banaue1.jpg",
-      "tag": "Cultural",
+      "tag": "City",
       "inclusions": [
         "2D1N homestay",
         "Local Guide",
@@ -67,7 +67,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "location": "Palawan, Philippines",
       "description":
           "One of the New 7 Wonders of Nature featuring a stunning underground river.",
-      "image": "assets/img/pp1.jpeg",
+      "image": "assets/img/pp1.jpg",
       "tag": "City",
       "inclusions": ["Boat Tour", "Buffet lunch", "Permits"],
     },
@@ -342,129 +342,127 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
     );
   }
 
- // Card design
-Widget buildDestinationCard(Map<String, dynamic> destination) {
-  final isFavorite = favorites.any(
-    (item) => item["place"] == destination["place"],
-  );
+  // Card design
+  Widget buildDestinationCard(Map<String, dynamic> destination) {
+    final isFavorite = favorites.any(
+      (item) => item["place"] == destination["place"],
+    );
 
-  return Container(
-    width: 220,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.brown.shade200),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Image
-        Stack(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: Image.asset(
-                destination["image"],
-                height: 130,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              right: 8,
-              top: 8,
-              child: CircleAvatar(
-                backgroundColor: Colors.white70,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: const Color(0xFFE63946),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (isFavorite) {
-                        favorites.removeWhere(
-                          (item) => item["place"] == destination["place"],
-                        );
-                      } else {
-                        favorites.add(destination);
-                      }
-                    });
-                  },
+    return Container(
+      width: 220,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.brown.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
+                child: Image.asset(
+                  destination["image"],
+                  height: 130,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-          ],
-        ),
-
-        // Info
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                destination["place"],
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, size: 14, color: Colors.red),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      destination["location"],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+              Positioned(
+                right: 8,
+                top: 8,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white70,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: const Color(0xFFE63946),
                     ),
+                    onPressed: () {
+                      setState(() {
+                        if (isFavorite) {
+                          favorites.removeWhere(
+                            (item) => item["place"] == destination["place"],
+                          );
+                        } else {
+                          favorites.add(destination);
+                        }
+                      });
+                    },
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                "Tour Starts at ₱${destination["price"]}",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
+            ],
+          ),
 
-              // Buttons
-              Row(
-                children: [
-                  Expanded( // Details button
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFFDC143C)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+          // Info
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  destination["place"],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, size: 14, color: Colors.red),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        destination["location"],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Tour Starts at ₱${destination["price"]}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDC143C)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DestinationDetails(destination: destination),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Details",
+                          style: TextStyle(color: Color(0xFFDC143C)),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DestinationDetails(destination: destination),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Details",
-                        style: TextStyle(color: Color(0xFFDC143C)),
-                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8), // Add a small space between buttons
-                  Expanded( // Book button
-                    child: ElevatedButton(
+                    ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFDC143C),
-                        minimumSize: const Size(double.infinity, 32), // Set width to fill Expanded
+                        minimumSize: const Size(80, 32),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -485,25 +483,25 @@ Widget buildDestinationCard(Map<String, dynamic> destination) {
                                     },
                                   });
                                   print(
-                                      'Booking added: ${bookings.length}'); // Debug print
+                                    'Booking added: ${bookings.length}',
+                                  ); // Debug print
                                 });
                               },
                             ),
                           ),
                         );
                       },
-                      child: const Text("Book"),
+                      child: const Text("Book Now"),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }
 
 class DestinationDetails extends StatelessWidget {

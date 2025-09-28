@@ -66,11 +66,6 @@ class _ManageBookingState extends State<ManageBooking> {
   }
 
   Widget buildBookingsList() {
-    print(
-      'Building bookings list - Number of bookings: ${widget.bookings.length}',
-    ); // Debug print
-    print('Bookings data: ${widget.bookings}'); // Debug print
-
     if (widget.bookings.isEmpty) {
       return const Center(
         child: Text(
@@ -212,9 +207,12 @@ class _ManageBookingState extends State<ManageBooking> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          widget.onRemoveBooking.call(
-                                            index,
-                                          ); // Let parent handle removal
+                                          // First notify parent through callback
+                                          widget.onRemoveBooking.call(index);
+                                          // Then update local state
+                                          setState(() {
+                                            widget.bookings.removeAt(index);
+                                          });
                                           Navigator.pop(
                                             context,
                                           ); // Close dialog
@@ -252,8 +250,8 @@ class _ManageBookingState extends State<ManageBooking> {
       context: context,
       builder: (context) => Dialog(
         // Change from AlertDialog to Dialog for more control
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: Container(
           width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
           constraints: BoxConstraints(
@@ -264,7 +262,7 @@ class _ManageBookingState extends State<ManageBooking> {
             children: [
               // Header
               Padding(
-                padding: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
