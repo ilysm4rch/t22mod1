@@ -128,7 +128,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
           ),
         ],
       ),
-      Align(alignment: Alignment.bottomCenter, child: _navBar()),
+      bottomNavigationBar: _navBar(),
     );
   }
 
