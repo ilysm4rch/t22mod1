@@ -102,7 +102,14 @@ class _FavoritesState extends State<Favorites> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ManageBooking(bookings: bookings),
+                        builder: (context) => ManageBooking(
+                          bookings: bookings,
+                          onRemoveBooking: (index) {
+                            setState(() {
+                              bookings.removeAt(index);
+                            });
+                          },
+                        ),
                       ),
                     );
                   }
