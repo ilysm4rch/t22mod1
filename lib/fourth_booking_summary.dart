@@ -44,6 +44,7 @@ class BookingSummary extends StatelessWidget {
                       image: const AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
+                        // ignore: deprecated_member_use
                         Colors.black.withOpacity(0.5),
                         BlendMode.darken,
                       ),
@@ -216,6 +217,7 @@ class BookingSummary extends StatelessWidget {
                           // Navigate back to TravelHome after delay
                           Future.delayed(const Duration(seconds: 1), () {
                             Navigator.of(
+                              // ignore: use_build_context_synchronously
                               context,
                             ).popUntil((route) => route.isFirst);
                           });

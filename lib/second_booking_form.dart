@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 import 'third_booking_form.dart';
@@ -200,7 +202,7 @@ class _SecondFormState extends State<SecondForm> {
                       border: Border.all(color: const Color(0xFFF7CAC9)),
                     ),
                     child: DropdownButtonFormField<String>(
-                      value: participants[index]['gender'],
+                      initialValue: participants[index]['gender'],
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 12),
                         border: InputBorder.none,

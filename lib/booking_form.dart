@@ -80,6 +80,7 @@ class _BookFormState extends State<BookForm> {
                       image: AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
+                        // ignore: deprecated_member_use
                         Colors.black.withOpacity(0.2),
                         BlendMode.darken,
                       ),
@@ -537,8 +538,9 @@ class _BookFormState extends State<BookForm> {
                                           icon: const Icon(Icons.remove),
                                           onPressed: () {
                                             setState(() {
-                                              if (selectedAge > 0)
+                                              if (selectedAge > 0) {
                                                 selectedAge--;
+                                              }
                                             });
                                           },
                                           color: const Color(0xFF1E4D92),
@@ -557,8 +559,9 @@ class _BookFormState extends State<BookForm> {
                                           icon: const Icon(Icons.add),
                                           onPressed: () {
                                             setState(() {
-                                              if (selectedAge < 100)
+                                              if (selectedAge < 100) {
                                                 selectedAge++;
+                                              }
                                             });
                                           },
                                           color: const Color(0xFF1E4D92),
@@ -585,7 +588,7 @@ class _BookFormState extends State<BookForm> {
                                       ),
                                     ),
                                     child: DropdownButtonFormField<String>(
-                                      value: selectedGender,
+                                      initialValue: selectedGender,
                                       decoration: const InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
                                           horizontal: 12,

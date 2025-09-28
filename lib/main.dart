@@ -86,6 +86,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           size: 20,
                         ),
                         filled: true,
+                        // ignore: deprecated_member_use
                         fillColor: Colors.white.withOpacity(0.8),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 6,
@@ -434,6 +435,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                                       'image': destination['image'],
                                     },
                                   });
+                                  // ignore: avoid_print
                                   print(
                                     'Booking added: ${bookings.length}',
                                   ); // Debug print

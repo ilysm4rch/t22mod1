@@ -53,6 +53,7 @@ class _ManageBookingState extends State<ManageBooking> {
                       image: const AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
+                        // ignore: deprecated_member_use
                         Colors.black.withOpacity(0.2),
                         BlendMode.darken,
                       ),
@@ -436,7 +437,7 @@ Gender: ${participant['gender']}""";
                     const SizedBox(height: 16),
                   ],
                 );
-              }).toList(),
+              }),
               const Text(
                 'CONTACT INFORMATION',
                 style: TextStyle(

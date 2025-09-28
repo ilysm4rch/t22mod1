@@ -56,6 +56,7 @@ class _FavoritesState extends State<Favorites> {
                       image: AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
+                        // ignore: deprecated_member_use
                         Colors.black.withOpacity(0.2),
                         BlendMode.darken,
                       ),
