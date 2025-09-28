@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'favorites.dart';
-import 'booking_form.dart';
 import 'manage_booking.dart';
 
 class TravelHome extends StatefulWidget {
@@ -15,7 +14,7 @@ List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.bookmark];
 
 List<String> navLabels = ["Favorites", "Home", "Trips"];
 
-int selectedIndex = 0;
+int selectedIndex = 1;
 
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   final List<Map<String, dynamic>> bookings = [];
@@ -43,6 +42,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       fit: BoxFit.cover,
                     ),
                   ),
+                  // Search bar
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 60,
@@ -135,10 +135,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: navIcons.map((icon) {
-          int index = navIcons.indexOf(icon);
+          int index = navIcons.indexOf(icon); // Define index here
           bool isSelected = selectedIndex == index;
           return Material(
             color: Colors.transparent,
@@ -147,15 +145,28 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 setState(() {
                   selectedIndex = index;
                 });
+
+                if (index == 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Favorites()),
+                  );
+                } else if (index == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ManageBooking()),
+                  );
+                }
+                // Don't navigate for index 1 (Home) since we're already there
               },
               child: Column(
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       top: 15,
                       bottom: 0,
-                      left: 35,
+                      left: 49,
                       right: 35,
                     ),
                     child: Icon(
