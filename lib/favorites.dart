@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+
 import 'manage_booking.dart';
 
 class Favorites extends StatefulWidget {
