@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'order_summary.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,127 +27,32 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
-      appBar: AppBar(
-        title: const Text(
-          'cafe haven',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontFamily: "Caveat",
-            fontSize: 35,
-            color: Color(0xFFB53324),
-          ),
-        ),
-        backgroundColor: const Color(0xFFFFFAF4),
-        centerTitle: true,
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_basket),
-                color: const Color(0xFFB53324),
-                onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OrderSummary(
-                        cartItems: cartItems,
-                        onCartUpdated: updateCartCount,
-                      ),
-                    ),
-                  );
-                  updateCartCount();
-                },
-              ),
-              if (cartCount > 0)
-                Positioned(
-                  right: 3,
-                  top: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFB53324),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 18,
-                      minHeight: 18,
-                    ),
-                    child: Text(
-                      '$cartCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // banner sec
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              padding: const EdgeInsets.fromLTRB(16, 16, 40, 0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFFB53324),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    "assets/img/banner.png",
-                    width: 160,
-                    height: 130,
-                    fit: BoxFit.contain,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Welcome to",
-                        style: TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
-                      Text(
-                        "cafe haven!",
-                        style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "Caveat",
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(300),
+        child: ClipPath(
+          clipper: AppBarWaveClipper(),
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/img/bg-top.jpg"),
+                fit: BoxFit.cover,
               ),
             ),
-            // Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 120,
+              ),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search for coffee...',
+                  hintText: 'Search a destination',
                   prefixIcon: const Icon(
                     Icons.search,
                     color: Color(0xFFB53324),
                   ),
                   filled: true,
-                  fillColor: const Color(0xFFFFFAF4),
+                  fillColor: Colors.white.withOpacity(0.8),
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 0,
                     horizontal: 16,
@@ -175,6 +79,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 },
               ),
             ),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
             // Tabs drinks & fav
             DefaultTabController(
               length: 2,
@@ -718,4 +628,24 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
 void main() {
   runApp(const MaterialApp(home: Home()));
+}
+
+class AppBarWaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 30);
+    path.quadraticBezierTo(
+      size.width / 2,
+      size.height,
+      size.width,
+      size.height - 30,
+    );
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
