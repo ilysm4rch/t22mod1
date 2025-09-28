@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'booking_form.dart';
 import 'manage_booking.dart';
-import 'main.dart'; // Add this import for TravelHome
 
 class Favorites extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
@@ -98,10 +97,7 @@ class _FavoritesState extends State<Favorites> {
                   });
 
                   if (index == 1) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TravelHome()),
-                    );
+                    Navigator.pop(context); // Changed from push to pop
                   } else if (index == 2) {
                     Navigator.push(
                       context,

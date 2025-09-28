@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'main.dart'; // Add this import for TravelHome
 import 'favorites.dart';
 
 class ManageBooking extends StatefulWidget {
@@ -291,10 +290,9 @@ class _ManageBookingState extends State<ManageBooking> {
                       ),
                     );
                   } else if (index == 1) {
-                    Navigator.push(
+                    Navigator.pop(
                       context,
-                      MaterialPageRoute(builder: (context) => TravelHome()),
-                    );
+                    ); // Changed from push to pop for home navigation
                   }
                 },
                 child: Container(
