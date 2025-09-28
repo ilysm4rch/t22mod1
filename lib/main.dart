@@ -27,127 +27,32 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
-      appBar: AppBar(
-        title: const Text(
-          'cafe haven',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontFamily: "Caveat",
-            fontSize: 35,
-            color: Color(0xFFB53324),
-          ),
-        ),
-        backgroundColor: const Color(0xFFFFFAF4),
-        centerTitle: true,
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_basket),
-                color: const Color(0xFFB53324),
-                onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OrderSummary(
-                        cartItems: cartItems,
-                        onCartUpdated: updateCartCount,
-                      ),
-                    ),
-                  );
-                  updateCartCount();
-                },
-              ),
-              if (cartCount > 0)
-                Positioned(
-                  right: 3,
-                  top: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFB53324),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 18,
-                      minHeight: 18,
-                    ),
-                    child: Text(
-                      '$cartCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // banner sec
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              padding: const EdgeInsets.fromLTRB(16, 16, 40, 0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFFB53324),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    "assets/img/banner.png",
-                    width: 160,
-                    height: 130,
-                    fit: BoxFit.contain,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Welcome to",
-                        style: TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
-                      Text(
-                        "cafe haven!",
-                        style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: "Caveat",
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(300),
+        child: ClipPath(
+          clipper: AppBarWaveClipper(),
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/img/bg-top.jpg"),
+                fit: BoxFit.cover,
               ),
             ),
-            // Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 120,
+              ),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search for coffee...',
+                  hintText: 'Search a destination',
                   prefixIcon: const Icon(
                     Icons.search,
                     color: Color(0xFF1E4D92),
                   ),
                   filled: true,
-                  fillColor: const Color(0xFFFFFAF4),
+                  fillColor: const Color(0xFFF6F9FC),
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 0,
                     horizontal: 16,
@@ -174,7 +79,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 },
               ),
             ),
-            // Tabs drinks & fav
+            // Tabs
             DefaultTabController(
               length: 2,
               child: Column(
@@ -191,7 +96,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   SizedBox(
                     height: 700,
                     child: TabBarView(
-                      children: [buildDestinations(context), buildFavorites()],
+                      children: [
+                        buildDestinations(context),
+                        buildFavorites(),
+                      ],
                     ),
                   ),
                 ],
@@ -241,8 +149,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       {
         "place": "Tokyo",
         "price": 1500,
-        "description":
-            "A blend of tradition and technology in Japan’s capital.",
+        "description": "A blend of tradition and technology in Japan’s capital.",
         "image": "assets/img/tokyo.png",
       },
       {
@@ -321,9 +228,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
   // Destination Card
   Widget buildDestinationCard(Map<String, dynamic> destination) {
-    final isFavorite = favorites.any(
-      (item) => item["place"] == destination["place"],
-    );
+    final isFavorite =
+        favorites.any((item) => item["place"] == destination["place"]);
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -383,9 +289,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       onPressed: () {
                         setState(() {
                           if (isFavorite) {
-                            favorites.removeWhere(
-                              (item) => item["place"] == destination["place"],
-                            );
+                            favorites.removeWhere((item) =>
+                                item["place"] == destination["place"]);
                           } else {
                             favorites.add(destination);
                           }
@@ -427,7 +332,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       },
                     ),
                   ],
-                ),
+                )
               ],
             ),
           ),
