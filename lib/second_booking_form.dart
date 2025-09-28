@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'third_booking_form.dart';
+
 class SecondForm extends StatefulWidget {
   final Map<String, dynamic> bookingData;
   final Function(Map<String, dynamic>) onBook;
@@ -353,14 +355,18 @@ class _SecondFormState extends State<SecondForm> {
                                 });
                                 if (_formKey.currentState!.validate()) {
                                   final updatedBookingData = {
-                                    ...widget
-                                        .bookingData, // Spreads the first form's data
-                                    'participants':
-                                        participants, // Adds the participants list
+                                    ...widget.bookingData,
+                                    'participants': participants,
                                   };
-                                  widget.onBook(
-                                    updatedBookingData,
-                                  ); // Sends combined data back
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ThirdForm(
+                                        bookingData: updatedBookingData,
+                                        onBook: widget.onBook,
+                                      ),
+                                    ),
+                                  );
                                 }
                               },
                               child: const Text(
