@@ -27,112 +27,100 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(300),
-        child: ClipPath(
-          clipper: AppBarWaveClipper(),
-          child: Container(
-            height: 300,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/img/bg-top.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 120,
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search a destination',
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Color(0xFF1E4D92),
-                  ),
-                  filled: true,
-                  fillColor: const Color(0xFFF6F9FC),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 0,
-                    horizontal: 16,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(
-                      color: Color(0xFF1E4D92),
-                      width: 1,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: FlexibleSpaceBar(
+              background: ClipPath(
+                clipper: AppBarWaveClipper(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/img/bg-top.jpg"),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(
-                      color: Color(0xFF1E4D92),
-                      width: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 120,
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search a destination',
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Color(0xFF1E4D92),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFF6F9FC),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 16,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1E4D92),
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1E4D92),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      onChanged: (query) {
+                        setState(() {
+                          searchQuery = query.toLowerCase();
+                        });
+                      },
                     ),
                   ),
                 ),
-                onChanged: (query) {
-                  setState(() {
-                    searchQuery = query.toLowerCase();
-                  });
-                },
               ),
             ),
-            // Tabs
-            DefaultTabController(
-              length: 2,
-              child: Column(
-                children: [
-                  const TabBar(
-                    labelColor: Color(0xFF1E4D92),
-                    unselectedLabelColor: Colors.black54,
-                    indicatorColor: Color(0xFF1E4D92),
-                    tabs: [
-                      Tab(text: "Destinations"),
-                      Tab(text: "Favorites"),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 700,
-                    child: TabBarView(
+          ),
+          SliverFillRemaining(
+            child: Column(
+              children: [
+                // Tabs and content here
+                Expanded(
+                  child: DefaultTabController(
+                    length: 2,
+                    child: Column(
                       children: [
-                        buildDestinations(context),
-                        buildFavorites(),
+                        const TabBar(
+                          labelColor: Color(0xFF1E4D92),
+                          unselectedLabelColor: Colors.black54,
+                          indicatorColor: Color(0xFF1E4D92),
+                          tabs: [
+                            Tab(text: "Destinations"),
+                            Tab(text: "Favorites"),
+                          ],
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              buildDestinations(context),
+                              buildFavorites(),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            // Footer
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              color: const Color(0xFF1E4D92),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text(
-                    "Travel Haven",
-                    style: TextStyle(
-                      fontFamily: "Caveat",
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFF6F9FC),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Wander. Explore. Discover.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13, color: Color(0xFFF6F9FC)),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -149,7 +137,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       {
         "place": "Tokyo",
         "price": 1500,
-        "description": "A blend of tradition and technology in Japan’s capital.",
+        "description":
+            "A blend of tradition and technology in Japan’s capital.",
         "image": "assets/img/tokyo.png",
       },
       {
@@ -228,8 +217,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
   // Destination Card
   Widget buildDestinationCard(Map<String, dynamic> destination) {
-    final isFavorite =
-        favorites.any((item) => item["place"] == destination["place"]);
+    final isFavorite = favorites.any(
+      (item) => item["place"] == destination["place"],
+    );
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -289,8 +279,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       onPressed: () {
                         setState(() {
                           if (isFavorite) {
-                            favorites.removeWhere((item) =>
-                                item["place"] == destination["place"]);
+                            favorites.removeWhere(
+                              (item) => item["place"] == destination["place"],
+                            );
                           } else {
                             favorites.add(destination);
                           }
@@ -332,7 +323,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       },
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -350,13 +341,37 @@ class AppBarWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.lineTo(0, size.height - 30);
+    path.moveTo(0, 0);
+    path.lineTo(size.width * 0.0003667, size.height * 0.8100800);
     path.quadraticBezierTo(
-      size.width / 2,
-      size.height,
-      size.width,
-      size.height - 30,
+      size.width * 0.1236444,
+      size.height * 0.6845400,
+      size.width * 0.2444111,
+      size.height * 0.8500200,
     );
+    path.cubicTo(
+      size.width * 0.3334778,
+      size.height * 0.7877200,
+      size.width * 0.4082444,
+      size.height * 0.8200800,
+      size.width * 0.4643889,
+      size.height * 0.9200000,
+    );
+    path.cubicTo(
+      size.width * 0.5266111,
+      size.height * 0.7738200,
+      size.width * 0.7073333,
+      size.height * 0.7294200,
+      size.width * 0.7873333,
+      size.height * 0.8234200,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.8718444,
+      size.height * 0.6790800,
+      size.width * 1.0003444,
+      size.height * 0.7259800,
+    );
+
     path.lineTo(size.width, 0);
     path.close();
     return path;
