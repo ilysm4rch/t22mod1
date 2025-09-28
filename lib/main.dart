@@ -68,7 +68,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "description":
           "One of the New 7 Wonders of Nature featuring a stunning underground river.",
       "image": "assets/img/pp1.jpeg",
-      "tag": "City",
+      "tag": "Beach",
       "inclusions": ["Boat Tour", "Buffet lunch", "Permits"],
     },
     {
@@ -77,7 +77,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "location": "Albay, Philippines",
       "description": "Iconic volcano known for its perfect cone shape.",
       "image": "assets/img/mayon1.jpg",
-      "tag": "City",
+      "tag": "Adventure",
       "inclusions": ["Guided tour", "ATV ride", "safety gear"],
     },
     {
@@ -93,6 +93,23 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // 1. Filter by search query and selected tag
+    final filteredDestinations = destinations.where((d) {
+      final matchesTag = selectedTag == "All" || d["tag"] == selectedTag;
+      final matchesSearch = searchQuery.isEmpty ||
+          d["place"].toLowerCase().contains(searchQuery) ||
+          d["location"].toLowerCase().contains(searchQuery);
+      return matchesTag && matchesSearch;
+    }).toList();
+
+    // 2. Split into "Best Deals" (first half) and "Local Destinations" (second half)
+    final splitIndex = (filteredDestinations.length / 2).ceil();
+    final bestDeals = filteredDestinations.sublist(
+        0, splitIndex > filteredDestinations.length ? filteredDestinations.length : splitIndex);
+    final localDestinations = filteredDestinations.sublist(
+        splitIndex > filteredDestinations.length ? filteredDestinations.length : splitIndex);
+
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
       body: CustomScrollView(
@@ -210,38 +227,51 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   const SizedBox(height: 20),
 
                   // Best Deals
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      "Best Deals",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                  if (bestDeals.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Text(
+                        "Best Deals",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  buildHorizontalCardList("Best"),
+                  if (bestDeals.isNotEmpty) buildHorizontalCardList(bestDeals),
 
                   const SizedBox(height: 20),
 
                   // Local Destinations
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      "Local Destinations",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                  if (localDestinations.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Text(
+                        "Local Destinations",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  buildHorizontalCardList("Local"),
+                  if (localDestinations.isNotEmpty) buildHorizontalCardList(localDestinations),
+
+                  if (filteredDestinations.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: Text(
+                          "No destinations found for your selection.",
+                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -260,7 +290,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         color: const Color(0xFFF7CAC9),
         borderRadius: BorderRadius.circular(25),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
         ],
       ),
@@ -320,190 +350,187 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   }
 
   // Horizontal card list
-  Widget buildHorizontalCardList(String section) {
-    final filtered = destinations.where((d) {
-      final matchesTag = selectedTag == "All" || d["tag"] == selectedTag;
-      return matchesTag;
-    }).toList();
-
+  Widget buildHorizontalCardList(List<Map<String, dynamic>> list) {
     return SizedBox(
       height: 300,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: filtered.length,
+        itemCount: list.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: buildDestinationCard(filtered[index]),
+            child: buildDestinationCard(list[index]),
           );
         },
       ),
     );
   }
 
- // Card design
-Widget buildDestinationCard(Map<String, dynamic> destination) {
-  final isFavorite = favorites.any(
-    (item) => item["place"] == destination["place"],
-  );
+  // Card design
+  Widget buildDestinationCard(Map<String, dynamic> destination) {
+    final isFavorite = favorites.any(
+      (item) => item["place"] == destination["place"],
+    );
 
-  return Container(
-    width: 220,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Colors.brown.shade200),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Image
-        Stack(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: Image.asset(
-                destination["image"],
-                height: 130,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              right: 8,
-              top: 8,
-              child: CircleAvatar(
-                backgroundColor: Colors.white70,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: const Color(0xFFE63946),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (isFavorite) {
-                        favorites.removeWhere(
-                          (item) => item["place"] == destination["place"],
-                        );
-                      } else {
-                        favorites.add(destination);
-                      }
-                    });
-                  },
+    return Container(
+      width: 220,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.brown.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
+                child: Image.asset(
+                  destination["image"],
+                  height: 130,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-          ],
-        ),
-
-        // Info
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                destination["place"],
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, size: 14, color: Colors.red),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      destination["location"],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+              Positioned(
+                right: 8,
+                top: 8,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white70,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: const Color(0xFFE63946),
                     ),
+                    onPressed: () {
+                      setState(() {
+                        if (isFavorite) {
+                          favorites.removeWhere(
+                            (item) => item["place"] == destination["place"],
+                          );
+                        } else {
+                          favorites.add(destination);
+                        }
+                      });
+                    },
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Tour Starts at ₱${destination["price"]}",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-
-              // Buttons
-              Row(
-                children: [
-                  Expanded( // Details button
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFFDC143C)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DestinationDetails(destination: destination),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Details",
-                        style: TextStyle(color: Color(0xFFDC143C)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8), // Add a small space between buttons
-                  Expanded( // Book button
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDC143C),
-                        minimumSize: const Size(double.infinity, 32), // Set width to fill Expanded
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookForm(
-                              destination: destination,
-                              onBook: (booking) {
-                                setState(() {
-                                  bookings.add({
-                                    ...booking,
-                                    'destination': {
-                                      'place': destination['place'],
-                                      'image': destination['image'],
-                                    },
-                                  });
-                                  print(
-                                      'Booking added: ${bookings.length}'); // Debug print
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      child: const Text("Book"),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
+
+          // Info
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  destination["place"],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, size: 14, color: Colors.red),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        destination["location"],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Tour Starts at ₱${destination["price"]}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      // Details button
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDC143C)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DestinationDetails(destination: destination),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Details",
+                          style: TextStyle(color: Color(0xFFDC143C)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8), // Add a small space between buttons
+                    Expanded(
+                      // Book button
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDC143C),
+                          minimumSize: const Size(double.infinity, 30), // Set width to fill Expanded
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookForm(
+                                destination: destination,
+                                onBook: (booking) {
+                                  setState(() {
+                                    bookings.add({
+                                      ...booking,
+                                      'destination': {
+                                        'place': destination['place'],
+                                        'image': destination['image'],
+                                      },
+                                    });
+                                    print(
+                                        'Booking added: ${bookings.length}'); // Debug print
+                                  });
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("Book"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class DestinationDetails extends StatelessWidget {

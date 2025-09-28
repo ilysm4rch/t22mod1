@@ -2,6 +2,130 @@ import 'package:flutter/material.dart';
 
 import 'booking_form.dart';
 import 'manage_booking.dart';
+// You will also need to import 'main.dart' or the file that contains DestinationDetails
+// If DestinationDetails is in main.dart, you need to import it. Assuming main.dart is TravelHome's file for now.
+// Since you provided the full code for TravelHome, I'll include the necessary import for DestinationDetails.
+
+// Import the file containing DestinationDetails. Assuming it's in a file named 'main.dart'
+// based on the context, but since you provided the full class structure, 
+// I'll assume you have a file with the DestinationDetails class definition.
+// If your main.dart is structured like in the prompt, you would need to import it.
+// For a standalone file, we must redefine or import it. For this example, I'll assume you have access.
+// Since the prompt provided DestinationDetails, I'll put it here to make the file runnable.
+
+// IMPORTANT: In a real Flutter project, if DestinationDetails is defined in the same file
+// as TravelHome (which is often named main.dart), you would need to import it here.
+// For the sake of providing a complete and correct Favorites.dart file, 
+// I will include the DestinationDetails class definition that was in the main.dart file.
+
+class DestinationDetails extends StatelessWidget {
+  final Map<String, dynamic> destination;
+  const DestinationDetails({super.key, required this.destination});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFDC143C),
+        title: Text(destination["place"]),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                destination["image"],
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              destination["place"],
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                const Icon(Icons.location_on, color: Colors.red, size: 16),
+                const SizedBox(width: 4),
+                Text(
+                  destination["location"],
+                  style: const TextStyle(color: Colors.black54),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(destination["description"]),
+            const SizedBox(height: 16),
+            const Text(
+              "Inclusions:",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            ...List.generate(
+              (destination["inclusions"] as List).length,
+              (i) => Row(
+                children: [
+                  const Icon(Icons.check, color: Colors.green, size: 18),
+                  const SizedBox(width: 6),
+                  Text(destination["inclusions"][i]),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AppBarWaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(size.width * 0.0003667, size.height * 0.8100800);
+    path.quadraticBezierTo(
+      size.width * 0.1236444,
+      size.height * 0.6845400,
+      size.width * 0.2444111,
+      size.height * 0.8500200,
+    );
+    path.cubicTo(
+      size.width * 0.3334778,
+      size.height * 0.7877200,
+      size.width * 0.4082444,
+      size.height * 0.8200800,
+      size.width * 0.4643889,
+      size.height * 0.9200000,
+    );
+    path.cubicTo(
+      size.width * 0.5266111,
+      size.height * 0.7738200,
+      size.width * 0.7073333,
+      size.height * 0.7294200,
+      size.width * 0.7873333,
+      size.height * 0.8234200,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.8718444,
+      size.height * 0.6790800,
+      size.width * 1.0003444,
+      size.height * 0.7259800,
+    );
+
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
 
 class Favorites extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
@@ -99,6 +223,14 @@ class _FavoritesState extends State<Favorites> {
                   if (index == 1) {
                     Navigator.pop(context); // Changed from push to pop
                   } else if (index == 2) {
+                    // Navigate to ManageBooking
+                    // Need to correctly pass the bookings list.
+                    // Since bookings is local to this state, a proper app state
+                    // management solution would be better, but for this copy-paste
+                    // scenario, we use the local list and a temporary callback.
+                    // NOTE: This implementation of passing 'bookings' is temporary
+                    // and won't reflect real bookings from TravelHome unless
+                    // passed through arguments/state management.
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -153,7 +285,8 @@ class _FavoritesState extends State<Favorites> {
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 0.7,
+        // Adjusted aspect ratio to accommodate the new buttons
+        childAspectRatio: 0.65, 
       ),
       itemCount: widget.favorites.length,
       itemBuilder: (context, index) {
@@ -169,15 +302,40 @@ class _FavoritesState extends State<Favorites> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.asset(
-              destination["image"],
-              height: 120,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+          // Stack for Image and Favorite Icon (same as original card)
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.asset(
+                  destination["image"],
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                right: 8,
+                top: 8,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white70,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(
+                      Icons.favorite, // Always filled since it's in the favorites list
+                      color: Color(0xFFE63946),
+                    ),
+                    onPressed: () {
+                      widget.onRemoveFavorite(destination);
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
+
+          // Info and Buttons
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -188,68 +346,112 @@ class _FavoritesState extends State<Favorites> {
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E4D92),
+                    color: Color(0xFF000000),
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  destination["description"],
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                // Location Row
+                Row(
+                  children: [
+                    const Icon(Icons.location_on, size: 14, color: Colors.red),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        destination["location"],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  "\$${destination["price"]}",
+                  "Tour Starts at ₱${destination["price"]}",
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
+
+                // Buttons Row (Copied from TravelHome card)
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.favorite,
-                        color: Color(0xFFE63946),
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        widget.onRemoveFavorite(
-                          destination,
-                        ); // Use the callback to remove
-                      },
-                    ),
-                    // Booking button
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E4D92),
-                        minimumSize: const Size(60, 30),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    Expanded(
+                      // Details button
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDC143C)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                          minimumSize: const Size(0, 30), // Smaller size for GridView item
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DestinationDetails(destination: destination),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Details",
+                          style: TextStyle(
+                            color: Color(0xFFDC143C), 
+                            fontSize: 12, // Smaller font size
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        "Book",
-                        style: TextStyle(fontSize: 12, color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookForm(
-                              destination: destination,
-                              onBook: (booking) {
-                                setState(() {
-                                  bookings.add(booking);
-                                });
-                              },
-                            ),
+                    ),
+                    const SizedBox(width: 8), // Add a small space between buttons
+                    Expanded(
+                      // Book button
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDC143C),
+                          minimumSize: const Size(0, 30), // Smaller size for GridView item
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ).then((_) => setState(() {}));
-                      },
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookForm(
+                                destination: destination,
+                                onBook: (booking) {
+                                  setState(() {
+                                    // The Favorites screen doesn't have the main bookings list
+                                    // but we can add the new booking to its local list for demonstration/testing
+                                    bookings.add({
+                                      ...booking,
+                                      'destination': {
+                                        'place': destination['place'],
+                                        'image': destination['image'],
+                                      },
+                                    });
+                                  });
+                                },
+                              ),
+                            ),
+                          ).then((_) => setState(() {}));
+                        },
+                        child: const Text(
+                          "Book",
+                          style: TextStyle(
+                            fontSize: 12, // Smaller font size
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -260,48 +462,4 @@ class _FavoritesState extends State<Favorites> {
       ),
     );
   }
-}
-
-class AppBarWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.moveTo(0, 0);
-    path.lineTo(size.width * 0.0003667, size.height * 0.8100800);
-    path.quadraticBezierTo(
-      size.width * 0.1236444,
-      size.height * 0.6845400,
-      size.width * 0.2444111,
-      size.height * 0.8500200,
-    );
-    path.cubicTo(
-      size.width * 0.3334778,
-      size.height * 0.7877200,
-      size.width * 0.4082444,
-      size.height * 0.8200800,
-      size.width * 0.4643889,
-      size.height * 0.9200000,
-    );
-    path.cubicTo(
-      size.width * 0.5266111,
-      size.height * 0.7738200,
-      size.width * 0.7073333,
-      size.height * 0.7294200,
-      size.width * 0.7873333,
-      size.height * 0.8234200,
-    );
-    path.quadraticBezierTo(
-      size.width * 0.8718444,
-      size.height * 0.6790800,
-      size.width * 1.0003444,
-      size.height * 0.7259800,
-    );
-
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
