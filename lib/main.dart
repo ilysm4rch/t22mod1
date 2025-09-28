@@ -7,6 +7,12 @@ class TravelHome extends StatefulWidget {
   TravelHomeState createState() => TravelHomeState();
 }
 
+List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.bookmark];
+
+List<String> navLabels = ["Favorites", "Home", "Trips"];
+
+int selectedIndex = 0;
+
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   int bookingCount = 0;
   final List<Map<String, dynamic>> bookings = [];
@@ -121,6 +127,60 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             ),
           ),
         ],
+      ),
+      Align(alignment: Alignment.bottomCenter, child: _navBar()),
+    );
+  }
+
+  // Navigation Bar
+  Widget _navBar() {
+    return Container(
+      height: 55,
+      margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7CAC9),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: navIcons.map((icon) {
+          int index = navIcons.indexOf(icon);
+          bool isSelected = selectedIndex == index;
+          return Material(
+            color: Colors.transparent,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(
+                      top: 15,
+                      bottom: 0,
+                      left: 35,
+                      right: 35,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 30,
+                      color: isSelected
+                          ? Color(0xFFDC143C)
+                          : const Color(0xFFF75270),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
