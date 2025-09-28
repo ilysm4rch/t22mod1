@@ -15,10 +15,13 @@ List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.bookmark];
 
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   int selectedIndex = 1;
-  final List<Map<String, dynamic>> bookings = []; // Add this
+  final List<Map<String, dynamic>> bookings = [];
   final List<Map<String, dynamic>> favorites = [];
 
   String searchQuery = "";
+  String selectedTag = "All";
+
+  final List<String> tags = ["All", "City", "Beach", "Cultural", "Adventure"];
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,6 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  // Search bar
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 60,
@@ -90,26 +92,37 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
           SliverFillRemaining(
             child: Column(
               children: [
-                // Tabs and content here
-                Expanded(
-                  child: DefaultTabController(
-                    length: 1,
-                    child: Column(
-                      children: [
-                        const TabBar(
-                          labelColor: Color(0xFF1E4D92),
-                          unselectedLabelColor: Colors.black54,
-                          indicatorColor: Color(0xFF1E4D92),
-                          tabs: [Tab(text: "Destinations")],
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [buildDestinations(context)],
+                // Filter tags row
+                SizedBox(
+                  height: 45,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemCount: tags.length,
+                    itemBuilder: (context, index) {
+                      final tag = tags[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ChoiceChip(
+                          label: Text(tag),
+                          selected: selectedTag == tag,
+                          selectedColor: const Color(0xFF1E4D92),
+                          labelStyle: TextStyle(
+                            color: selectedTag == tag
+                                ? Colors.white
+                                : Colors.black87,
                           ),
+                          onSelected: (_) {
+                            setState(() => selectedTag = tag);
+                          },
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
+                ),
+                // Destination grid
+                Expanded(
+                  child: buildDestinations(context),
                 ),
               ],
             ),
@@ -149,7 +162,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                     context,
                     MaterialPageRoute(
                       builder: (context) => Favorites(
-                        favorites: favorites, // Pass the favorites list
+                        favorites: favorites,
                         onRemoveFavorite: (destination) {
                           setState(() {
                             favorites.removeWhere(
@@ -165,21 +178,16 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ManageBooking(
-                        bookings: bookings, // Pass the bookings list
+                        bookings: bookings,
                         onRemoveBooking: (index) {
                           setState(() {
-                            bookings.removeAt(
-                              index,
-                            ); // Remove from main list when canceled
+                            bookings.removeAt(index);
                           });
                         },
                       ),
                     ),
-                  ).then(
-                    (_) => setState(() => selectedIndex = 1),
-                  ); // Reset to home when returning
+                  ).then((_) => setState(() => selectedIndex = 1));
                 }
-                // Don't navigate for index 1 (Home) since we're already there
               },
               child: Column(
                 children: [
@@ -216,31 +224,36 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
         "price": 1200,
         "description": "The city of lights, love, and iconic Eiffel Tower.",
         "image": "assets/img/paris.png",
+        "tag": "City",
       },
       {
         "place": "Tokyo",
         "price": 1500,
-        "description":
-            "A blend of tradition and technology in Japan’s capital.",
+        "description": "A blend of tradition and technology in Japan’s capital.",
         "image": "assets/img/tokyo.png",
+        "tag": "Cultural",
       },
       {
         "place": "Bali",
         "price": 1000,
         "description": "A tropical paradise with beaches and temples.",
         "image": "assets/img/bali.png",
+        "tag": "Beach",
       },
       {
         "place": "New York",
         "price": 1300,
         "description": "The city that never sleeps, full of energy.",
         "image": "assets/img/newyork.png",
+        "tag": "City",
       },
     ];
 
-    final filtered = destinations
-        .where((d) => d["place"].toLowerCase().contains(searchQuery))
-        .toList();
+    final filtered = destinations.where((d) {
+      final matchesQuery = d["place"].toLowerCase().contains(searchQuery);
+      final matchesTag = selectedTag == "All" || d["tag"] == selectedTag;
+      return matchesQuery && matchesTag;
+    }).toList();
 
     return filtered.isEmpty
         ? const Center(
@@ -280,7 +293,6 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: Image.asset(
@@ -322,7 +334,6 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Favorite button
                     IconButton(
                       icon: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -341,7 +352,6 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         });
                       },
                     ),
-                    // Booking button
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1E4D92),
