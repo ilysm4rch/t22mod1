@@ -28,7 +28,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "place": "Siargao",
       "price": 10000,
       "location": "Siargao, Philippines",
-      "description": "Discover the beauty of ganito ganyan! Kaunting description here.",
+      "description":
+          "Discover the beauty of ganito ganyan! Kaunting description here.",
       "image": "assets/img/bali.png",
       "tag": "Beach",
     },
@@ -113,7 +114,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 children: [
                   // Discover
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Text(
                       "Discover",
                       style: const TextStyle(
@@ -137,7 +141,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           child: ChoiceChip(
                             label: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 6),
+                                horizontal: 16,
+                                vertical: 6,
+                              ),
                               child: Text(tag),
                             ),
                             selected: selectedTag == tag,
@@ -145,7 +151,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                             backgroundColor: const Color(0xFFF7CAC9),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: selectedTag == tag ? Colors.white : Colors.black87,
+                              color: selectedTag == tag
+                                  ? Colors.white
+                                  : Colors.black87,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
@@ -163,7 +171,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
                   // Best Deals
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Text(
                       "Best Deals",
                       style: const TextStyle(
@@ -178,7 +189,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
 
                   // Local Destinations
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Text(
                       "Local Destinations",
                       style: const TextStyle(
@@ -255,7 +269,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             icon: Icon(
               icon,
               size: 30,
-              color: isSelected ? const Color(0xFFDC143C) : const Color(0xFFF75270),
+              color: isSelected
+                  ? const Color(0xFFDC143C)
+                  : const Color(0xFFF75270),
             ),
           );
         }).toList(),
@@ -306,7 +322,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: Image.asset(
                   destination["image"],
                   height: 120,
@@ -350,9 +368,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
               children: [
                 Text(
                   "Name of Tourist Attraction",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
@@ -361,7 +377,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                     Expanded(
                       child: Text(
                         destination["location"],
-                        style: const TextStyle(fontSize: 12, color: Colors.black54),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -370,9 +389,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 const SizedBox(height: 8),
                 Text(
                   "Tour Starts at ₱${destination["price"]}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
 
@@ -412,10 +429,14 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                                 setState(() {
                                   bookings.add({
                                     ...booking,
-                                    'destination': destination,
+                                    'destination': {
+                                      'place': destination['place'],
+                                      'image': destination['image'],
+                                    },
                                   });
-                                  // Add debug print to verify booking is added
-                                  print('Booking added: ${bookings.length}');
+                                  print(
+                                    'Booking added: ${bookings.length}',
+                                  ); // Debug print
                                 });
                               },
                             ),
