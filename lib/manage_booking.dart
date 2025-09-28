@@ -17,7 +17,11 @@ class ManageBooking extends StatefulWidget {
 
 class _ManageBookingState extends State<ManageBooking> {
   int selectedIndex = 2;
-  final List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.book];
+  final List<IconData> navIcons = [
+    Icons.favorite,
+    Icons.home,
+    Icons.calendar_month,
+  ];
 
   @override
   Widget build(BuildContext context) {

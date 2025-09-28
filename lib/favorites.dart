@@ -19,7 +19,11 @@ class Favorites extends StatefulWidget {
 
 class _FavoritesState extends State<Favorites> {
   int selectedIndex = 0;
-  final List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.book];
+  final List<IconData> navIcons = [
+    Icons.favorite,
+    Icons.home,
+    Icons.calendar_month,
+  ];
   final List<Map<String, dynamic>> bookings = [];
 
   @override
