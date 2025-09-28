@@ -362,7 +362,12 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                               destination: destination,
                               onBook: (booking) {
                                 setState(() {
-                                  bookings.add(booking);
+                                  bookings.add({
+                                    ...booking,
+                                    'destination': destination,
+                                  });
+                                  // Add debug print to verify booking is added
+                                  print('Booking added: ${bookings.length}');
                                 });
                               },
                             ),

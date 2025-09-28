@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'manage_booking.dart';
 
 class BookingSummary extends StatelessWidget {
   final Map<String, dynamic> bookingData;
@@ -191,13 +190,16 @@ class BookingSummary extends StatelessWidget {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFDC143C),
-                          minimumSize: const Size(130, 30),
+                          minimumSize: const Size(130, 45),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                         onPressed: () {
-                          onBook(bookingData); // Save the booking data
+                          // First call onBook to save the data
+                          onBook(
+                            bookingData,
+                          ); // This adds the booking to the main list
 
                           // Show success message
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -211,22 +213,16 @@ class BookingSummary extends StatelessWidget {
                             ),
                           );
 
-                          // Navigate after short delay to show the message
+                          // Navigate back to TravelHome after delay
                           Future.delayed(const Duration(seconds: 1), () {
-                            Navigator.pushAndRemoveUntil(
+                            Navigator.of(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => ManageBooking(
-                                  bookings: bookingData['bookings'] ?? [],
-                                ),
-                              ),
-                              (route) => false,
-                            );
+                            ).popUntil((route) => route.isFirst);
                           });
                         },
                         child: const Text(
                           'Finish',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
+                          style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ],
