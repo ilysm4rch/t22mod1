@@ -1115,7 +1115,8 @@ class _BookFormState extends State<BookForm> {
       _formSubmitted = true;
     });
 
-    if (_formKey.currentState!.validate()) {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (isValid) {
       if (_currentStep < 2) {
         // Move to next step
         setState(() {

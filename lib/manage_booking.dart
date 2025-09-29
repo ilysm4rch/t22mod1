@@ -103,10 +103,6 @@ class _ManageBookingState extends State<ManageBooking> {
   }
 
   Widget buildBookingsList() {
-    print(
-      'Building bookings list with ${widget.bookings.length} bookings',
-    ); // Debug print
-
     if (widget.bookings.isEmpty) {
       return const Center(
         child: Text(
@@ -120,8 +116,15 @@ class _ManageBookingState extends State<ManageBooking> {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
+    // Render as a grid similar to Favorites
+    return GridView.builder(
+      padding: const EdgeInsets.all(12),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.70,
+      ),
       itemCount: widget.bookings.length,
       itemBuilder: (context, index) {
         try {
@@ -130,9 +133,7 @@ class _ManageBookingState extends State<ManageBooking> {
           // Validate booking data structure
           if (!booking.containsKey('destination') ||
               booking['destination'] == null) {
-            print(
-              'Invalid booking data at index $index: $booking',
-            ); // Debug print
+            print('Invalid booking data at index $index: $booking');
             return const SizedBox.shrink();
           }
 
@@ -141,18 +142,154 @@ class _ManageBookingState extends State<ManageBooking> {
           if (destination == null ||
               (destination['place'] == null && destination['image'] == null)) {
             // If absolutely no destination info, skip rendering this item
-            print('Invalid destination data: $destination'); // Debug print
+            print('Invalid destination data: $destination');
             return const SizedBox.shrink();
           }
 
-          return buildBookingCard(booking, index);
+          return buildBookingGridCard(booking, index);
         } catch (e) {
-          print(
-            'Error building booking card at index $index: $e',
-          ); // Debug print
+          print('Error building booking grid card at index $index: $e');
           return const SizedBox.shrink();
         }
       },
+    );
+  }
+
+  Widget buildBookingGridCard(Map<String, dynamic> booking, int index) {
+    final destination = booking['destination'] as Map<String, dynamic>?;
+    if (destination == null) return const SizedBox.shrink();
+
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: Image.asset(
+              destination['image'] ?? 'assets/img/bg-top.jpg',
+              height: 120,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Info
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  destination['place'] ?? 'Unknown Location',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF000000),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Arrival: ${booking['arrival'] ?? '—'}',
+                  style: const TextStyle(fontSize: 12, color: Colors.black87),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  'Departure: ${booking['departure'] ?? '—'}',
+                  style: const TextStyle(fontSize: 12, color: Colors.black87),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '${booking['adults'] ?? 0} Adults, ${booking['kids'] ?? 0} Kids',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFF1E4D92)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 0,
+                          ),
+                          minimumSize: const Size(0, 30),
+                        ),
+                        onPressed: () => showBookingDetails(booking),
+                        child: const Text(
+                          'View',
+                          style: TextStyle(
+                            color: Color(0xFF1E4D92),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDC143C),
+                          minimumSize: const Size(0, 30),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 0,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Cancel Booking'),
+                              content: const Text(
+                                'Are you sure you want to cancel this booking?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    widget.onRemoveBooking(index);
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Yes'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
