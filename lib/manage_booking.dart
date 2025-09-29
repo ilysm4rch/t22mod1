@@ -605,8 +605,18 @@ Gender: ${participant['gender']}""";
                       ),
                     );
                   } else if (index == 1) {
-                    // Navigate to home by popping until we reach main.dart
                     Navigator.of(context).popUntil((route) => route.isFirst);
+                  } else if (index == 2) {
+                    // Re-fetch bookings from main screen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ManageBooking(
+                          bookings: widget.bookings,
+                          onRemoveBooking: widget.onRemoveBooking,
+                        ),
+                      ),
+                    );
                   }
                 },
                 child: Container(

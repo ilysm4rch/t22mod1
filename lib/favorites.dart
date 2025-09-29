@@ -235,11 +235,12 @@ class _FavoritesState extends State<Favorites> {
                     // NOTE: This implementation of passing 'bookings' is temporary
                     // and won't reflect real bookings from TravelHome unless
                     // passed through arguments/state management.
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ManageBooking(
-                          bookings: bookings,
+                          bookings:
+                              bookings, // Pass the bookings from main.dart
                           onRemoveBooking: (index) {
                             setState(() {
                               bookings.removeAt(index);

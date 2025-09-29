@@ -478,7 +478,6 @@ class _ThirdFormState extends State<ThirdForm> {
                                   'paymentMode': selectedPaymentMode,
                                 },
                               };
-                              widget.onBook(updatedBookingData);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

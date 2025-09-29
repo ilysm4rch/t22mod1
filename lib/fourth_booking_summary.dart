@@ -196,25 +196,20 @@ class BookingSummary extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // First call onBook to save the data
+                          print('Submitting final booking data: $bookingData');
                           onBook(
                             bookingData,
-                          ); // This adds the booking to the main list
+                          ); // Add booking to list in main.dart
 
-                          // Show success message
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                'You successfully booked!',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Color(0xFFDC143C),
-                              duration: Duration(seconds: 2),
+                              content: Text('You successfully booked!'),
+                              backgroundColor: Color(0xFF1E4D92),
                             ),
                           );
 
-                          // Navigate back to TravelHome after delay
-                          Future.delayed(const Duration(seconds: 1), () {
+                          // Pop all routes back to home screen after short delay
+                          Future.delayed(const Duration(milliseconds: 500), () {
                             Navigator.of(
                               context,
                             ).popUntil((route) => route.isFirst);

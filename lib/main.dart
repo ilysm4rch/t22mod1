@@ -16,7 +16,6 @@ List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.calendar_month];
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   int selectedIndex = 1;
   final List<Map<String, dynamic>> bookings = [];
-
   final List<Map<String, dynamic>> favorites = [];
 
   String searchQuery = "";
@@ -516,43 +515,19 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                             MaterialPageRoute(
                               builder: (context) => BookForm(
                                 destination: destination,
-                                onBook: (bookingData) {
+                                onBook: (booking) {
                                   setState(() {
-                                    // Add the booking with all required data
                                     bookings.add({
-                                      ...bookingData,
+                                      ...booking,
                                       'destination': {
                                         'place': destination['place'],
                                         'image': destination['image'],
                                       },
                                     });
                                     print(
-                                      'Booking added. Total bookings: ${bookings.length}',
+                                      'Booking added: ${bookings.length}',
                                     ); // Debug print
                                   });
-
-                                  // Show success message and navigate
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('You successfully booked!'),
-                                      backgroundColor: Color(0xFF1E4D92),
-                                    ),
-                                  );
-
-                                  // Navigate to ManageBooking
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ManageBooking(
-                                        bookings: bookings,
-                                        onRemoveBooking: (index) {
-                                          setState(() {
-                                            bookings.removeAt(index);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
                                 },
                               ),
                             ),

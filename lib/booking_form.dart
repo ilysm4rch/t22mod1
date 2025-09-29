@@ -708,20 +708,29 @@ class _BookFormState extends State<BookForm> {
                                     adultCount > 0) {
                                   // Collect all form data into a Map
                                   final bookingData = {
-                                    'destination': widget.destination['place'],
+                                    'destination': {
+                                      'place': widget.destination['place'],
+                                      'image': widget
+                                          .destination['image'], // Add this
+                                      'price': widget.destination['price'],
+                                    },
                                     'arrival': _arrivalController.text,
                                     'departure': _departureController.text,
                                     'adults': adultCount,
                                     'kids': kidsCount,
                                     'firstName': _firstNameController.text,
                                     'lastName': _lastNameController.text,
-                                    'age': selectedAge, // Update this
-                                    'gender': selectedGender, // Update this
+                                    'age': selectedAge,
+                                    'gender': selectedGender,
                                     'origin': _originController.text,
-                                    'price': widget.destination['price'],
+                                    'timestamp': DateTime.now()
+                                        .toString(), // Add unique identifier
                                   };
 
-                                  // Navigate to SecondBookingForm with the collected data
+                                  print(
+                                    'Initial booking data: $bookingData',
+                                  ); // Debug print
+
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
