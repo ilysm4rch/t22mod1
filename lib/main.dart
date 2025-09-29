@@ -495,7 +495,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                             ),
                           );
                         },
-                        child: const Text("Book"),
+                        child: const Text(
+                          "Book",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
