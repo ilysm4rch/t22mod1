@@ -91,13 +91,22 @@ class BookingSummary extends StatelessWidget {
                       MapEntry(
                         'Full Name:',
                         _getFullName(
-                          bookingData['firstName'],
-                          bookingData['lastName'],
+                          bookingData['bookerInfo']['firstName'],
+                          bookingData['bookerInfo']['lastName'],
                         ),
                       ),
-                      MapEntry('Age:', '${bookingData['age'] ?? ''}'),
-                      MapEntry('Gender:', bookingData['gender'] ?? ''),
-                      MapEntry('Origin:', bookingData['origin'] ?? ''),
+                      MapEntry(
+                        'Age:',
+                        '${bookingData['bookerInfo']['age'] ?? ''}',
+                      ),
+                      MapEntry(
+                        'Gender:',
+                        bookingData['bookerInfo']['gender'] ?? '',
+                      ),
+                      MapEntry(
+                        'Origin:',
+                        bookingData['bookerInfo']['origin'] ?? '',
+                      ),
                     ],
                   ),
 

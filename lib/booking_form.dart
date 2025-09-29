@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'second_booking_form.dart';
+import 'booking_summary.dart';
 
 class BookForm extends StatefulWidget {
   final Map<String, dynamic> destination;
@@ -14,40 +13,1173 @@ class BookForm extends StatefulWidget {
 
 class _BookFormState extends State<BookForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _formSubmitted = false;
+  int _currentStep = 0; // Track which step we're on
+
+  // All controllers from all forms
   final _arrivalController = TextEditingController();
   final _departureController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _ageController = TextEditingController();
-  final _genderController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _mobileController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _senderNameController = TextEditingController();
   final _originController = TextEditingController();
+  final _bookerFirstNameController = TextEditingController();
+  final _bookerLastNameController = TextEditingController();
 
+  // All state variables
   int adultCount = 0;
   int kidsCount = 0;
   int selectedAge = 18;
   String? selectedGender;
-
-  // Add these variables
+  String? selectedPaymentMode;
   DateTime? selectedArrival;
   DateTime? selectedDeparture;
+  List<Map<String, dynamic>> participants = [];
 
-  bool _formSubmitted = false; // Track if the form has been submitted
+  // Payment options
+  final List<String> paymentModes = [
+    'Credit Card',
+    'Debit Card',
+    'PayPal',
+    'Bank Transfer',
+    'GCash',
+  ];
 
   @override
   void dispose() {
+    _bookerFirstNameController.dispose();
+    _bookerLastNameController.dispose();
+    // Dispose all controllers
     _arrivalController.dispose();
     _departureController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _ageController.dispose();
-    _genderController.dispose();
+    _addressController.dispose();
+    _mobileController.dispose();
+    _emailController.dispose();
+    _senderNameController.dispose();
     _originController.dispose();
     super.dispose();
+  }
+
+  // Helper method to get current step title
+  String get _currentTitle {
+    switch (_currentStep) {
+      case 0:
+        return 'Basic Information';
+      case 1:
+        return 'Participants Information';
+      case 2:
+        return 'Contact & Payment';
+      default:
+        return 'Booking Form';
+    }
+  }
+
+  // Helper method to build form content based on current step
+  Widget _buildStepContent() {
+    switch (_currentStep) {
+      case 0:
+        return _buildBasicInfoForm();
+      case 1:
+        return _buildParticipantsForm();
+      case 2:
+        return _buildContactAndPaymentForm();
+      default:
+        return Container();
+    }
+  }
+
+  // Build methods for each step...
+  Widget _buildBasicInfoForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Booking Form',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 25),
+        // Booking Information Section
+        const Text(
+          'Booking Information',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Arrival'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _arrivalController,
+                    readOnly: true, // Make it read only
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      suffixIcon: Icon(
+                        Icons.calendar_today,
+                        color: Color(0xFF1E4D92),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: const ColorScheme.light(
+                                primary: Color(0xFF1E4D92),
+                                onPrimary: Colors.white,
+                                onSurface: Color(0xFF1E4D92),
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          selectedArrival = picked;
+                          _arrivalController.text = _formatDate(picked);
+                        });
+                      }
+                    },
+                    validator: (value) {
+                      // Only show error if user has attempted to submit the form
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Departure'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _departureController,
+                    readOnly: true, // Make it read only
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      suffixIcon: Icon(
+                        Icons.calendar_today,
+                        color: Color(0xFF1E4D92),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    onTap: () async {
+                      if (selectedArrival == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please select arrival date first'),
+                            backgroundColor: Color(0xFFDC143C),
+                          ),
+                        );
+                        return;
+                      }
+
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: selectedArrival!.add(
+                          const Duration(days: 1),
+                        ),
+                        firstDate: selectedArrival!.add(
+                          const Duration(days: 1),
+                        ),
+                        lastDate: selectedArrival!.add(
+                          const Duration(days: 30),
+                        ),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: const ColorScheme.light(
+                                primary: Color(0xFF1E4D92),
+                                onPrimary: Colors.white,
+                                onSurface: Color(0xFF1E4D92),
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          selectedDeparture = picked;
+                          _departureController.text = _formatDate(picked);
+                        });
+                      }
+                    },
+                    validator: (value) {
+                      // Only show error if user has attempted to submit the form
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const Text('Number in the group'),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Adult'),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFF7CAC9)),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (adultCount > 0) adultCount--;
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '$adultCount',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              adultCount++;
+                              // Update participants list when adding adults
+                              _updateParticipantsList();
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Kids'),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFF7CAC9)),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (kidsCount > 0) kidsCount--;
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '$kidsCount',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              kidsCount++;
+                              // Update participants list when adding kids
+                              _updateParticipantsList();
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 25),
+        const Text(
+          'Booker Information',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('First Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _bookerFirstNameController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    validator: (value) {
+                      // Only show error if form has been submitted
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Last Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _bookerLastNameController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    validator: (value) {
+                      // Only show error if form has been submitted
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Age'),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFF7CAC9)),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (selectedAge > 0) selectedAge--;
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '$selectedAge',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              if (selectedAge < 100) selectedAge++;
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Gender'),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFF7CAC9)),
+                    ),
+                    child: DropdownButtonFormField<String>(
+                      value: selectedGender,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                        border: InputBorder.none,
+                      ),
+                      hint: const Text('Select Gender'),
+                      items: ['Male', 'Female', 'Other']
+                          .map(
+                            (String value) => DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedGender = newValue;
+                        });
+                      },
+                      validator: (value) {
+                        if (_formSubmitted &&
+                            (value == null || value.isEmpty)) {
+                          return 'This field is required';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        const Text('Origin'),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _originController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFDC143C)),
+            ),
+          ),
+          onChanged: (value) {
+            _formKey.currentState?.validate();
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildParticipantsForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Participants Information',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 25),
+        ...List.generate(
+          participants.length,
+          (index) => _buildParticipantForm(index),
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _buildParticipantForm(int index) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Participant ${index + 1}',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('First Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        participants[index]['firstName'] = value;
+                        // Trigger validation on change
+                        _formKey.currentState?.validate();
+                      });
+                    },
+                    validator: (value) {
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Last Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        participants[index]['lastName'] = value;
+                        // Trigger validation on change
+                        _formKey.currentState?.validate();
+                      });
+                    },
+                    validator: (value) {
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Age'),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFF7CAC9)),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (participants[index]['age'] > 0) {
+                                participants[index]['age']--;
+                              }
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '${participants[index]['age']}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              if (participants[index]['age'] < 100) {
+                                participants[index]['age']++;
+                              }
+                            });
+                          },
+                          color: const Color(0xFF1E4D92),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Gender'),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFF7CAC9)),
+                    ),
+                    child: DropdownButtonFormField<String>(
+                      value: participants[index]['gender'],
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                        border: InputBorder.none,
+                      ),
+                      hint: const Text('Select Gender'),
+                      items: ['Male', 'Female', 'Other']
+                          .map(
+                            (String value) => DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          participants[index]['gender'] = newValue;
+                          // Trigger validation on change
+                          _formKey.currentState?.validate();
+                        });
+                      },
+                      validator: (value) {
+                        if (_formSubmitted &&
+                            (value == null || value.isEmpty)) {
+                          return 'This field is required';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 25),
+      ],
+    );
+  }
+
+  Widget _buildContactAndPaymentForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Contact Information',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 25),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('First Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _firstNameController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    validator: (value) {
+                      // Only show error if form has been submitted
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Last Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _lastNameController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFDC143C)),
+                      ),
+                    ),
+                    validator: (value) {
+                      // Only show error if form has been submitted
+                      if (_formSubmitted && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        const Text('Complete Address'),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _addressController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFDC143C)),
+            ),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _formKey.currentState?.validate();
+            });
+          },
+          validator: (value) {
+            if (_formSubmitted && (value == null || value.isEmpty)) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 15),
+        const Text('Mobile Number'),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _mobileController,
+          keyboardType: TextInputType.phone,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFDC143C)),
+            ),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _formKey.currentState?.validate();
+            });
+          },
+          validator: (value) {
+            if (_formSubmitted && (value == null || value.isEmpty)) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 15),
+        const Text('Email Address'),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFDC143C)),
+            ),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _formKey.currentState?.validate();
+            });
+          },
+          validator: (value) {
+            if (_formSubmitted && (value == null || value.isEmpty)) {
+              return 'This field is required';
+            }
+            // Only validate email format if there's a value
+            if (value != null && value.isNotEmpty && !value.contains('@')) {
+              return 'Please enter a valid email address';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 25),
+        const Text(
+          'Payment',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E4D92),
+          ),
+        ),
+        const SizedBox(height: 25),
+        const Text("Sender's Full Name"),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _senderNameController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFF7CAC9)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFDC143C)),
+            ),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _formKey.currentState?.validate();
+            });
+          },
+          validator: (value) {
+            if (_formSubmitted && (value == null || value.isEmpty)) {
+              return 'This field is required';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 15),
+        const Text('Mode of Payment'),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFF7CAC9)),
+          ),
+          child: DropdownButtonFormField<String>(
+            value: selectedPaymentMode,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+              border: InputBorder.none,
+            ),
+            hint: const Text('Select Payment Mode'),
+            items: paymentModes
+                .map(
+                  (String value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  ),
+                )
+                .toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedPaymentMode = newValue;
+                _formKey.currentState?.validate();
+              });
+            },
+            validator: (value) {
+              if (_formSubmitted && (value == null || value.isEmpty)) {
+                return 'This field is required';
+              }
+              return null;
+            },
+          ),
+        ),
+        const SizedBox(height: 25),
+      ],
+    );
   }
 
   // Helper method to format date
   String _formatDate(DateTime date) {
     return "${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}";
+  }
+
+  // Helper method to handle next button press
+  void _handleNext() {
+    setState(() {
+      _formSubmitted = true;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      if (_currentStep < 2) {
+        // Move to next step
+        setState(() {
+          _currentStep++;
+        });
+      } else {
+        // On final step, prepare booking data and navigate to summary
+        final bookingData = {
+          'destination': widget.destination,
+          'arrival': _arrivalController.text,
+          'departure': _departureController.text,
+          'adults': adultCount,
+          'kids': kidsCount,
+          'bookerInfo': {
+            'firstName': _bookerFirstNameController.text,
+            'lastName': _bookerLastNameController.text,
+            'age': selectedAge,
+            'gender': selectedGender,
+            'origin': _originController.text,
+          },
+          'participants': participants,
+          'contactInfo': {
+            'firstName': _firstNameController.text,
+            'lastName': _lastNameController.text,
+            'address': _addressController.text,
+            'mobile': _mobileController.text,
+            'email': _emailController.text,
+          },
+          'payment': {
+            'senderName': _senderNameController.text,
+            'paymentMode': selectedPaymentMode,
+          },
+        };
+
+        // Navigate to booking summary
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                BookingSummary(bookingData: bookingData, onBook: widget.onBook),
+          ),
+        );
+      }
+    }
+  }
+
+  void _updateParticipantsList() {
+    final totalParticipants = adultCount + kidsCount;
+    if (totalParticipants > participants.length) {
+      // Add new participants
+      while (participants.length < totalParticipants) {
+        participants.add({
+          'firstName': '',
+          'lastName': '',
+          'age': 18,
+          'gender': null,
+        });
+      }
+    } else if (totalParticipants < participants.length) {
+      // Remove excess participants
+      while (participants.length > totalParticipants) {
+        participants.removeLast();
+      }
+    }
   }
 
   @override
@@ -60,24 +1192,29 @@ class _BookFormState extends State<BookForm> {
             expandedHeight: 150,
             pinned: true,
             backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false, // Remove the leading back button
+            automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: const EdgeInsets.only(bottom: 80),
-              title: const Text(
-                'BOOKING',
-                style: TextStyle(
-                  color: Color(0xFFFFFFFF),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'BOOKING',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               background: ClipPath(
                 clipper: AppBarWaveClipper(),
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/img/bg-top.jpg"),
+                      image: const AssetImage("assets/img/bg-top.jpg"),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(0.2),
@@ -94,599 +1231,55 @@ class _BookFormState extends State<BookForm> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Form content in the middle
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Booking Form',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E4D92),
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        // Booking Information Section
-                        const Text(
-                          'Booking Information',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E4D92),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Arrival'),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: _arrivalController,
-                                    readOnly: true, // Make it read only
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      suffixIcon: Icon(
-                                        Icons.calendar_today,
-                                        color: Color(0xFF1E4D92),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFDC143C),
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () async {
-                                      final DateTime?
-                                      picked = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now(),
-                                        lastDate: DateTime.now().add(
-                                          const Duration(days: 365),
-                                        ),
-                                        builder: (context, child) {
-                                          return Theme(
-                                            data: Theme.of(context).copyWith(
-                                              colorScheme:
-                                                  const ColorScheme.light(
-                                                    primary: Color(0xFF1E4D92),
-                                                    onPrimary: Colors.white,
-                                                    onSurface: Color(
-                                                      0xFF1E4D92,
-                                                    ),
-                                                  ),
-                                            ),
-                                            child: child!,
-                                          );
-                                        },
-                                      );
-                                      if (picked != null) {
-                                        setState(() {
-                                          selectedArrival = picked;
-                                          _arrivalController.text = _formatDate(
-                                            picked,
-                                          );
-                                        });
-                                      }
-                                    },
-                                    validator: (value) {
-                                      // Only show error if user has attempted to submit the form
-                                      if (_formSubmitted &&
-                                          (value == null || value.isEmpty)) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Departure'),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: _departureController,
-                                    readOnly: true, // Make it read only
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      suffixIcon: Icon(
-                                        Icons.calendar_today,
-                                        color: Color(0xFF1E4D92),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFDC143C),
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () async {
-                                      if (selectedArrival == null) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'Please select arrival date first',
-                                            ),
-                                            backgroundColor: Color(0xFFDC143C),
-                                          ),
-                                        );
-                                        return;
-                                      }
-
-                                      final DateTime?
-                                      picked = await showDatePicker(
-                                        context: context,
-                                        initialDate: selectedArrival!.add(
-                                          const Duration(days: 1),
-                                        ),
-                                        firstDate: selectedArrival!.add(
-                                          const Duration(days: 1),
-                                        ),
-                                        lastDate: selectedArrival!.add(
-                                          const Duration(days: 30),
-                                        ),
-                                        builder: (context, child) {
-                                          return Theme(
-                                            data: Theme.of(context).copyWith(
-                                              colorScheme:
-                                                  const ColorScheme.light(
-                                                    primary: Color(0xFF1E4D92),
-                                                    onPrimary: Colors.white,
-                                                    onSurface: Color(
-                                                      0xFF1E4D92,
-                                                    ),
-                                                  ),
-                                            ),
-                                            child: child!,
-                                          );
-                                        },
-                                      );
-                                      if (picked != null) {
-                                        setState(() {
-                                          selectedDeparture = picked;
-                                          _departureController.text =
-                                              _formatDate(picked);
-                                        });
-                                      }
-                                    },
-                                    validator: (value) {
-                                      // Only show error if user has attempted to submit the form
-                                      if (_formSubmitted &&
-                                          (value == null || value.isEmpty)) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text('Number in the group'),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Adult'),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(0xFFF7CAC9),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.remove),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (adultCount > 0) adultCount--;
-                                            });
-                                          },
-                                          color: const Color(0xFF1E4D92),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            '$adultCount',
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add),
-                                          onPressed: () {
-                                            setState(() {
-                                              adultCount++;
-                                            });
-                                          },
-                                          color: const Color(0xFF1E4D92),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Kids'),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(0xFFF7CAC9),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.remove),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (kidsCount > 0) kidsCount--;
-                                            });
-                                          },
-                                          color: const Color(0xFF1E4D92),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            '$kidsCount',
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add),
-                                          onPressed: () {
-                                            setState(() {
-                                              kidsCount++;
-                                            });
-                                          },
-                                          color: const Color(0xFF1E4D92),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 25),
-                        const Text(
-                          'Booker Information',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E4D92),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Full Name'),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: _firstNameController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFDC143C),
-                                        ),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      // Only show error if form has been submitted
-                                      if (_formSubmitted &&
-                                          (value == null || value.isEmpty)) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Last Name'),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: _lastNameController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFF7CAC9),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xFFDC143C),
-                                        ),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      // Only show error if form has been submitted
-                                      if (_formSubmitted &&
-                                          (value == null || value.isEmpty)) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Age'),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(0xFFF7CAC9),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.remove),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (selectedAge > 0)
-                                                selectedAge--;
-                                            });
-                                          },
-                                          color: const Color(0xFF1E4D92),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            '$selectedAge',
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add),
-                                          onPressed: () {
-                                            setState(() {
-                                              if (selectedAge < 100)
-                                                selectedAge++;
-                                            });
-                                          },
-                                          color: const Color(0xFF1E4D92),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Gender'),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: const Color(0xFFF7CAC9),
-                                      ),
-                                    ),
-                                    child: DropdownButtonFormField<String>(
-                                      value: selectedGender,
-                                      decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                        ),
-                                        border: InputBorder.none,
-                                      ),
-                                      hint: const Text('Select Gender'),
-                                      items: ['Male', 'Female', 'Other']
-                                          .map(
-                                            (String value) =>
-                                                DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                ),
-                                          )
-                                          .toList(),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          selectedGender = newValue;
-                                        });
-                                      },
-                                      validator: (value) {
-                                        if (_formSubmitted &&
-                                            (value == null || value.isEmpty)) {
-                                          return 'This field is required';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text('Origin'),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _originController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFF7CAC9),
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFF7CAC9),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFDC143C),
-                              ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _currentTitle,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E4D92),
                             ),
                           ),
-                          onChanged: (value) {
-                            _formKey.currentState?.validate();
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'This field is required';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+                          const SizedBox(height: 20),
+                          _buildStepContent(),
+                        ],
+                      ),
                     ),
                   ),
-                  // Bottom buttons and dots remain the same
+                  // Bottom navigation
                   Column(
                     children: [
-                      // Buttons first
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          bottom: 20, // Reduced bottom padding
-                          top: 0,
-                        ),
+                        padding: const EdgeInsets.all(20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFF7CAC9),
-                                minimumSize: const Size(130, 25),
+                                minimumSize: const Size(130, 30),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                               ),
                               onPressed: () {
-                                Navigator.pop(context);
+                                if (_currentStep > 0) {
+                                  setState(() {
+                                    _currentStep--;
+                                  });
+                                } else {
+                                  Navigator.pop(context);
+                                }
                               },
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(
+                              child: Text(
+                                _currentStep > 0 ? 'Back' : 'Cancel',
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,
                                 ),
@@ -694,69 +1287,16 @@ class _BookFormState extends State<BookForm> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFFDC143C),
-                                minimumSize: const Size(130, 25),
+                                backgroundColor: const Color(0xFFDC143C),
+                                minimumSize: const Size(130, 30),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _formSubmitted = true;
-                                });
-                                if (_formKey.currentState!.validate() &&
-                                    adultCount > 0) {
-                                  // Collect all form data into a Map
-                                  final bookingData = {
-                                    'destination': {
-                                      'place': widget.destination['place'],
-                                      'image': widget
-                                          .destination['image'], // Add this
-                                      'price': widget.destination['price'],
-                                    },
-                                    'arrival': _arrivalController.text,
-                                    'departure': _departureController.text,
-                                    'adults': adultCount,
-                                    'kids': kidsCount,
-                                    'firstName': _firstNameController.text,
-                                    'lastName': _lastNameController.text,
-                                    'age': selectedAge,
-                                    'gender': selectedGender,
-                                    'origin': _originController.text,
-                                    'timestamp': DateTime.now()
-                                        .toString(), // Add unique identifier
-                                  };
-
-                                  print(
-                                    'Initial booking data: $bookingData',
-                                  ); // Debug print
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SecondForm(
-                                        bookingData: bookingData,
-                                        onBook: widget.onBook,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  // Show error for adult count
-                                  if (adultCount == 0) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'At least one adult is required',
-                                        ),
-                                        backgroundColor: Color(0xFFDC143C),
-                                      ),
-                                    );
-                                  }
-                                }
-                              },
-                              child: const Text(
-                                'Next',
-                                style: TextStyle(
+                              onPressed: _handleNext,
+                              child: Text(
+                                _currentStep == 2 ? 'Submit' : 'Next',
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.white,
                                 ),
@@ -765,9 +1305,9 @@ class _BookFormState extends State<BookForm> {
                           ],
                         ),
                       ),
-                      // Page indicator
+                      // Progress indicator dots
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 35),
+                        padding: const EdgeInsets.only(bottom: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
@@ -778,7 +1318,7 @@ class _BookFormState extends State<BookForm> {
                               height: 7,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: index == 0
+                                color: index == _currentStep
                                     ? const Color(0xFFDC143C)
                                     : const Color(0xFFF7CAC9),
                               ),
