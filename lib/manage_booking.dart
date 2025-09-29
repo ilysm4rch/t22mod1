@@ -71,9 +71,9 @@ class _ManageBookingState extends State<ManageBooking> {
   }
 
   Widget buildBookingsList() {
-    // Add debug prints
-    print('Building bookings list. Count: ${widget.bookings.length}');
-    print('Bookings data: ${widget.bookings}');
+    print(
+      'Building bookings list with ${widget.bookings.length} bookings',
+    ); // Debug print
 
     if (widget.bookings.isEmpty) {
       return const Center(
@@ -92,9 +92,34 @@ class _ManageBookingState extends State<ManageBooking> {
       padding: const EdgeInsets.all(16),
       itemCount: widget.bookings.length,
       itemBuilder: (context, index) {
-        final booking = widget.bookings[index];
-        print('Building card for booking: $booking'); // Debug print
-        return buildBookingCard(booking, index);
+        try {
+          final booking = widget.bookings[index];
+
+          // Validate booking data structure
+          if (!booking.containsKey('destination') ||
+              booking['destination'] == null) {
+            print(
+              'Invalid booking data at index $index: $booking',
+            ); // Debug print
+            return const SizedBox.shrink();
+          }
+
+          // Validate destination data
+          final destination = booking['destination'] as Map<String, dynamic>?;
+          if (destination == null ||
+              !destination.containsKey('place') ||
+              !destination.containsKey('image')) {
+            print('Invalid destination data: $destination'); // Debug print
+            return const SizedBox.shrink();
+          }
+
+          return buildBookingCard(booking, index);
+        } catch (e) {
+          print(
+            'Error building booking card at index $index: $e',
+          ); // Debug print
+          return const SizedBox.shrink();
+        }
       },
     );
   }
