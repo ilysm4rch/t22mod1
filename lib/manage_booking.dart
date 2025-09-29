@@ -118,7 +118,7 @@ class _ManageBookingState extends State<ManageBooking> {
 
     // Render as a grid similar to Favorites
     return GridView.builder(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12.0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12,
@@ -204,15 +204,7 @@ class _ManageBookingState extends State<ManageBooking> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  '${booking['adults'] ?? 0} Adults, ${booking['kids'] ?? 0} Kids',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 9),
                 Row(
                   children: [
                     Expanded(
