@@ -2,21 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'booking_form.dart';
 import 'manage_booking.dart';
-// You will also need to import 'main.dart' or the file that contains DestinationDetails
-// If DestinationDetails is in main.dart, you need to import it. Assuming main.dart is TravelHome's file for now.
-// Since you provided the full code for TravelHome, I'll include the necessary import for DestinationDetails.
-
-// Import the file containing DestinationDetails. Assuming it's in a file named 'main.dart'
-// based on the context, but since you provided the full class structure,
-// I'll assume you have a file with the DestinationDetails class definition.
-// If your main.dart is structured like in the prompt, you would need to import it.
-// For a standalone file, we must redefine or import it. For this example, I'll assume you have access.
-// Since the prompt provided DestinationDetails, I'll put it here to make the file runnable.
-
-// IMPORTANT: In a real Flutter project, if DestinationDetails is defined in the same file
-// as TravelHome (which is often named main.dart), you would need to import it here.
-// For the sake of providing a complete and correct Favorites.dart file,
-// I will include the DestinationDetails class definition that was in the main.dart file.
 
 class DestinationDetails extends StatelessWidget {
   final Map<String, dynamic> destination;
