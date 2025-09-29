@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'booking_form.dart';
 import 'manage_booking.dart';
+import 'widgets/app_bottom_nav.dart';
 
 class DestinationDetails extends StatelessWidget {
   final Map<String, dynamic> destination;
@@ -177,75 +178,42 @@ class _FavoritesState extends State<Favorites> {
           SliverFillRemaining(child: buildFavoritesList()),
         ],
       ),
-      bottomNavigationBar: _navBar(),
-    );
-  }
-
-  // Navigation Bar
-  Widget _navBar() {
-    return Container(
-      height: 70,
-      margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7CAC9),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: navIcons.asMap().entries.map((entry) {
-          int index = entry.key;
-          IconData icon = entry.value;
-          bool isSelected = selectedIndex == index;
-
-          return Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-
-                  if (index == 1) {
-                    Navigator.pop(context); // Changed from push to pop
-                  } else if (index == 2) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ManageBooking(
-                          bookings:
-                              bookings, // Pass the bookings from main.dart
-                          onRemoveBooking: (index) {
-                            setState(() {
-                              bookings.removeAt(index);
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Icon(
-                    icon,
-                    size: 30,
-                    color: isSelected
-                        ? const Color(0xFFDC143C)
-                        : const Color(0xFFF75270),
-                  ),
+      bottomNavigationBar: AppBottomNavBar(
+        icons: navIcons,
+        selectedIndex: selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+          if (index == 1) {
+            Navigator.pop(context);
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManageBooking(
+                  bookings: bookings,
+                  onRemoveBooking: (index) {
+                    setState(() {
+                      bookings.removeAt(index);
+                    });
+                  },
+                  favorites: widget.favorites,
+                  onRemoveFavorite: (destination) {
+                    setState(() {
+                      widget.onRemoveFavorite(destination);
+                    });
+                  },
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }
+        },
       ),
     );
   }
+
+  // _navBar removed: using AppBottomNavBar component
 
   Widget buildFavoritesList() {
     if (widget.favorites.isEmpty) {

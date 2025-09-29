@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'favorites.dart';
 import 'booking_form.dart';
+import 'widgets/app_bottom_nav.dart';
 
 class ManageBooking extends StatefulWidget {
   final List<Map<String, dynamic>> bookings;
   final Function(int) onRemoveBooking;
+  final List<Map<String, dynamic>> favorites;
+  final Function(Map<String, dynamic>) onRemoveFavorite;
 
   const ManageBooking({
     super.key,
     required this.bookings,
     required this.onRemoveBooking,
+    required this.favorites,
+    required this.onRemoveFavorite,
   });
 
   @override
@@ -66,7 +71,32 @@ class _ManageBookingState extends State<ManageBooking> {
           SliverFillRemaining(child: buildBookingsList()),
         ],
       ),
-      bottomNavigationBar: _navBar(),
+      bottomNavigationBar: AppBottomNavBar(
+        icons: navIcons,
+        selectedIndex: selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Favorites(
+                  favorites: widget.favorites,
+                  onRemoveFavorite: widget.onRemoveFavorite,
+                ),
+              ),
+            );
+          } else if (index == 1) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          } else if (index == 2) {
+            // Stay on Manage Booking; do a lightweight refresh
+            setState(() {});
+          }
+        },
+      ),
     );
   }
 
@@ -617,76 +647,7 @@ Gender: $gender""";
     );
   }
 
-  Widget _navBar() {
-    return Container(
-      height: 70,
-      margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7CAC9),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: navIcons.asMap().entries.map((entry) {
-          int index = entry.key;
-          IconData icon = entry.value;
-          bool isSelected = selectedIndex == index;
-
-          return Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-
-                  if (index == 0) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Favorites(
-                          favorites: const [],
-                          onRemoveFavorite: (destination) {},
-                        ),
-                      ),
-                    );
-                  } else if (index == 1) {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  } else if (index == 2) {
-                    // Re-fetch bookings from main screen
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ManageBooking(
-                          bookings: widget.bookings,
-                          onRemoveBooking: widget.onRemoveBooking,
-                        ),
-                      ),
-                    );
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Icon(
-                    icon,
-                    size: 30,
-                    color: isSelected
-                        ? const Color(0xFFDC143C)
-                        : const Color(0xFFF75270),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+  // _navBar removed: using AppBottomNavBar component
 }
 
 class AppBarWaveClipper extends CustomClipper<Path> {

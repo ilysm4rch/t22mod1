@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'favorites.dart';
 import 'booking_form.dart';
 import 'manage_booking.dart';
+import 'widgets/app_bottom_nav.dart';
 
 class TravelHome extends StatefulWidget {
   const TravelHome({super.key});
@@ -286,76 +287,58 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
           ),
         ],
       ),
-      bottomNavigationBar: _navBar(),
+      bottomNavigationBar: AppBottomNavBar(
+        icons: navIcons,
+        selectedIndex: selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Favorites(
+                  favorites: favorites,
+                  onRemoveFavorite: (destination) {
+                    setState(() {
+                      favorites.removeWhere(
+                        (item) => item["place"] == destination["place"],
+                      );
+                    });
+                  },
+                ),
+              ),
+            ).then((_) => setState(() => selectedIndex = 1));
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManageBooking(
+                  bookings: bookings,
+                  onRemoveBooking: (index) {
+                    setState(() {
+                      bookings.removeAt(index);
+                    });
+                  },
+                  favorites: favorites,
+                  onRemoveFavorite: (destination) {
+                    setState(() {
+                      favorites.removeWhere(
+                        (item) => item['place'] == destination['place'],
+                      );
+                    });
+                  },
+                ),
+              ),
+            ).then((_) => setState(() => selectedIndex = 1));
+          }
+        },
+      ),
     );
   }
 
-  // Bottom Nav
-  Widget _navBar() {
-    return Container(
-      height: 70,
-      margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7CAC9),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: navIcons.map((icon) {
-          int index = navIcons.indexOf(icon);
-          bool isSelected = selectedIndex == index;
-          return IconButton(
-            onPressed: () {
-              setState(() {
-                selectedIndex = index;
-              });
-              if (index == 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Favorites(
-                      favorites: favorites,
-                      onRemoveFavorite: (destination) {
-                        setState(() {
-                          favorites.removeWhere(
-                            (item) => item["place"] == destination["place"],
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                ).then((_) => setState(() => selectedIndex = 1));
-              } else if (index == 2) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ManageBooking(
-                      bookings: bookings,
-                      onRemoveBooking: (index) {
-                        setState(() {
-                          bookings.removeAt(index);
-                        });
-                      },
-                    ),
-                  ),
-                ).then((_) => setState(() => selectedIndex = 1));
-              }
-            },
-            icon: Icon(
-              icon,
-              size: 30,
-              color: isSelected
-                  ? const Color(0xFFDC143C)
-                  : const Color(0xFFF75270),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+  // _navBar removed: using AppBottomNavBar component
 
   // Horizontal card list
   Widget buildHorizontalCardList(List<Map<String, dynamic>> list) {
