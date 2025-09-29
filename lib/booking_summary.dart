@@ -65,12 +65,14 @@ class BookingSummary extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E4D92),
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 20),
                   InfoSection(
                     title: 'BOOKING INFORMATION',
+                    backgroundColor: const Color(0xFFF75270),
+                    titleColor: Colors.white,
                     items: [
                       MapEntry('Arrival:', bookingData['arrival'] ?? ''),
                       MapEntry('Departure:', bookingData['departure'] ?? ''),
@@ -79,6 +81,8 @@ class BookingSummary extends StatelessWidget {
 
                   InfoSection(
                     title: 'NUMBER OF PARTICIPANTS',
+                    backgroundColor: const Color(0xFFF75270),
+                    titleColor: Colors.white,
                     items: [
                       MapEntry('Adults:', '${bookingData['adults'] ?? 0}'),
                       MapEntry('Kids:', '${bookingData['kids'] ?? 0}'),
@@ -87,6 +91,8 @@ class BookingSummary extends StatelessWidget {
 
                   InfoSection(
                     title: 'BOOKER INFORMATION',
+                    backgroundColor: const Color(0xFFF75270),
+                    titleColor: Colors.white,
                     items: [
                       MapEntry(
                         'Full Name:',
@@ -119,6 +125,8 @@ class BookingSummary extends StatelessWidget {
                             return InfoSection(
                               title: 'PARTICIPANT ${entry.key + 1}',
                               titleSize: 16,
+                              backgroundColor: const Color(0xFFF75270),
+                              titleColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               items: [
                                 MapEntry(
@@ -141,6 +149,8 @@ class BookingSummary extends StatelessWidget {
 
                   InfoSection(
                     title: 'CONTACT INFORMATION',
+                    backgroundColor: const Color(0xFFF75270),
+                    titleColor: Colors.white,
                     items: [
                       MapEntry(
                         'Full Name:',
@@ -166,6 +176,8 @@ class BookingSummary extends StatelessWidget {
 
                   InfoSection(
                     title: 'PAYMENT',
+                    backgroundColor: const Color(0xFFF75270),
+                    titleColor: Colors.white,
                     items: [
                       MapEntry(
                         'Sender\'s Full Name:',
@@ -213,7 +225,7 @@ class BookingSummary extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('You successfully booked!'),
-                              backgroundColor: Color(0xFF1E4D92),
+                              backgroundColor: Color(0xFFF75270),
                             ),
                           );
 
@@ -265,6 +277,7 @@ class InfoSection extends StatelessWidget {
   final double titleSize;
   final Color titleColor;
   final EdgeInsets padding;
+  final Color? backgroundColor;
 
   const InfoSection({
     super.key,
@@ -273,6 +286,7 @@ class InfoSection extends StatelessWidget {
     this.titleSize = 18,
     this.titleColor = const Color(0xFF1E4D92),
     this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.backgroundColor,
   });
 
   @override
@@ -282,14 +296,31 @@ class InfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: titleSize,
-              fontWeight: FontWeight.bold,
-              color: titleColor,
+          if (backgroundColor != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(0),
+              ),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: titleSize,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor,
+                ),
+              ),
+            )
+          else
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: titleSize,
+                fontWeight: FontWeight.bold,
+                color: titleColor,
+              ),
             ),
-          ),
           const SizedBox(height: 8),
           ...items.map(
             (item) => Padding(

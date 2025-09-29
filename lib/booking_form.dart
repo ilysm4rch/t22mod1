@@ -69,11 +69,11 @@ class _BookFormState extends State<BookForm> {
   String get _currentTitle {
     switch (_currentStep) {
       case 0:
-        return 'Basic Information';
+        return 'Booking Form';
       case 1:
-        return 'Participants Information';
+        return 'Booking Form';
       case 2:
-        return 'Contact & Payment';
+        return 'Booking Form';
       default:
         return 'Booking Form';
     }
@@ -98,22 +98,20 @@ class _BookFormState extends State<BookForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Booking Form',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1E4D92),
-          ),
-        ),
-        const SizedBox(height: 25),
         // Booking Information Section
-        const Text(
-          'Booking Information',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1E4D92),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF75270),
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: const Text(
+            'Booking Information',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
         ),
         const SizedBox(height: 15),
@@ -379,12 +377,19 @@ class _BookFormState extends State<BookForm> {
           ],
         ),
         const SizedBox(height: 25),
-        const Text(
-          'Booker Information',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1E4D92),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF75270),
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: const Text(
+            'Booker Information',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
         ),
         const SizedBox(height: 15),
@@ -600,12 +605,19 @@ class _BookFormState extends State<BookForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Participants Information',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1E4D92),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF75270),
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: const Text(
+            'Participant Information',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
         ),
         const SizedBox(height: 25),
@@ -627,7 +639,7 @@ class _BookFormState extends State<BookForm> {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1E4D92),
+            color: Color(0xFFF75270),
           ),
         ),
         const SizedBox(height: 15),
@@ -829,12 +841,19 @@ class _BookFormState extends State<BookForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Contact Information',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1E4D92),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF75270),
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: const Text(
+            'Contact Information',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
         ),
         const SizedBox(height: 25),
@@ -1020,12 +1039,19 @@ class _BookFormState extends State<BookForm> {
           },
         ),
         const SizedBox(height: 25),
-        const Text(
-          'Payment',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1E4D92),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF75270),
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: const Text(
+            'Payment',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
           ),
         ),
         const SizedBox(height: 25),
@@ -1121,6 +1147,8 @@ class _BookFormState extends State<BookForm> {
         // Move to next step
         setState(() {
           _currentStep++;
+          // Reset submit flag so next step doesn't immediately show errors
+          _formSubmitted = false;
         });
       } else {
         // On final step, prepare booking data and navigate to summary
@@ -1244,7 +1272,7 @@ class _BookFormState extends State<BookForm> {
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E4D92),
+                              color: Colors.black,
                             ),
                           ),
                           const SizedBox(height: 20),
