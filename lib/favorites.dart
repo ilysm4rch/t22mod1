@@ -227,14 +227,6 @@ class _FavoritesState extends State<Favorites> {
                   if (index == 1) {
                     Navigator.pop(context); // Changed from push to pop
                   } else if (index == 2) {
-                    // Navigate to ManageBooking
-                    // Need to correctly pass the bookings list.
-                    // Since bookings is local to this state, a proper app state
-                    // management solution would be better, but for this copy-paste
-                    // scenario, we use the local list and a temporary callback.
-                    // NOTE: This implementation of passing 'bookings' is temporary
-                    // and won't reflect real bookings from TravelHome unless
-                    // passed through arguments/state management.
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
