@@ -179,8 +179,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
                       "Discover",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -224,24 +226,32 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   const SizedBox(height: 20),
                   if (bestDeals.isNotEmpty)
                     const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Text(
                         "Best Deals",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   if (bestDeals.isNotEmpty) buildHorizontalCardList(bestDeals),
                   const SizedBox(height: 20),
                   if (localDestinations.isNotEmpty)
                     const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Text(
                         "Local Destinations",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   if (localDestinations.isNotEmpty)
@@ -276,7 +286,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   onRemoveFavorite: (destination) {
                     setState(() {
                       favorites.removeWhere(
-                          (item) => item["place"] == destination["place"]);
+                        (item) => item["place"] == destination["place"],
+                      );
                     });
                   },
                   bookings: bookings,
@@ -301,7 +312,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                   onRemoveFavorite: (destination) {
                     setState(() {
                       favorites.removeWhere(
-                          (item) => item['place'] == destination['place']);
+                        (item) => item['place'] == destination['place'],
+                      );
                     });
                   },
                 ),
@@ -331,8 +343,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   }
 
   Widget buildDestinationCard(Map<String, dynamic> destination) {
-    final isFavorite =
-        favorites.any((item) => item["place"] == destination["place"]);
+    final isFavorite = favorites.any(
+      (item) => item["place"] == destination["place"],
+    );
     final images = (destination["images"] as List?) ?? [];
 
     return Container(
@@ -350,8 +363,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             child: Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
                   child: PageView.builder(
                     itemCount: images.length,
                     itemBuilder: (context, index) {
@@ -378,8 +392,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       onPressed: () {
                         setState(() {
                           if (isFavorite) {
-                            favorites.removeWhere((item) =>
-                                item["place"] == destination["place"]);
+                            favorites.removeWhere(
+                              (item) => item["place"] == destination["place"],
+                            );
                           } else {
                             favorites.add(destination);
                           }
@@ -406,7 +421,9 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       child: Text(
                         destination["location"],
                         style: const TextStyle(
-                            fontSize: 12, color: Colors.black54),
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -425,7 +442,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0xFFDC143C)),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -449,7 +467,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                           backgroundColor: const Color(0xFFDC143C),
                           minimumSize: const Size(double.infinity, 32),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -519,8 +538,7 @@ class DestinationDetails extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               destination["place"],
-              style:
-                  const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
