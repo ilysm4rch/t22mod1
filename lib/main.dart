@@ -54,7 +54,7 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
       "description":
           "A UNESCO World Heritage Site carved into the mountains 2,000 years ago.",
       "image": "assets/img/banaue1.jpg",
-      "tag": "City",
+      "tag": "Cultural",
       "inclusions": [
         "2D1N homestay",
         "Local Guide",
