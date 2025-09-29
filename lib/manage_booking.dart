@@ -444,112 +444,131 @@ class _ManageBookingState extends State<ManageBooking> {
     );
   }
 
-  void showBookingDetails(Map<String, dynamic> booking) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        // Change from AlertDialog to Dialog for more control
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.7,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Booking FormSummary',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.edit,
-                        color: Color(0xFFf75270),
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        showEditDialog(booking);
-                      },
-                    ),
-                  ],
+void showBookingDetails(Map<String, dynamic> booking) {
+  final destination = booking['destination'] as Map<String, dynamic>?;
+
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 📌 Destination image
+            if (destination?['image'] != null)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                child: Image.asset(
+                  destination!['image'],
+                  height: 160,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
               ),
-              // Content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '[${((booking["destination"] as Map?)?["place"] ?? "Unknown Destination")}]',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFf75270),
-                        ),
+
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Booking Summary',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Color(0xFFf75270),
+                      size: 24,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      showEditDialog(booking);
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '[${destination?["place"] ?? "Unknown Destination"}]',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFf75270),
                       ),
-                      const SizedBox(height: 16),
-                      // ... existing buildDetailSection calls ...
-                      buildDetailSection('PARTICIPANTS INFORMATION', [
-                        ...(((booking['participants'] as List?)
-                                    ?.cast<Map<String, dynamic>>() ??
-                                const <Map<String, dynamic>>[]))
-                            .asMap()
-                            .entries
-                            .map((entry) {
-                              final participant = entry.value;
-                              final firstName = participant['firstName'] ?? '';
-                              final lastName = participant['lastName'] ?? '';
-                              final age = participant['age'] ?? '—';
-                              final gender = participant['gender'] ?? '—';
-                              return """
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Participants
+                    buildDetailSection('PARTICIPANTS INFORMATION', [
+                      ...(((booking['participants'] as List?)?.cast<Map<String, dynamic>>() ?? const <Map<String, dynamic>>[]))
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                        final participant = entry.value;
+                        final firstName = participant['firstName'] ?? '';
+                        final lastName = participant['lastName'] ?? '';
+                        final age = participant['age'] ?? '—';
+                        final gender = participant['gender'] ?? '—';
+                        return """
 PARTICIPANT ${entry.key + 1}
 Full Name: $firstName $lastName
 Age: $age
 Gender: $gender""";
-                            }),
-                      ]),
-                      buildDetailSection('CONTACT INFORMATION', [
-                        'Full Name: ${((booking["contactInfo"] as Map?)?["firstName"] ?? '')} ${((booking["contactInfo"] as Map?)?["lastName"] ?? '')}',
-                        'Complete Address: ${((booking["contactInfo"] as Map?)?["address"] ?? '—')}',
-                        'Mobile Number: ${((booking["contactInfo"] as Map?)?["mobile"] ?? '—')}',
-                        'E-mail Address: ${((booking["contactInfo"] as Map?)?["email"] ?? '—')}',
-                      ]),
-                      buildDetailSection('PAYMENT', [
-                        'Sender\'s Full Name: ${((booking["payment"] as Map?)?["senderName"] ?? '—')}',
-                        'Mode of Payment: ${((booking["payment"] as Map?)?["paymentMode"] ?? '—')}',
-                      ]),
-                    ],
-                  ),
+                      }),
+                    ]),
+
+                    // Contact Info
+                    buildDetailSection('CONTACT INFORMATION', [
+                      'Full Name: ${((booking["contactInfo"] as Map?)?["firstName"] ?? '')} ${((booking["contactInfo"] as Map?)?["lastName"] ?? '')}',
+                      'Complete Address: ${((booking["contactInfo"] as Map?)?["address"] ?? '—')}',
+                      'Mobile Number: ${((booking["contactInfo"] as Map?)?["mobile"] ?? '—')}',
+                      'E-mail Address: ${((booking["contactInfo"] as Map?)?["email"] ?? '—')}',
+                    ]),
+
+                    // Payment
+                    buildDetailSection('PAYMENT', [
+                      'Sender\'s Full Name: ${((booking["payment"] as Map?)?["senderName"] ?? '—')}',
+                      'Mode of Payment: ${((booking["payment"] as Map?)?["paymentMode"] ?? '—')}',
+                    ]),
+                  ],
                 ),
               ),
-              // Footer
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
-                ),
+            ),
+
+            // Footer
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   void showEditDialog(Map<String, dynamic> booking) {
     // Controllers for all editable fields
