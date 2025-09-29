@@ -16,6 +16,7 @@ List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.calendar_month];
 class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
   int selectedIndex = 1;
   final List<Map<String, dynamic>> bookings = [];
+
   final List<Map<String, dynamic>> favorites = [];
 
   String searchQuery = "";
@@ -96,7 +97,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
     // 1. Filter by search query and selected tag
     final filteredDestinations = destinations.where((d) {
       final matchesTag = selectedTag == "All" || d["tag"] == selectedTag;
-      final matchesSearch = searchQuery.isEmpty ||
+      final matchesSearch =
+          searchQuery.isEmpty ||
           d["place"].toLowerCase().contains(searchQuery) ||
           d["location"].toLowerCase().contains(searchQuery);
       return matchesTag && matchesSearch;
@@ -105,10 +107,16 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
     // 2. Split into "Best Deals" (first half) and "Local Destinations" (second half)
     final splitIndex = (filteredDestinations.length / 2).ceil();
     final bestDeals = filteredDestinations.sublist(
-        0, splitIndex > filteredDestinations.length ? filteredDestinations.length : splitIndex);
+      0,
+      splitIndex > filteredDestinations.length
+          ? filteredDestinations.length
+          : splitIndex,
+    );
     final localDestinations = filteredDestinations.sublist(
-        splitIndex > filteredDestinations.length ? filteredDestinations.length : splitIndex);
-
+      splitIndex > filteredDestinations.length
+          ? filteredDestinations.length
+          : splitIndex,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFAF4),
@@ -260,7 +268,8 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                  if (localDestinations.isNotEmpty) buildHorizontalCardList(localDestinations),
+                  if (localDestinations.isNotEmpty)
+                    buildHorizontalCardList(localDestinations),
 
                   if (filteredDestinations.isEmpty)
                     const Center(
@@ -458,77 +467,109 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 8),
 
-              // Buttons
-              Row(
-                children: [
-                  Expanded( // Details button
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFFDC143C)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DestinationDetails(destination: destination),
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      // Details button
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFDC143C)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        );
-                      },
-                      child: const Text(
-                        "Details",
-                        style: TextStyle(color: Color(0xFFDC143C)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8), // Add a small space between buttons
-                  Expanded( // Book button
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFDC143C),
-                        minimumSize: const Size(double.infinity, 32), // Set width to fill Expanded
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookForm(
-                              destination: destination,
-                              onBook: (booking) {
-                                setState(() {
-                                  bookings.add({
-                                    ...booking,
-                                    'destination': {
-                                      'place': destination['place'],
-                                      'image': destination['image'],
-                                    },
-                                  });
-                                  print(
-                                      'Booking added: ${bookings.length}'); // Debug print
-                                });
-                              },
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DestinationDetails(destination: destination),
                             ),
-                          ),
-                        );
-                      },
-                      child: const Text("Book"),
+                          );
+                        },
+                        child: const Text(
+                          "Details",
+                          style: TextStyle(color: Color(0xFFDC143C)),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(
+                      width: 8,
+                    ), // Add a small space between buttons
+                    Expanded(
+                      // Book button
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFDC143C),
+                          minimumSize: const Size(
+                            double.infinity,
+                            32,
+                          ), // Set width to fill Expanded
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookForm(
+                                destination: destination,
+                                onBook: (bookingData) {
+                                  setState(() {
+                                    // Add the booking with all required data
+                                    bookings.add({
+                                      ...bookingData,
+                                      'destination': {
+                                        'place': destination['place'],
+                                        'image': destination['image'],
+                                      },
+                                    });
+                                    print(
+                                      'Booking added. Total bookings: ${bookings.length}',
+                                    ); // Debug print
+                                  });
+
+                                  // Show success message and navigate
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('You successfully booked!'),
+                                      backgroundColor: Color(0xFF1E4D92),
+                                    ),
+                                  );
+
+                                  // Navigate to ManageBooking
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ManageBooking(
+                                        bookings: bookings,
+                                        onRemoveBooking: (index) {
+                                          setState(() {
+                                            bookings.removeAt(index);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text("Book"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }
 
 class DestinationDetails extends StatelessWidget {

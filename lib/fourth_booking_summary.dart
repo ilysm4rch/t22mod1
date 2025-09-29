@@ -190,7 +190,7 @@ class BookingSummary extends StatelessWidget {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFDC143C),
-                          minimumSize: const Size(130, 45),
+                          minimumSize: const Size(130, 30),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
@@ -208,7 +208,7 @@ class BookingSummary extends StatelessWidget {
                                 'You successfully booked!',
                                 style: TextStyle(color: Colors.white),
                               ),
-                              backgroundColor: Color(0xFF1E4D92),
+                              backgroundColor: Color(0xFFDC143C),
                               duration: Duration(seconds: 2),
                             ),
                           );
@@ -222,7 +222,7 @@ class BookingSummary extends StatelessWidget {
                         },
                         child: const Text(
                           'Finish',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
                       ),
                     ],

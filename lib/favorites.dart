@@ -7,7 +7,7 @@ import 'manage_booking.dart';
 // Since you provided the full code for TravelHome, I'll include the necessary import for DestinationDetails.
 
 // Import the file containing DestinationDetails. Assuming it's in a file named 'main.dart'
-// based on the context, but since you provided the full class structure, 
+// based on the context, but since you provided the full class structure,
 // I'll assume you have a file with the DestinationDetails class definition.
 // If your main.dart is structured like in the prompt, you would need to import it.
 // For a standalone file, we must redefine or import it. For this example, I'll assume you have access.
@@ -15,7 +15,7 @@ import 'manage_booking.dart';
 
 // IMPORTANT: In a real Flutter project, if DestinationDetails is defined in the same file
 // as TravelHome (which is often named main.dart), you would need to import it here.
-// For the sake of providing a complete and correct Favorites.dart file, 
+// For the sake of providing a complete and correct Favorites.dart file,
 // I will include the DestinationDetails class definition that was in the main.dart file.
 
 class DestinationDetails extends StatelessWidget {
@@ -143,7 +143,11 @@ class Favorites extends StatefulWidget {
 
 class _FavoritesState extends State<Favorites> {
   int selectedIndex = 0;
-  final List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.calendar_month];
+  final List<IconData> navIcons = [
+    Icons.favorite,
+    Icons.home,
+    Icons.calendar_month,
+  ];
   final List<Map<String, dynamic>> bookings = [];
 
   @override
@@ -195,7 +199,7 @@ class _FavoritesState extends State<Favorites> {
   // Navigation Bar
   Widget _navBar() {
     return Container(
-      height: 55,
+      height: 70,
       margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
       decoration: BoxDecoration(
         color: const Color(0xFFF7CAC9),
@@ -286,7 +290,7 @@ class _FavoritesState extends State<Favorites> {
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
         // Adjusted aspect ratio to accommodate the new buttons
-        childAspectRatio: 0.65, 
+        childAspectRatio: 0.65,
       ),
       itemCount: widget.favorites.length,
       itemBuilder: (context, index) {
@@ -306,8 +310,9 @@ class _FavoritesState extends State<Favorites> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: Image.asset(
                   destination["image"],
                   height: 120,
@@ -323,7 +328,8 @@ class _FavoritesState extends State<Favorites> {
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     icon: const Icon(
-                      Icons.favorite, // Always filled since it's in the favorites list
+                      Icons
+                          .favorite, // Always filled since it's in the favorites list
                       color: Color(0xFFE63946),
                     ),
                     onPressed: () {
@@ -388,8 +394,14 @@ class _FavoritesState extends State<Favorites> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                          minimumSize: const Size(0, 30), // Smaller size for GridView item
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 0,
+                          ),
+                          minimumSize: const Size(
+                            0,
+                            30,
+                          ), // Smaller size for GridView item
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -403,20 +415,28 @@ class _FavoritesState extends State<Favorites> {
                         child: const Text(
                           "Details",
                           style: TextStyle(
-                            color: Color(0xFFDC143C), 
+                            color: Color(0xFFDC143C),
                             fontSize: 12, // Smaller font size
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8), // Add a small space between buttons
+                    const SizedBox(
+                      width: 8,
+                    ), // Add a small space between buttons
                     Expanded(
                       // Book button
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFDC143C),
-                          minimumSize: const Size(0, 30), // Smaller size for GridView item
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                          minimumSize: const Size(
+                            0,
+                            30,
+                          ), // Smaller size for GridView item
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 0,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),

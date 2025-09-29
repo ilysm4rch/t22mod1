@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'favorites.dart';
+import 'booking_form.dart';
 
 class ManageBooking extends StatefulWidget {
   final List<Map<String, dynamic>> bookings;
-  final Function(int) onRemoveBooking; // Remove the ? to make it required
+  final Function(int) onRemoveBooking;
 
   const ManageBooking({
     super.key,
     required this.bookings,
-    required this.onRemoveBooking, // Make it required
+    required this.onRemoveBooking,
   });
 
   @override
@@ -17,7 +18,11 @@ class ManageBooking extends StatefulWidget {
 
 class _ManageBookingState extends State<ManageBooking> {
   int selectedIndex = 2;
-  final List<IconData> navIcons = [Icons.favorite, Icons.home, Icons.calendar_month];
+  final List<IconData> navIcons = [
+    Icons.favorite,
+    Icons.home,
+    Icons.calendar_month,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +71,9 @@ class _ManageBookingState extends State<ManageBooking> {
   }
 
   Widget buildBookingsList() {
-    print(
-      'Building bookings list - Number of bookings: ${widget.bookings.length}',
-    ); // Debug print
-    print('Bookings data: ${widget.bookings}'); // Debug print
+    // Add debug prints
+    print('Building bookings list. Count: ${widget.bookings.length}');
+    print('Bookings data: ${widget.bookings}');
 
     if (widget.bookings.isEmpty) {
       return const Center(
@@ -88,12 +92,21 @@ class _ManageBookingState extends State<ManageBooking> {
       padding: const EdgeInsets.all(16),
       itemCount: widget.bookings.length,
       itemBuilder: (context, index) {
-        return buildBookingCard(widget.bookings[index], index);
+        final booking = widget.bookings[index];
+        print('Building card for booking: $booking'); // Debug print
+        return buildBookingCard(booking, index);
       },
     );
   }
 
   Widget buildBookingCard(Map<String, dynamic> booking, int index) {
+    // Add null checks for required data
+    final destination = booking['destination'] as Map<String, dynamic>?;
+    if (destination == null) {
+      print('Warning: Booking destination is null'); // Debug print
+      return const SizedBox.shrink(); // Return empty widget if data is invalid
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Card(
@@ -111,7 +124,7 @@ class _ManageBookingState extends State<ManageBooking> {
                     left: Radius.circular(16),
                   ),
                   child: Image.asset(
-                    booking["destination"]["image"],
+                    destination['image'] ?? 'assets/img/placeholder.jpg',
                     height: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -119,46 +132,37 @@ class _ManageBookingState extends State<ManageBooking> {
               ),
               // Right side - Content
               Expanded(
-                child: Stack(
-                  children: [
-                    // Main content
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            booking["destination"]["place"],
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E4D92),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Arrival: ${booking["arrival"]}",
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          Text(
-                            "Departure: ${booking["departure"]}",
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "${booking["adults"]} Adults, ${booking["kids"]} Kids",
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          const SizedBox(height: 45), // Space for buttons
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        destination['place'] ?? 'Unknown Location',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E4D92),
+                        ),
                       ),
-                    ),
-                    // Buttons at bottom right
-                    Positioned(
-                      bottom: 16,
-                      right: 16,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                      const SizedBox(height: 8),
+                      Text(
+                        "Arrival: ${booking['arrival'] ?? 'Not specified'}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      Text(
+                        "Departure: ${booking['departure'] ?? 'Not specified'}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "${booking['adults'] ?? 0} Adults, ${booking['kids'] ?? 0} Kids",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           SizedBox(
                             height: 35,
@@ -173,7 +177,15 @@ class _ManageBookingState extends State<ManageBooking> {
                                 ),
                               ),
                               onPressed: () {
-                                showBookingDetails(booking);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BookForm(
+                                      destination: destination,
+                                      onBook: (_) {},
+                                    ),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 "View Details",
@@ -198,9 +210,10 @@ class _ManageBookingState extends State<ManageBooking> {
                                 ),
                               ),
                               onPressed: () {
+                                // Show confirmation dialog
                                 showDialog(
                                   context: context,
-                                  builder: (BuildContext context) => AlertDialog(
+                                  builder: (context) => AlertDialog(
                                     title: const Text('Cancel Booking'),
                                     content: const Text(
                                       'Are you sure you want to cancel this booking?',
@@ -212,12 +225,9 @@ class _ManageBookingState extends State<ManageBooking> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          widget.onRemoveBooking.call(
-                                            index,
-                                          ); // Let parent handle removal
-                                          Navigator.pop(
-                                            context,
-                                          ); // Close dialog
+                                          widget.onRemoveBooking(index);
+                                          setState(() {}); // Trigger rebuild
+                                          Navigator.pop(context);
                                         },
                                         child: const Text('Yes'),
                                       ),
@@ -236,8 +246,8 @@ class _ManageBookingState extends State<ManageBooking> {
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -559,7 +569,7 @@ Gender: ${participant['gender']}""";
 
   Widget _navBar() {
     return Container(
-      height: 55,
+      height: 70,
       margin: const EdgeInsets.only(right: 30, left: 30, bottom: 20),
       decoration: BoxDecoration(
         color: const Color(0xFFF7CAC9),
@@ -585,7 +595,7 @@ Gender: ${participant['gender']}""";
                   });
 
                   if (index == 0) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Favorites(
@@ -595,9 +605,8 @@ Gender: ${participant['gender']}""";
                       ),
                     );
                   } else if (index == 1) {
-                    Navigator.pop(
-                      context,
-                    ); // Changed from push to pop for home navigation
+                    // Navigate to home by popping until we reach main.dart
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                   }
                 },
                 child: Container(

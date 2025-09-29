@@ -455,11 +455,10 @@ class _BookFormState extends State<BookForm> {
                                         ),
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      _formKey.currentState?.validate();
-                                    },
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      // Only show error if form has been submitted
+                                      if (_formSubmitted &&
+                                          (value == null || value.isEmpty)) {
                                         return 'This field is required';
                                       }
                                       return null;
@@ -499,11 +498,10 @@ class _BookFormState extends State<BookForm> {
                                         ),
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      _formKey.currentState?.validate();
-                                    },
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      // Only show error if form has been submitted
+                                      if (_formSubmitted &&
+                                          (value == null || value.isEmpty)) {
                                         return 'This field is required';
                                       }
                                       return null;
