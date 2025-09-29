@@ -107,8 +107,8 @@ class _ManageBookingState extends State<ManageBooking> {
           // Validate destination data
           final destination = booking['destination'] as Map<String, dynamic>?;
           if (destination == null ||
-              !destination.containsKey('place') ||
-              !destination.containsKey('image')) {
+              (destination['place'] == null && destination['image'] == null)) {
+            // If absolutely no destination info, skip rendering this item
             print('Invalid destination data: $destination'); // Debug print
             return const SizedBox.shrink();
           }
@@ -149,7 +149,8 @@ class _ManageBookingState extends State<ManageBooking> {
                     left: Radius.circular(16),
                   ),
                   child: Image.asset(
-                    destination['image'] ?? 'assets/img/placeholder.jpg',
+                    // Use a known-existing fallback image
+                    destination['image'] ?? 'assets/img/bg-top.jpg',
                     height: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -332,7 +333,7 @@ class _ManageBookingState extends State<ManageBooking> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '[${booking["destination"]["place"]}]',
+                        '[${((booking["destination"] as Map?)?["place"] ?? "Unknown Destination")}]',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -342,28 +343,33 @@ class _ManageBookingState extends State<ManageBooking> {
                       const SizedBox(height: 16),
                       // ... existing buildDetailSection calls ...
                       buildDetailSection('PARTICIPANTS INFORMATION', [
-                        ...(booking['participants']
-                                as List<Map<String, dynamic>>)
+                        ...(((booking['participants'] as List?)
+                                    ?.cast<Map<String, dynamic>>() ??
+                                const <Map<String, dynamic>>[]))
                             .asMap()
                             .entries
                             .map((entry) {
                               final participant = entry.value;
+                              final firstName = participant['firstName'] ?? '';
+                              final lastName = participant['lastName'] ?? '';
+                              final age = participant['age'] ?? '—';
+                              final gender = participant['gender'] ?? '—';
                               return """
 PARTICIPANT ${entry.key + 1}
-Full Name: ${participant['firstName']} ${participant['lastName']}
-Age: ${participant['age']}
-Gender: ${participant['gender']}""";
+Full Name: $firstName $lastName
+Age: $age
+Gender: $gender""";
                             }),
                       ]),
                       buildDetailSection('CONTACT INFORMATION', [
-                        'Full Name: ${booking["contactInfo"]["firstName"]} ${booking["contactInfo"]["lastName"]}',
-                        'Complete Address: ${booking["contactInfo"]["address"]}',
-                        'Mobile Number: ${booking["contactInfo"]["mobile"]}',
-                        'E-mail Address: ${booking["contactInfo"]["email"]}',
+                        'Full Name: ${((booking["contactInfo"] as Map?)?["firstName"] ?? '')} ${((booking["contactInfo"] as Map?)?["lastName"] ?? '')}',
+                        'Complete Address: ${((booking["contactInfo"] as Map?)?["address"] ?? '—')}',
+                        'Mobile Number: ${((booking["contactInfo"] as Map?)?["mobile"] ?? '—')}',
+                        'E-mail Address: ${((booking["contactInfo"] as Map?)?["email"] ?? '—')}',
                       ]),
                       buildDetailSection('PAYMENT', [
-                        'Sender\'s Full Name: ${booking["payment"]["senderName"]}',
-                        'Mode of Payment: ${booking["payment"]["paymentMode"]}',
+                        'Sender\'s Full Name: ${((booking["payment"] as Map?)?["senderName"] ?? '—')}',
+                        'Mode of Payment: ${((booking["payment"] as Map?)?["paymentMode"] ?? '—')}',
                       ]),
                     ],
                   ),
@@ -386,38 +392,48 @@ Gender: ${participant['gender']}""";
 
   void showEditDialog(Map<String, dynamic> booking) {
     // Controllers for all editable fields
-    final participants = booking['participants'] as List<Map<String, dynamic>>;
+    final participants =
+        ((booking['participants'] as List?)?.cast<Map<String, dynamic>>() ??
+        <Map<String, dynamic>>[]);
     final participantControllers = participants
         .map(
           (participant) => {
-            'firstName': TextEditingController(text: participant['firstName']),
-            'lastName': TextEditingController(text: participant['lastName']),
-            'age': TextEditingController(text: participant['age'].toString()),
-            'gender': TextEditingController(text: participant['gender']),
+            'firstName': TextEditingController(
+              text: (participant['firstName'] ?? '').toString(),
+            ),
+            'lastName': TextEditingController(
+              text: (participant['lastName'] ?? '').toString(),
+            ),
+            'age': TextEditingController(
+              text: (participant['age']?.toString() ?? ''),
+            ),
+            'gender': TextEditingController(
+              text: (participant['gender'] ?? '').toString(),
+            ),
           },
         )
         .toList();
 
     final contactFirstNameController = TextEditingController(
-      text: booking["contactInfo"]["firstName"],
+      text: ((booking["contactInfo"] as Map?)?["firstName"] ?? '').toString(),
     );
     final contactLastNameController = TextEditingController(
-      text: booking["contactInfo"]["lastName"],
+      text: ((booking["contactInfo"] as Map?)?["lastName"] ?? '').toString(),
     );
     final addressController = TextEditingController(
-      text: booking["contactInfo"]["address"],
+      text: ((booking["contactInfo"] as Map?)?["address"] ?? '').toString(),
     );
     final mobileController = TextEditingController(
-      text: booking["contactInfo"]["mobile"],
+      text: ((booking["contactInfo"] as Map?)?["mobile"] ?? '').toString(),
     );
     final emailController = TextEditingController(
-      text: booking["contactInfo"]["email"],
+      text: ((booking["contactInfo"] as Map?)?["email"] ?? '').toString(),
     );
     final senderNameController = TextEditingController(
-      text: booking["payment"]["senderName"],
+      text: ((booking["payment"] as Map?)?["senderName"] ?? '').toString(),
     );
     final paymentModeController = TextEditingController(
-      text: booking["payment"]["paymentMode"],
+      text: ((booking["payment"] as Map?)?["paymentMode"] ?? '').toString(),
     );
 
     showDialog(
@@ -538,27 +554,36 @@ Gender: ${participant['gender']}""";
             ),
             onPressed: () {
               setState(() {
+                // Ensure maps exist
+                final contactInfo =
+                    (booking['contactInfo'] as Map?) ??
+                    (booking['contactInfo'] = <String, dynamic>{});
+                final payment =
+                    (booking['payment'] as Map?) ??
+                    (booking['payment'] = <String, dynamic>{});
+
                 // Update participants information
                 for (var i = 0; i < participants.length; i++) {
                   final controllers = participantControllers[i];
                   participants[i]['firstName'] = controllers['firstName']!.text;
                   participants[i]['lastName'] = controllers['lastName']!.text;
-                  participants[i]['age'] = int.parse(controllers['age']!.text);
+                  participants[i]['age'] =
+                      int.tryParse(controllers['age']!.text) ?? 0;
                   participants[i]['gender'] = controllers['gender']!.text;
                 }
+                // If original booking had no participants list, persist ours
+                booking['participants'] = participants;
 
                 // Update contact information
-                booking["contactInfo"]["firstName"] =
-                    contactFirstNameController.text;
-                booking["contactInfo"]["lastName"] =
-                    contactLastNameController.text;
-                booking["contactInfo"]["address"] = addressController.text;
-                booking["contactInfo"]["mobile"] = mobileController.text;
-                booking["contactInfo"]["email"] = emailController.text;
+                contactInfo["firstName"] = contactFirstNameController.text;
+                contactInfo["lastName"] = contactLastNameController.text;
+                contactInfo["address"] = addressController.text;
+                contactInfo["mobile"] = mobileController.text;
+                contactInfo["email"] = emailController.text;
 
                 // Update payment information
-                booking["payment"]["senderName"] = senderNameController.text;
-                booking["payment"]["paymentMode"] = paymentModeController.text;
+                payment["senderName"] = senderNameController.text;
+                payment["paymentMode"] = paymentModeController.text;
               });
               Navigator.pop(context);
             },
