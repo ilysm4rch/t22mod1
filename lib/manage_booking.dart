@@ -86,6 +86,8 @@ class _ManageBookingState extends State<ManageBooking> {
                 builder: (context) => Favorites(
                   favorites: widget.favorites,
                   onRemoveFavorite: widget.onRemoveFavorite,
+                  bookings: widget.bookings,
+                  onRemoveBooking: widget.onRemoveBooking,
                 ),
               ),
             );

@@ -307,6 +307,12 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
                       );
                     });
                   },
+                  bookings: bookings,
+                  onRemoveBooking: (i) {
+                    setState(() {
+                      bookings.removeAt(i);
+                    });
+                  },
                 ),
               ),
             ).then((_) => setState(() => selectedIndex = 1));
