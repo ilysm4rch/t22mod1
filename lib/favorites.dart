@@ -10,6 +10,8 @@ class DestinationDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List images = (destination["images"] as List?) ?? [];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFDC143C),
@@ -20,13 +22,22 @@ class DestinationDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Slideshow of images
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                destination["image"],
+              child: SizedBox(
                 height: 200,
                 width: double.infinity,
-                fit: BoxFit.cover,
+                child: PageView.builder(
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return Image.asset(
+                      images[index],
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -138,7 +149,6 @@ class _FavoritesState extends State<Favorites> {
     Icons.home,
     Icons.calendar_month,
   ];
-  // Bookings are supplied by parent (Home) to keep shared state
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +160,7 @@ class _FavoritesState extends State<Favorites> {
             expandedHeight: 150,
             pinned: true,
             backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false, // Remove the leading back button
+            automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: const EdgeInsets.only(bottom: 80),
@@ -217,8 +227,6 @@ class _FavoritesState extends State<Favorites> {
     );
   }
 
-  // _navBar removed: using AppBottomNavBar component
-
   Widget buildFavoritesList() {
     if (widget.favorites.isEmpty) {
       return const Center(
@@ -239,7 +247,6 @@ class _FavoritesState extends State<Favorites> {
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        // Adjusted aspect ratio to accommodate the new buttons
         childAspectRatio: 0.65,
       ),
       itemCount: widget.favorites.length,
@@ -250,45 +257,53 @@ class _FavoritesState extends State<Favorites> {
   }
 
   Widget buildDestinationCard(Map<String, dynamic> destination) {
+    final List images = (destination["images"] as List?) ?? [];
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Stack for Image and Favorite Icon (same as original card)
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
+          // Slideshow instead of single image
+          SizedBox(
+            height: 120,
+            child: Stack(
+              children: [
+                PageView.builder(
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                      child: Image.asset(
+                        images[index],
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    );
+                  },
                 ),
-                child: Image.asset(
-                  destination["image"],
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white70,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons
-                          .favorite, // Always filled since it's in the favorites list
-                      color: Color(0xFFE63946),
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white70,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: const Icon(
+                        Icons.favorite,
+                        color: Color(0xFFE63946),
+                      ),
+                      onPressed: () {
+                        widget.onRemoveFavorite(destination);
+                      },
                     ),
-                    onPressed: () {
-                      widget.onRemoveFavorite(destination);
-                    },
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           // Info and Buttons
@@ -306,7 +321,6 @@ class _FavoritesState extends State<Favorites> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // Location Row
                 Row(
                   children: [
                     const Icon(Icons.location_on, size: 14, color: Colors.red),
@@ -332,12 +346,9 @@ class _FavoritesState extends State<Favorites> {
                   ),
                 ),
                 const SizedBox(height: 8),
-
-                // Buttons Row (Copied from TravelHome card)
                 Row(
                   children: [
                     Expanded(
-                      // Details button
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0xFFDC143C)),
@@ -348,10 +359,7 @@ class _FavoritesState extends State<Favorites> {
                             horizontal: 4,
                             vertical: 0,
                           ),
-                          minimumSize: const Size(
-                            0,
-                            30,
-                          ), // Smaller size for GridView item
+                          minimumSize: const Size(0, 30),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -366,23 +374,17 @@ class _FavoritesState extends State<Favorites> {
                           "Details",
                           style: TextStyle(
                             color: Color(0xFFDC143C),
-                            fontSize: 12, // Smaller font size
+                            fontSize: 12,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ), // Add a small space between buttons
+                    const SizedBox(width: 8),
                     Expanded(
-                      // Book button
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFDC143C),
-                          minimumSize: const Size(
-                            0,
-                            30,
-                          ), // Smaller size for GridView item
+                          minimumSize: const Size(0, 30),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 4,
                             vertical: 0,
@@ -399,12 +401,13 @@ class _FavoritesState extends State<Favorites> {
                                 destination: destination,
                                 onBook: (booking) {
                                   setState(() {
-                                    // Add to shared bookings list provided by parent (Home)
                                     widget.bookings.add({
                                       ...booking,
                                       'destination': {
                                         'place': destination['place'],
-                                        'image': destination['image'],
+                                        'image': images.isNotEmpty
+                                            ? images[0]
+                                            : null, // ✅ save first image as thumbnail
                                       },
                                     });
                                   });
@@ -416,7 +419,7 @@ class _FavoritesState extends State<Favorites> {
                         child: const Text(
                           "Book",
                           style: TextStyle(
-                            fontSize: 12, // Smaller font size
+                            fontSize: 12,
                             color: Colors.white,
                           ),
                         ),
