@@ -116,11 +116,15 @@ class AppBarWaveClipper extends CustomClipper<Path> {
 class Favorites extends StatefulWidget {
   final List<Map<String, dynamic>> favorites;
   final Function(Map<String, dynamic>) onRemoveFavorite;
+  final List<Map<String, dynamic>> bookings;
+  final Function(int) onRemoveBooking;
 
   const Favorites({
     super.key,
     required this.favorites,
     required this.onRemoveFavorite,
+    required this.bookings,
+    required this.onRemoveBooking,
   });
 
   @override
@@ -134,7 +138,7 @@ class _FavoritesState extends State<Favorites> {
     Icons.home,
     Icons.calendar_month,
   ];
-  final List<Map<String, dynamic>> bookings = [];
+  // Bookings are supplied by parent (Home) to keep shared state
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +196,10 @@ class _FavoritesState extends State<Favorites> {
               context,
               MaterialPageRoute(
                 builder: (context) => ManageBooking(
-                  bookings: bookings,
+                  bookings: widget.bookings,
                   onRemoveBooking: (index) {
                     setState(() {
-                      bookings.removeAt(index);
+                      widget.onRemoveBooking(index);
                     });
                   },
                   favorites: widget.favorites,
@@ -395,9 +399,8 @@ class _FavoritesState extends State<Favorites> {
                                 destination: destination,
                                 onBook: (booking) {
                                   setState(() {
-                                    // The Favorites screen doesn't have the main bookings list
-                                    // but we can add the new booking to its local list for demonstration/testing
-                                    bookings.add({
+                                    // Add to shared bookings list provided by parent (Home)
+                                    widget.bookings.add({
                                       ...booking,
                                       'destination': {
                                         'place': destination['place'],
