@@ -210,7 +210,7 @@ class _ManageBookingState extends State<ManageBooking> {
                     Expanded(
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFF1E4D92)),
+                          side: const BorderSide(color: Color(0xFFf75270)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -224,7 +224,7 @@ class _ManageBookingState extends State<ManageBooking> {
                         child: const Text(
                           'View',
                           style: TextStyle(
-                            color: Color(0xFF1E4D92),
+                            color: Color(0xFFf75270),
                             fontSize: 12,
                           ),
                         ),
@@ -330,7 +330,7 @@ class _ManageBookingState extends State<ManageBooking> {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E4D92),
+                          color: Color(0xFFf75270),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -355,7 +355,7 @@ class _ManageBookingState extends State<ManageBooking> {
                             height: 35,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF1E4D92),
+                                backgroundColor: const Color(0xFFf75270),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -475,7 +475,7 @@ class _ManageBookingState extends State<ManageBooking> {
                     IconButton(
                       icon: const Icon(
                         Icons.edit,
-                        color: Color(0xFF1E4D92),
+                        color: Color(0xFFf75270),
                         size: 24,
                       ),
                       onPressed: () {
@@ -498,7 +498,7 @@ class _ManageBookingState extends State<ManageBooking> {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E4D92),
+                          color: Color(0xFFf75270),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -617,7 +617,7 @@ Gender: $gender""";
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E4D92),
+                        color: Color(0xFFf75270),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -652,7 +652,7 @@ Gender: $gender""";
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E4D92),
+                  color: Color(0xFFf75270),
                 ),
               ),
               const SizedBox(height: 8),
