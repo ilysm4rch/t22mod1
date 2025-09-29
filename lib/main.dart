@@ -411,8 +411,10 @@ class TravelHomeState extends State<TravelHome> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(destination["place"],
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  destination["place"],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Row(
                   children: [
                     const Icon(Icons.location_on, size: 14, color: Colors.red),
