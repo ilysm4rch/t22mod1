@@ -706,7 +706,7 @@ Gender: $gender""";
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E4D92),
+                  color: Color(0xFFf75270),
                 ),
               ),
               const SizedBox(height: 8),
@@ -730,7 +730,7 @@ Gender: $gender""";
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1E4D92),
+              backgroundColor: const Color(0xFFf75270),
             ),
             onPressed: () {
               setState(() {
@@ -783,7 +783,7 @@ Gender: $gender""";
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1E4D92),
+            color: Color(0xFFf75270),
           ),
         ),
         ...details.map(
